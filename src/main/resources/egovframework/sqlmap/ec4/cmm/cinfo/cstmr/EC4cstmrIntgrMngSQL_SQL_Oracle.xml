@@ -1,0 +1,1867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EC4cstmrIntgrMng">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="searchVo" type="egovframework.ec4.cmm.cinfo.service.CstmrIntgrMngVO"/>
+	<typeAlias  alias="cstmrIntgrMngVO" type="egovframework.ec4.cmm.cinfo.service.CstmrIntgrMngVO"/>
+
+	<resultMap id="CstmrIntgr" class="egovframework.ec4.cmm.cinfo.service.CstmrIntgrMngVO">
+		<result property="cstmrCd" column="CSTMR_ESNTL_ID" /> <!-- 콜고객코드 -->
+		<result property="cstmrNm" column="CSTMR_NM" /> <!-- 콜고객명 -->
+		<result property="hpno" column="HPNO" /> <!-- 핸드폰번호 -->
+		<result property="telno" column="TELNO" /> <!-- 전화번호 -->
+		<result property="brthdy" column="BRTHDY" /> <!-- 생년월일 -->
+		<result property="emailAdres" column="EMAIL_ADRES" /> <!-- 이메일주소 -->
+		<result property="emailDomain" column="EMAIL_DOMAIN" /> <!-- 이메일도메인 -->
+		<result property="vhcleNo" column="VHCLE_NO" /> <!-- 차량번호 -->
+		<result property="vin" column="VIN" /> <!-- 차대번호 -->
+		<result property="houseZip" column="HOUSE_ZIP" /> <!-- 집우편번호 -->
+		<result property="houseAdres" column="HOUSE_ADRES" /> <!-- 집주소 -->
+		<result property="houseAdresDetail" column="HOUSE_ADRES_DETAIL" /> <!-- 집주소상세 -->
+		<result property="officeZip" column="OFFICE_ZIP" /> <!-- 직장우편번호 -->
+		<result property="officeAdres" column="OFFICE_ADRES" /> <!-- 직장주소 -->
+		<result property="officeAdresDetail" column="OFFICE_ADRES_DETAIL" /> <!-- 직장주소상세 -->
+		<result property="telRecvYn" column="TEL_RECV_YN" /> <!-- 전화수신여부 -->
+		<result property="smsRecvYn" column="SMS_RECV_YN" /> <!-- SMS수신여부 -->
+		<result property="emailRecvYn" column="EMAIL_RECV_YN" /> <!-- 이메일수신여부 -->
+		<result property="faxRecvYn" column="FAX_RECV_YN" /> <!-- FAX수신여부 -->
+		<result property="dmRecvYn" column="DM_RECV_YN" /> <!-- DM수신여부 -->
+		<result property="mberGrad" column="MBER_GRAD" /> <!-- 회원등급 -->
+		<result property="chevMembYn" column="CHEV_MEMB_YN" /> <!-- 쉐보레멤버여부 -->
+		<result property="webMembYn" column="WEB_MEMB_YN" /> <!-- 웹멤버여부 -->
+		<result property="wutoMembYn" column="WUTO_MEMB_YN" /> <!-- 오토멤버여부 -->
+		<result property="cstmrMemo" column="CSTMR_MEMO" /> <!-- 고객메모 -->
+		<result property="registDe" column="REGIST_DE" /> <!-- 등록일자 -->
+		<result property="register" column="REGISTER" /> <!-- 등록자 -->
+		<result property="updtDe" column="UPDT_DE" /> <!-- 수정일자 -->
+		<result property="updusr" column="UPDUSR" /> <!-- 수정자 -->
+
+	</resultMap>
+
+
+
+    <!--
+        쿼리명 : 고객조회팝업
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.31    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.05.31
+    -->
+    <select id="EC4cstmrIntgrMngSQL.selectCstmrIntgrMngList" parameterClass="searchVo" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+					        CSTMR_ESNTL_ID                  AS CSTMR_CD                             	  /* 콜고객코드 */
+					      , CSTMR_NM                        AS CSTMR_NM                                   /* 콜고객명 */
+					      , HPNO                            AS HPNO                                       /* 핸드폰번호 */
+					      , TELNO                           AS TELNO                                      /* 전화번호 */
+					      , BRTHDY                          AS BRTHDY                                     /* 생년월일 */
+					      , EMAIL_ADRES                     AS EMAIL_ADRES                                /* 이메일주소 */
+					      , EMAIL_DOMAIN                    AS EMAIL_DOMAIN                               /* 이메일도메인 */
+					      , DECODE(NVL(EMAIL_DOMAIN,'X'), 'X', EMAIL_ADRES, EMAIL_ADRES||'@'||EMAIL_DOMAIN) AS EMAIL_ADDRESS
+					      , VHCLE_NO                        AS VHCLE_NO                                   /* 차량번호 */
+					      , VIN                             AS VIN                                        /* 차대번호 */
+					      , HOUSE_ZIP                       AS HOUSE_ZIP                                  /* 집우편번호 */
+					      , HOUSE_ADRES                     AS HOUSE_ADRES                                /* 집주소 */
+					      , HOUSE_ADRES_DETAIL              AS HOUSE_ADRES_DETAIL                         /* 집주소상세 */
+					      , HOUSE_ADRES||' '||HOUSE_ADRES_DETAIL AS HOME_ADDRESS
+					      , OFFICE_ZIP                      AS OFFICE_ZIP                                 /* 직장우편번호 */
+					      , OFFICE_ADRES                    AS OFFICE_ADRES                               /* 직장주소 */
+					      , OFFICE_ADRES_DETAIL             AS OFFICE_ADRES_DETAIL                        /* 직장주소상세 */
+					      , TEL_RECV_YN                     AS TEL_RECV_YN                                /* 전화수신여부 */
+					      , SMS_RECV_YN                     AS SMS_RECV_YN                                /* SMS수신여부 */
+					      , EMAIL_RECV_YN                   AS EMAIL_RECV_YN                              /* 이메일수신여부 */
+					      , FAX_RECV_YN                     AS FAX_RECV_YN                                /* FAX수신여부 */
+					      , DM_RECV_YN                      AS DM_RECV_YN                                 /* DM수신여부 */
+					      , MBER_GRAD                       AS MBER_GRAD                                  /* 회원등급 */
+					      , CHEV_MEMB_YN                    AS CHEV_MEMB_YN                               /* 쉐보레멤버여부 */
+					      , WEB_MEMB_YN                     AS WEB_MEMB_YN                                /* 웹멤버여부 */
+					      , WUTO_MEMB_YN                    AS WUTO_MEMB_YN                               /* 오토멤버여부 */
+					      , CSTMR_MEMO                      AS CSTMR_MEMO                                 /* 고객메모 */
+					      , REGIST_DE                       AS REGIST_DE                                  /* 등록일자 */
+					      , REGISTER                        AS REGISTER                                   /* 등록자 */
+					      , UPDT_DE                         AS UPDT_DE                                    /* 수정일자 */
+					      , UPDUSR                          AS UPDUSR                                     /* 수정자 */
+                        FROM
+                              CA_ITGRT_CSTMR dc
+                       WHERE
+                              dc.CSTMR_ESNTL_ID > '0'
+    ]]>
+        <isNotEmpty property="cstmrNm" prepend="AND">
+        <![CDATA[
+                              dc.CSTMR_NM LIKE '%'||#cstmrNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              dc.BRTHDY LIKE '%'||REGEXP_REPLACE(#brthdy#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="hpno" prepend="AND">
+        <![CDATA[
+                              dc.HPNO LIKE '%'||REGEXP_REPLACE(#hpno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="telno" prepend="AND">
+        <![CDATA[
+                              dc.TELNO LIKE '%'||REGEXP_REPLACE(#telno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              dc.EMAIL_ADRES||'@'||dc.EMAIL_DOMAIN LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="houseAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(dc.HOUSE_ADRES||dc.HOUSE_ADRES_DETAIL,' ','') LIKE '%'||REPLACE(#houseAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+    <select id="EC4cstmrIntgrMngSQL.selectCstmrIntgrMngListCnt" parameterClass="searchVo" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+          FROM
+                CA_ITGRT_CSTMR dc
+         WHERE
+                dc.CSTMR_ESNTL_ID > '0'
+    ]]>
+        <isNotEmpty property="cstmrNm" prepend="AND">
+        <![CDATA[
+                              dc.CSTMR_NM LIKE '%'||#cstmrNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              dc.BRTHDY LIKE '%'||REGEXP_REPLACE(#brthdy#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="hpno" prepend="AND">
+        <![CDATA[
+                              dc.HPNO LIKE '%'||REGEXP_REPLACE(#hpno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              dc.EMAIL_ADRES||'@'||dc.EMAIL_DOMAIN LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="houseAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(dc.HOUSE_ADRES||dc.HOUSE_ADRES_DETAIL,' ','') LIKE '%'||REPLACE(#houseAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 고객등록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.11.01   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.11.01
+    -->
+    <insert id="EC4cstmrIntgrMngSQL.insertCstmrIntgrMng">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CA_ITGRT_CSTMR
+		      (
+					  CSTMR_ESNTL_ID                       /* 콜고객코드 */
+					, CSTMR_NM                       /* 콜고객명 */
+					, HPNO                           /* 핸드폰번호 */
+					, TELNO                          /* 전화번호 */
+					, SEX_KND						 /* 성별 */
+					, BRTHDY                         /* 생년월일 */
+					, EMAIL_ADRES                    /* 이메일주소 */
+					, EMAIL_DOMAIN                   /* 이메일도메인 */
+					, VHCLE_NO                       /* 차량번호 */
+					, VIN                            /* 차대번호 */
+					, HOUSE_ZIP                      /* 집우편번호 */
+					, HOUSE_ADRES                    /* 집주소 */
+					, HOUSE_ADRES_DETAIL             /* 집주소상세 */
+					, OFFICE_ZIP                     /* 직장우편번호 */
+					, OFFICE_ADRES                   /* 직장주소 */
+					, OFFICE_ADRES_DETAIL            /* 직장주소상세 */
+					, TEL_RECV_YN                    /* 전화수신여부 */
+					, SMS_RECV_YN                    /* SMS수신여부 */
+					, EMAIL_RECV_YN                  /* 이메일수신여부 */
+					, FAX_RECV_YN                    /* FAX수신여부 */
+					, DM_RECV_YN                     /* DM수신여부 */
+					, MBER_GRAD                      /* 회원등급 */
+					, CHEV_MEMB_YN                   /* 쉐보레멤버여부 */
+					, WEB_MEMB_YN                    /* 웹멤버여부 */
+					, WUTO_MEMB_YN                   /* 오토멤버여부 */
+					, CSTMR_MEMO                     /* 고객메모 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  #cstmrCd#                        /* 콜고객코드 */
+					, #cstmrNm#                        /* 콜고객명 */
+					, REGEXP_REPLACE(#hpno#, '[^0-9]+')                           /* 핸드폰번호 */
+					, REGEXP_REPLACE(#telno#, '[^0-9]+')                          /* 전화번호 */
+					, #sexKnd#						   /* 성별 */
+					, REGEXP_REPLACE(#brthdy#, '[^0-9]+')                         /* 생년월일 */
+					, #emailAdres#                     /* 이메일주소 */
+					, #emailDomain#                    /* 이메일도메인 */
+					, #vhcleNo#                        /* 차량번호 */
+					, #vin#                            /* 차대번호 */
+					, #houseZip#                       /* 집우편번호 */
+					, #houseAdres#                     /* 집주소 */
+					, #houseAdresDetail#               /* 집주소상세 */
+					, #officeZip#                      /* 직장우편번호 */
+					, #officeAdres#                    /* 직장주소 */
+					, #officeAdresDetail#              /* 직장주소상세 */
+					, #telRecvYn#                      /* 전화수신여부 */
+					, #smsRecvYn#                      /* SMS수신여부 */
+					, #emailRecvYn#                    /* 이메일수신여부 */
+					, #faxRecvYn#                      /* FAX수신여부 */
+					, #dmRecvYn#                       /* DM수신여부 */
+					, #mberGrad#                       /* 회원등급 */
+					, #chevMembYn#                     /* 쉐보레멤버여부 */
+					, #webMembYn#                      /* 웹멤버여부 */
+					, #wutoMembYn#                     /* 오토멤버여부 */
+					, #cstmrMemo#                      /* 고객메모 */
+					, SYSDATE                       /* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+    <!--
+        쿼리명 : 고객조회팝업
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.27    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.05.31
+    -->
+    <select id="EC4cstmrIntgrMngSQL.selectCstmrCarList" parameterClass="searchVo" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+					        CCM.CSTMR_ESNTL_ID                                             /* 콜고객코드 */
+					      , CCM.CSTMR_NM                                             /* 콜고객명 */
+					      , CCM.HPNO                                                 /* 핸드폰번호 */
+					      , CCM.TELNO                                                /* 전화번호 */
+					      , CCM.BRTHDY                                               /* 생년월일 */
+					      , CCM.EMAIL_ADRES                                          /* 이메일주소 */
+					      , CCM.EMAIL_DOMAIN                                         /* 이메일도메인 */
+					      , NVL(CCM.VHCLE_NO,IMC.VEHI_NO01||IMC.VEHI_NO02) AS VHCLE_NO                                             /* 차량번호 */
+					      /* , CCM.VIN                                                  차대번호 */
+					      , CCM.HOUSE_ZIP                                            /* 집우편번호 */
+					      , CCM.HOUSE_ADRES                                          /* 집주소 */
+					      , CCM.HOUSE_ADRES_DETAIL                                   /* 집주소상세 */
+					      , CCM.OFFICE_ZIP                                           /* 직장우편번호 */
+					      , CCM.OFFICE_ADRES                                         /* 직장주소 */
+					      , CCM.OFFICE_ADRES_DETAIL                                  /* 직장주소상세 */
+					      , CCM.TEL_RECV_YN                                          /* 전화수신여부 */
+					      , CCM.SMS_RECV_YN                                          /* SMS수신여부 */
+					      , CCM.EMAIL_RECV_YN                                        /* 이메일수신여부 */
+					      , CCM.FAX_RECV_YN                                          /* FAX수신여부 */
+					      , CCM.DM_RECV_YN                                           /* DM수신여부 */
+					      , CCM.MBER_GRAD                                            /* 회원등급 */
+					      , CCM.CHEV_MEMB_YN                                         /* 쉐보레멤버여부 */
+					      , CCM.WEB_MEMB_YN                                          /* 웹멤버여부 */
+					      , CCM.WUTO_MEMB_YN                                         /* 오토멤버여부 */
+					      , CCM.CSTMR_MEMO                                           /* 고객메모 */
+					      , CCM.REGIST_DE                                            /* 등록일자 */
+					      , CCM.REGISTER                                             /* 등록자 */
+					      , CCM.UPDT_DE                                              /* 수정일자 */
+					      , CCM.UPDUSR                                               /* 수정자 */
+							, IMC.VIN                                                  /* 차대번호 */
+							, IMC.VEHI_NO01                                            /* 차량번호1 */
+							, IMC.VEHI_NO02                                            /* 차량번호2 */
+							, IMC.BOSS_NAME                                            /* 소유자 */
+							, IMC.MAKER                                                /* 메이커 */
+							, IMC.MDL_YEAR                                             /* 년식 */
+							, IMC.SALE_MDL                                             /* 차종코드 */
+							, IMC.TYPE_YEAR                                            /* 타입년식 */
+							, IMC.ENGN_NO                                              /* 엔진번호 */
+							, IMC.PROD_NO                                              /* PROD_NO */
+							, IMC.DELI_MAST_NO                                         /* 출고번호 */
+							, IMC.PROD_EVNT                                            /* 차량상태 */
+							, IMC.MFG_DATE                                             /* 제작완료일 */
+							, IMC.DELI_DATE                                            /* 출고년월일 */
+							, IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+							, IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+							, IMC.LAST_RCPT_DATE                                       /* 최종입고일자 */
+							, IMC.LAST_READ_KM                                         /* 최종주행거리 */
+							, IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+							, IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+							, IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+							, IMC.AREA_CODE                                            /* 지역코드 */
+							, IMC.COLR_CODE                                            /* 색상코드 */
+							, IMC.COLR_BODY                                            /* 차량색상 */
+							, IMC.COLR_TRIM                                            /* 트림색상 */
+							, IMC.RCPT_CNT                                             /* 입고카운트 */
+							, IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+							, IMC.SALE_TYPE                                            /* 판매유형 */
+							, IMC.USE_CODE                                             /* 용도 */
+							, IMC.SPCL_CODE                                            /* 특별관리코드 */
+							, IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+							, IMC.EXPT_COND                                            /* 수출차량여부 */
+							, IMC.REGI_COND                                            /* 등록구분코드 */
+							, IMC.REG_DTTM                                             /* 등록일시 */
+							, IMC.OPTN_01                                              /* 옵션1 */
+							, IMC.OPTN_02                                              /* 옵션2 */
+							, IMC.OPTN_03                                              /* 옵션3 */
+							, IMC.OPTN_04                                              /* 옵션4 */
+							, IMC.OPTN_05                                              /* 옵션5 */
+							, IMC.MISN_LOT                                             /* 미션로트 */
+							, IMC.ECM_LOT                                              /* ECM로트 */
+							, IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+							, IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+							, IMC.JOB_FLAG                                             /* 작업구분 */
+							, IMC.RESN_FLAG                                            /* 결함원인코드 */
+							, IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+							, IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+							, IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+							, IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+							, IMC.ENG_TYPE                                             /* ENG_TYPE */
+							, IMC.ENG_PART                                             /* ENG_PART */
+							, IMC.MODEL_YEAR                                           /* 차량년식 */
+                            ,(SELECT VHCLE_MODEL_ID FROM SI_VHCLE_DETAIL_MODEL WHERE IF_MDL_CODE = IMC.SALE_MDL) AS MODEL_CD
+                            ,(SELECT A.VHCLE_MODEL_NM FROM SI_VHCLE_MODEL A, SI_VHCLE_DETAIL_MODEL B WHERE A.VHCLE_MODEL_ID = B.VHCLE_MODEL_ID AND B.IF_MDL_CODE = IMC.SALE_MDL) AS MODEL_NM
+                            , DCC.COLOR_KOR AS COLOR_NM
+						FROM CA_CAR_ACQS CCA
+							,(SELECT
+	                              ISC.DEALER_CD
+	                              ,ISC.BUSINESS_ID
+	                              ,ISC.MODEL_CD
+	                              ,ISC.SPEC_CD
+	                              ,NVL(IMC.COLR_BODY,ISC.OUT_COLOR_CD) AS OUT_COLOR_CD
+	                              ,ISC.IN_COLOR_CD
+						          ,(CASE WHEN IMC.VIN IS NOT NULL THEN 'A'
+						                 WHEN ISC.VIN IS NOT NULL THEN 'S' 
+						                 ELSE 'X' END) AS IF_KND
+						          ,VW.VIN
+									, IMC.VEHI_NO01                                            /* 차량번호1 */
+									, IMC.VEHI_NO02                                            /* 차량번호2 */
+									, IMC.BOSS_NAME                                            /* 소유자 */
+									, IMC.MAKER                                                /* 메이커 */
+									, IMC.MDL_YEAR                                             /* 년식 */
+									, IMC.SALE_MDL                                             /* 차종코드 */
+									, IMC.TYPE_YEAR                                            /* 타입년식 */
+									, IMC.ENGN_NO                                              /* 엔진번호 */
+									, IMC.PROD_NO                                              /* PROD_NO */
+									, IMC.DELI_MAST_NO                                         /* 출고번호 */
+									, IMC.PROD_EVNT                                            /* 차량상태 */
+									, IMC.MFG_DATE                                             /* 제작완료일 */
+									, IMC.DELI_DATE                                            /* 출고년월일 */
+									, IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+									, IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+									, TO_CHAR(IMC.LAST_RCPT_DATE,'YYYY-MM-DD') AS LAST_RCPT_DATE                                       /* 최종입고일자 */
+									, IMC.LAST_READ_KM                                         /* 최종주행거리 */
+									, IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+									, IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+									, IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+									, IMC.AREA_CODE                                            /* 지역코드 */
+									, IMC.COLR_CODE                                            /* 색상코드 */
+									, IMC.COLR_BODY                                            /* 차량색상 */
+									, IMC.COLR_TRIM                                            /* 트림색상 */
+									, IMC.RCPT_CNT                                             /* 입고카운트 */
+									, IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+									, IMC.SALE_TYPE                                            /* 판매유형 */
+									, IMC.USE_CODE                                             /* 용도 */
+									, IMC.SPCL_CODE                                            /* 특별관리코드 */
+									, IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+									, IMC.EXPT_COND                                            /* 수출차량여부 */
+									, IMC.REGI_COND                                            /* 등록구분코드 */
+									, IMC.REG_DTTM                                             /* 등록일시 */
+									, IMC.OPTN_01                                              /* 옵션1 */
+									, IMC.OPTN_02                                              /* 옵션2 */
+									, IMC.OPTN_03                                              /* 옵션3 */
+									, IMC.OPTN_04                                              /* 옵션4 */
+									, IMC.OPTN_05                                              /* 옵션5 */
+									, IMC.MISN_LOT                                             /* 미션로트 */
+									, IMC.ECM_LOT                                              /* ECM로트 */
+									, IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+									, IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+									, IMC.JOB_FLAG                                             /* 작업구분 */
+									, IMC.RESN_FLAG                                            /* 결함원인코드 */
+									, IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+									, IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+									, IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+									, IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+									, IMC.ENG_TYPE                                             /* ENG_TYPE */
+									, IMC.ENG_PART                                             /* ENG_PART */
+									, IMC.MODEL_YEAR                                           /* 차량년식 */
+	                           FROM   VW_ITGRT_CAR VW
+	                                  ,IF_MNTNC_CAR IMC
+	                                  ,IF_SALE_CAR ISC
+	                           WHERE 1=1
+	                           AND VW.VIN = IMC.VIN(+)
+	                           AND VW.VIN = ISC.VIN(+)
+                             )IMC
+                            ,DZR_CAR_COLOR DCC
+						    ,CSTMR_INFO_LINK_MNG CIL
+						    ,CA_ITGRT_CSTMR CCM
+						WHERE 1=1
+						AND CCA.VHCLE_ESNTL_ID = IMC.VIN(+)
+						AND IMC.DEALER_CD = DCC.DEALER_CD(+) AND IMC.MODEL_CD = DCC.MODEL_CD(+) AND IMC.SPEC_CD = DCC.CAR_CD(+) AND IMC.OUT_COLOR_CD = DCC.COLOR_CD(+)  /*4색상*/
+						AND CIL.REL_KND = 'A'
+						AND IMC.VIN = (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO)
+						AND CIL.CSTMR_CD = CCM.CSTMR_ESNTL_ID(+)
+						/*AND (IMC.VIN||IMC.VEHI_NO01||IMC.VEHI_NO02) = (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO||CIL.VEHI_NO01||CIL.VEHI_NO02)*/
+						/*AND   CCM.CSTMR_ESNTL_ID > '0'*/
+    ]]>
+        <isNotEmpty property="cstmrNm" prepend="AND">
+        <![CDATA[
+                              CCM.CSTMR_NM LIKE '%'||#cstmrNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              CCM.BRTHDY LIKE '%'||REGEXP_REPLACE(#brthdy#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="hpno" prepend="AND">
+        <![CDATA[
+                              CCM.HPNO LIKE '%'||REGEXP_REPLACE(#hpno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              CCM.EMAIL_ADRES||'@'||CCM.EMAIL_DOMAIN LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="houseAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(CCM.HOUSE_ADRES||CCM.HOUSE_ADRES_DETAIL,' ','') LIKE '%'||REPLACE(#houseAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="vin" prepend="AND">
+        <![CDATA[
+                              IMC.VIN LIKE '%'||#vin#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="vhcleNo" prepend="AND">
+        <![CDATA[
+                              IMC.VEHI_NO01||IMC.VEHI_NO02 LIKE '%'||#vhcleNo#||'%'
+        ]]>
+        </isNotEmpty>
+
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+    <select id="EC4cstmrIntgrMngSQL.selectCstmrCarListCnt" parameterClass="searchVo" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+		FROM CA_CAR_ACQS CCA
+			,(SELECT
+	               ISC.DEALER_CD
+	               ,ISC.BUSINESS_ID
+	               ,ISC.MODEL_CD
+	               ,ISC.SPEC_CD
+	               ,NVL(IMC.COLR_BODY,ISC.OUT_COLOR_CD) AS OUT_COLOR_CD
+	               ,ISC.IN_COLOR_CD
+	               ,VW.VIN
+					, IMC.VEHI_NO01                                            /* 차량번호1 */
+					, IMC.VEHI_NO02                                            /* 차량번호2 */
+					, IMC.BOSS_NAME                                            /* 소유자 */
+					, IMC.MAKER                                                /* 메이커 */
+					, IMC.MDL_YEAR                                             /* 년식 */
+					, IMC.SALE_MDL                                             /* 차종코드 */
+					, IMC.TYPE_YEAR                                            /* 타입년식 */
+					, IMC.ENGN_NO                                              /* 엔진번호 */
+					, IMC.PROD_NO                                              /* PROD_NO */
+					, IMC.DELI_MAST_NO                                         /* 출고번호 */
+					, IMC.PROD_EVNT                                            /* 차량상태 */
+					, IMC.MFG_DATE                                             /* 제작완료일 */
+					, IMC.DELI_DATE                                            /* 출고년월일 */
+					, IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+					, IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+					, TO_CHAR(IMC.LAST_RCPT_DATE,'YYYY-MM-DD') AS LAST_RCPT_DATE                                       /* 최종입고일자 */
+					, IMC.LAST_READ_KM                                         /* 최종주행거리 */
+					, IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+					, IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+					, IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+					, IMC.AREA_CODE                                            /* 지역코드 */
+					, IMC.COLR_CODE                                            /* 색상코드 */
+					, IMC.COLR_BODY                                            /* 차량색상 */
+					, IMC.COLR_TRIM                                            /* 트림색상 */
+					, IMC.RCPT_CNT                                             /* 입고카운트 */
+					, IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+					, IMC.SALE_TYPE                                            /* 판매유형 */
+					, IMC.USE_CODE                                             /* 용도 */
+					, IMC.SPCL_CODE                                            /* 특별관리코드 */
+					, IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+					, IMC.EXPT_COND                                            /* 수출차량여부 */
+					, IMC.REGI_COND                                            /* 등록구분코드 */
+					, IMC.REG_DTTM                                             /* 등록일시 */
+					, IMC.OPTN_01                                              /* 옵션1 */
+					, IMC.OPTN_02                                              /* 옵션2 */
+					, IMC.OPTN_03                                              /* 옵션3 */
+					, IMC.OPTN_04                                              /* 옵션4 */
+					, IMC.OPTN_05                                              /* 옵션5 */
+					, IMC.MISN_LOT                                             /* 미션로트 */
+					, IMC.ECM_LOT                                              /* ECM로트 */
+					, IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+					, IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+					, IMC.JOB_FLAG                                             /* 작업구분 */
+					, IMC.RESN_FLAG                                            /* 결함원인코드 */
+					, IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+					, IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+					, IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+					, IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+					, IMC.ENG_TYPE                                             /* ENG_TYPE */
+					, IMC.ENG_PART                                             /* ENG_PART */
+					, IMC.MODEL_YEAR                                           /* 차량년식 */
+	            FROM   VW_ITGRT_CAR VW
+	                   ,IF_MNTNC_CAR IMC
+	                   ,IF_SALE_CAR ISC
+	            WHERE 1=1
+	            AND VW.VIN = IMC.VIN(+)
+	            AND VW.VIN = ISC.VIN(+)
+             )IMC
+            ,DZR_CAR_COLOR DCC
+		    ,CSTMR_INFO_LINK_MNG CIL
+		    ,CA_ITGRT_CSTMR CCM
+		WHERE 1=1
+		AND CCA.VHCLE_ESNTL_ID = IMC.VIN(+)
+		AND IMC.DEALER_CD = DCC.DEALER_CD(+) AND IMC.MODEL_CD = DCC.MODEL_CD(+) AND IMC.SPEC_CD = DCC.CAR_CD(+) AND IMC.OUT_COLOR_CD = DCC.COLOR_CD(+)  /*4색상*/
+		AND CIL.REL_KND = 'A'
+		AND IMC.VIN = (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO)
+		AND CIL.CSTMR_CD = CCM.CSTMR_ESNTL_ID(+)
+		/*AND (IMC.VIN||IMC.VEHI_NO01||IMC.VEHI_NO02) = (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO||CIL.VEHI_NO01||CIL.VEHI_NO02)*/
+		/*AND   CCM.CSTMR_ESNTL_ID > '0'*/
+    ]]>
+        <isNotEmpty property="cstmrNm" prepend="AND">
+        <![CDATA[
+                              CCM.CSTMR_NM LIKE '%'||#cstmrNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              CCM.BRTHDY LIKE '%'||REGEXP_REPLACE(#brthdy#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="hpno" prepend="AND">
+        <![CDATA[
+                              CCM.HPNO LIKE '%'||REGEXP_REPLACE(#hpno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              CCM.EMAIL_ADRES||'@'||CCM.EMAIL_DOMAIN LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="houseAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(CCM.HOUSE_ADRES||CCM.HOUSE_ADRES_DETAIL,' ','') LIKE '%'||REPLACE(#houseAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchVin" prepend="AND">
+        <![CDATA[
+                              IMC.VIN LIKE '%'||#searchVin#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchVhcleNo" prepend="AND">
+        <![CDATA[
+                              IMC.VEHI_NO01||IMC.VEHI_NO02 LIKE '%'||#searchVhcleNo#||'%'
+        ]]>
+        </isNotEmpty>
+    </select>
+    
+    
+    
+    
+    
+    
+    
+
+
+
+    <!--
+        쿼리명 : 기존고객조회팝업
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.04    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.01.04
+    -->
+    <select id="EC4cstmrIntgrMngSQL.existCstmrSearchList" parameterClass="searchVo" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT DISTINCT
+					        CCM.CSTMR_ESNTL_ID AS CSTMR_CD                                             /* 콜고객코드 */
+					      , CIL.CUST_NM AS CSTMR_NM                                             /* 콜고객명 */
+					      , CIL.HAND_PHONE_NO AS HPNO                                                 /* 핸드폰번호 */
+					      , CCM.TELNO                                                /* 전화번호 */
+					      , SUBSTR(CIL.BIRTH_SEX,1,6) AS BRTHDY                                               /* 생년월일 */
+					      , CIL.E_MAIL
+					      , SUBSTR(CIL.E_MAIL,1,INSTR(CIL.E_MAIL,'@')-1) AS EMAIL_ADRES                                          /* 이메일주소 */
+					      , SUBSTR(CIL.E_MAIL,INSTR(CIL.E_MAIL,'@')+1) AS EMAIL_DOMAIN                                         /* 이메일도메인 */
+					      , NVL(CCM.VHCLE_NO,IMC.VEHI_NO01||IMC.VEHI_NO02) AS VHCLE_NO                                             /* 차량번호 */
+					      /* , CCM.VIN                                                  차대번호 */
+					      , CCM.HOUSE_ZIP                                            /* 집우편번호 */
+					      , CCM.HOUSE_ADRES                                          /* 집주소 */
+					      , CCM.HOUSE_ADRES_DETAIL                                   /* 집주소상세 */
+					      , CCM.OFFICE_ZIP                                           /* 직장우편번호 */
+					      , CCM.OFFICE_ADRES                                         /* 직장주소 */
+					      , CCM.OFFICE_ADRES_DETAIL                                  /* 직장주소상세 */
+					      , CCM.TEL_RECV_YN                                          /* 전화수신여부 */
+					      , CCM.SMS_RECV_YN                                          /* SMS수신여부 */
+					      , CCM.EMAIL_RECV_YN                                        /* 이메일수신여부 */
+					      , CCM.FAX_RECV_YN                                          /* FAX수신여부 */
+					      , CCM.DM_RECV_YN                                           /* DM수신여부 */
+					      , CCM.MBER_GRAD                                            /* 회원등급 */
+					      , CCM.CHEV_MEMB_YN                                         /* 쉐보레멤버여부 */
+					      , CCM.WEB_MEMB_YN                                          /* 웹멤버여부 */
+					      , CCM.WUTO_MEMB_YN                                         /* 오토멤버여부 */
+					      , CCM.CSTMR_MEMO                                           /* 고객메모 */
+					      , CCM.REGIST_DE                                            /* 등록일자 */
+					      , CCM.REGISTER                                             /* 등록자 */
+					      , CCM.UPDT_DE                                              /* 수정일자 */
+					      , CCM.UPDUSR                                               /* 수정자 */
+							, IMC.VIN                                                  /* 차대번호 */
+							, IMC.VEHI_NO01                                            /* 차량번호1 */
+							, IMC.VEHI_NO02                                            /* 차량번호2 */
+							, IMC.BOSS_NAME                                            /* 소유자 */
+							, IMC.MAKER                                                /* 메이커 */
+							, IMC.MDL_YEAR                                             /* 년식 */
+							, IMC.SALE_MDL                                             /* 차종코드 */
+							, IMC.TYPE_YEAR                                            /* 타입년식 */
+							, IMC.ENGN_NO                                              /* 엔진번호 */
+							, IMC.PROD_NO                                              /* PROD_NO */
+							, IMC.DELI_MAST_NO                                         /* 출고번호 */
+							, IMC.PROD_EVNT                                            /* 차량상태 */
+							, IMC.MFG_DATE                                             /* 제작완료일 */
+							, IMC.DELI_DATE                                            /* 출고년월일 */
+							, IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+							, IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+							, IMC.LAST_RCPT_DATE                                       /* 최종입고일자 */
+							, IMC.LAST_READ_KM                                         /* 최종주행거리 */
+							, IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+							, IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+							, IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+							, IMC.AREA_CODE                                            /* 지역코드 */
+							, IMC.COLR_CODE                                            /* 색상코드 */
+							, IMC.COLR_BODY                                            /* 차량색상 */
+							, IMC.COLR_TRIM                                            /* 트림색상 */
+							, IMC.RCPT_CNT                                             /* 입고카운트 */
+							, IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+							, IMC.SALE_TYPE                                            /* 판매유형 */
+							, IMC.USE_CODE                                             /* 용도 */
+							, IMC.SPCL_CODE                                            /* 특별관리코드 */
+							, IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+							, IMC.EXPT_COND                                            /* 수출차량여부 */
+							, IMC.REGI_COND                                            /* 등록구분코드 */
+							, IMC.REG_DTTM                                             /* 등록일시 */
+							, IMC.OPTN_01                                              /* 옵션1 */
+							, IMC.OPTN_02                                              /* 옵션2 */
+							, IMC.OPTN_03                                              /* 옵션3 */
+							, IMC.OPTN_04                                              /* 옵션4 */
+							, IMC.OPTN_05                                              /* 옵션5 */
+							, IMC.MISN_LOT                                             /* 미션로트 */
+							, IMC.ECM_LOT                                              /* ECM로트 */
+							, IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+							, IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+							, IMC.JOB_FLAG                                             /* 작업구분 */
+							, IMC.RESN_FLAG                                            /* 결함원인코드 */
+							, IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+							, IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+							, IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+							, IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+							, IMC.ENG_TYPE                                             /* ENG_TYPE */
+							, IMC.ENG_PART                                             /* ENG_PART */
+							, IMC.MODEL_YEAR                                           /* 차량년식 */
+                            ,(SELECT VHCLE_MODEL_ID FROM SI_VHCLE_DETAIL_MODEL WHERE IF_MDL_CODE = IMC.SALE_MDL) AS MODEL_CD
+                            ,(SELECT A.VHCLE_MODEL_NM FROM SI_VHCLE_MODEL A, SI_VHCLE_DETAIL_MODEL B WHERE A.VHCLE_MODEL_ID = B.VHCLE_MODEL_ID AND B.IF_MDL_CODE = IMC.SALE_MDL) AS MODEL_NM
+                            , DCC.COLOR_KOR AS COLOR_NM
+                        FROM CA_ITGRT_CSTMR CCM
+                            ,DZR_CAR_COLOR DCC
+                            ,CSTMR_INFO_LINK_MNG CIL
+                            ,(SELECT
+                                  ISC.DEALER_CD
+                                  ,ISC.BUSINESS_ID
+                                  ,ISC.MODEL_CD
+                                  ,ISC.SPEC_CD
+                                  ,NVL(IMC.COLR_BODY,ISC.OUT_COLOR_CD) AS OUT_COLOR_CD
+                                  ,ISC.IN_COLOR_CD
+                                  ,VW.VIN
+									, IMC.VEHI_NO01                                            /* 차량번호1 */
+									, IMC.VEHI_NO02                                            /* 차량번호2 */
+									, IMC.BOSS_NAME                                            /* 소유자 */
+									, IMC.MAKER                                                /* 메이커 */
+									, IMC.MDL_YEAR                                             /* 년식 */
+									, IMC.SALE_MDL                                             /* 차종코드 */
+									, IMC.TYPE_YEAR                                            /* 타입년식 */
+									, IMC.ENGN_NO                                              /* 엔진번호 */
+									, IMC.PROD_NO                                              /* PROD_NO */
+									, IMC.DELI_MAST_NO                                         /* 출고번호 */
+									, IMC.PROD_EVNT                                            /* 차량상태 */
+									, IMC.MFG_DATE                                             /* 제작완료일 */
+									, IMC.DELI_DATE                                            /* 출고년월일 */
+									, IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+									, IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+									, TO_CHAR(IMC.LAST_RCPT_DATE,'YYYY-MM-DD') AS LAST_RCPT_DATE                                       /* 최종입고일자 */
+									, IMC.LAST_READ_KM                                         /* 최종주행거리 */
+									, IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+									, IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+									, IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+									, IMC.AREA_CODE                                            /* 지역코드 */
+									, IMC.COLR_CODE                                            /* 색상코드 */
+									, IMC.COLR_BODY                                            /* 차량색상 */
+									, IMC.COLR_TRIM                                            /* 트림색상 */
+									, IMC.RCPT_CNT                                             /* 입고카운트 */
+									, IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+									, IMC.SALE_TYPE                                            /* 판매유형 */
+									, IMC.USE_CODE                                             /* 용도 */
+									, IMC.SPCL_CODE                                            /* 특별관리코드 */
+									, IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+									, IMC.EXPT_COND                                            /* 수출차량여부 */
+									, IMC.REGI_COND                                            /* 등록구분코드 */
+									, IMC.REG_DTTM                                             /* 등록일시 */
+									, IMC.OPTN_01                                              /* 옵션1 */
+									, IMC.OPTN_02                                              /* 옵션2 */
+									, IMC.OPTN_03                                              /* 옵션3 */
+									, IMC.OPTN_04                                              /* 옵션4 */
+									, IMC.OPTN_05                                              /* 옵션5 */
+									, IMC.MISN_LOT                                             /* 미션로트 */
+									, IMC.ECM_LOT                                              /* ECM로트 */
+									, IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+									, IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+									, IMC.JOB_FLAG                                             /* 작업구분 */
+									, IMC.RESN_FLAG                                            /* 결함원인코드 */
+									, IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+									, IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+									, IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+									, IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+									, IMC.ENG_TYPE                                             /* ENG_TYPE */
+									, IMC.ENG_PART                                             /* ENG_PART */
+									, IMC.MODEL_YEAR                                           /* 차량년식 */
+                               FROM   VW_ITGRT_CAR VW
+                                      ,IF_MNTNC_CAR IMC
+                                      ,IF_SALE_CAR ISC
+                               WHERE 1=1
+                               AND VW.VIN = IMC.VIN(+)
+                               AND VW.VIN = ISC.VIN(+)
+                             )IMC
+                        WHERE 1=1
+                        AND CCM.CSTMR_ESNTL_ID = CIL.CSTMR_CD(+)
+                        AND (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO) = IMC.VIN(+)
+                        AND IMC.DEALER_CD = DCC.DEALER_CD(+) AND IMC.MODEL_CD = DCC.MODEL_CD(+) AND IMC.SPEC_CD = DCC.CAR_CD(+) AND IMC.OUT_COLOR_CD = DCC.COLOR_CD(+)  /*4색상*/
+						/*AND (IMC.VIN||IMC.VEHI_NO01||IMC.VEHI_NO02) = (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO||CIL.VEHI_NO01||CIL.VEHI_NO02)*/
+						/*AND   CCM.CSTMR_ESNTL_ID > '0'*/
+    ]]>
+        <isNotEmpty property="cstmrNm" prepend="AND">
+        <![CDATA[
+                              CIL.CUST_NM LIKE '%'||#cstmrNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              SUBSTR(CIL.BIRTH_SEX,1,6) LIKE '%'||REGEXP_REPLACE(#brthdy#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="hpno" prepend="AND">
+        <![CDATA[
+                              CIL.HAND_PHONE_NO LIKE '%'||REGEXP_REPLACE(#hpno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              CIL.E_MAIL LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="houseAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(CCM.HOUSE_ADRES||CCM.HOUSE_ADRES_DETAIL,' ','') LIKE '%'||REPLACE(#houseAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="vin" prepend="AND">
+        <![CDATA[
+                              IMC.VIN LIKE '%'||#vin#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="vhcleNo" prepend="AND">
+        <![CDATA[
+                              NVL(CCM.VHCLE_NO,IMC.VEHI_NO01||IMC.VEHI_NO02) LIKE '%'||#vhcleNo#||'%'
+        ]]>
+        </isNotEmpty>
+
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+    <select id="EC4cstmrIntgrMngSQL.existCstmrSearchListCnt" parameterClass="searchVo" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+        FROM CA_ITGRT_CSTMR CCM
+            ,DZR_CAR_COLOR DCC
+            ,CSTMR_INFO_LINK_MNG CIL
+            ,(SELECT
+                  ISC.DEALER_CD
+                  ,ISC.BUSINESS_ID
+                  ,ISC.MODEL_CD
+                  ,ISC.SPEC_CD
+                  ,NVL(IMC.COLR_BODY,ISC.OUT_COLOR_CD) AS OUT_COLOR_CD
+                  ,ISC.IN_COLOR_CD
+                  ,VW.VIN
+					, IMC.VEHI_NO01                                            /* 차량번호1 */
+					, IMC.VEHI_NO02                                            /* 차량번호2 */
+					, IMC.BOSS_NAME                                            /* 소유자 */
+					, IMC.MAKER                                                /* 메이커 */
+					, IMC.MDL_YEAR                                             /* 년식 */
+					, IMC.SALE_MDL                                             /* 차종코드 */
+					, IMC.TYPE_YEAR                                            /* 타입년식 */
+					, IMC.ENGN_NO                                              /* 엔진번호 */
+					, IMC.PROD_NO                                              /* PROD_NO */
+					, IMC.DELI_MAST_NO                                         /* 출고번호 */
+					, IMC.PROD_EVNT                                            /* 차량상태 */
+					, IMC.MFG_DATE                                             /* 제작완료일 */
+					, IMC.DELI_DATE                                            /* 출고년월일 */
+					, IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+					, IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+					, TO_CHAR(IMC.LAST_RCPT_DATE,'YYYY-MM-DD') AS LAST_RCPT_DATE                                       /* 최종입고일자 */
+					, IMC.LAST_READ_KM                                         /* 최종주행거리 */
+					, IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+					, IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+					, IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+					, IMC.AREA_CODE                                            /* 지역코드 */
+					, IMC.COLR_CODE                                            /* 색상코드 */
+					, IMC.COLR_BODY                                            /* 차량색상 */
+					, IMC.COLR_TRIM                                            /* 트림색상 */
+					, IMC.RCPT_CNT                                             /* 입고카운트 */
+					, IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+					, IMC.SALE_TYPE                                            /* 판매유형 */
+					, IMC.USE_CODE                                             /* 용도 */
+					, IMC.SPCL_CODE                                            /* 특별관리코드 */
+					, IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+					, IMC.EXPT_COND                                            /* 수출차량여부 */
+					, IMC.REGI_COND                                            /* 등록구분코드 */
+					, IMC.REG_DTTM                                             /* 등록일시 */
+					, IMC.OPTN_01                                              /* 옵션1 */
+					, IMC.OPTN_02                                              /* 옵션2 */
+					, IMC.OPTN_03                                              /* 옵션3 */
+					, IMC.OPTN_04                                              /* 옵션4 */
+					, IMC.OPTN_05                                              /* 옵션5 */
+					, IMC.MISN_LOT                                             /* 미션로트 */
+					, IMC.ECM_LOT                                              /* ECM로트 */
+					, IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+					, IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+					, IMC.JOB_FLAG                                             /* 작업구분 */
+					, IMC.RESN_FLAG                                            /* 결함원인코드 */
+					, IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+					, IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+					, IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+					, IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+					, IMC.ENG_TYPE                                             /* ENG_TYPE */
+					, IMC.ENG_PART                                             /* ENG_PART */
+					, IMC.MODEL_YEAR                                           /* 차량년식 */
+               FROM   VW_ITGRT_CAR VW
+                      ,IF_MNTNC_CAR IMC
+                      ,IF_SALE_CAR ISC
+               WHERE 1=1
+               AND VW.VIN = IMC.VIN(+)
+               AND VW.VIN = ISC.VIN(+)
+             )IMC
+        WHERE 1=1
+        AND CCM.CSTMR_ESNTL_ID = CIL.CSTMR_CD(+)
+        AND (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO) = IMC.VIN(+)
+        AND IMC.DEALER_CD = DCC.DEALER_CD(+) AND IMC.MODEL_CD = DCC.MODEL_CD(+) AND IMC.SPEC_CD = DCC.CAR_CD(+) AND IMC.OUT_COLOR_CD = DCC.COLOR_CD(+)  /*4색상*/
+		/*AND (IMC.VIN||IMC.VEHI_NO01||IMC.VEHI_NO02) = (CIL.VIN_COMP||CIL.VIN_TYPE||CIL.VIN_CHECK||CIL.VIN_MDL_YEAR||CIL.VIN_PLAN||CIL.VIN_BODY_NO||CIL.VEHI_NO01||CIL.VEHI_NO02)*/
+		/*AND   CCM.CSTMR_ESNTL_ID > '0'*/
+    ]]>
+        <isNotEmpty property="cstmrNm" prepend="AND">
+        <![CDATA[
+                              CIL.CUST_NM LIKE '%'||#cstmrNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              SUBSTR(CIL.BIRTH_SEX,1,6) LIKE '%'||REGEXP_REPLACE(#brthdy#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="hpno" prepend="AND">
+        <![CDATA[
+                              CIL.HAND_PHONE_NO LIKE '%'||REGEXP_REPLACE(#hpno#, '[^0-9]+')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              CIL.E_MAIL LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="houseAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(CCM.HOUSE_ADRES||CCM.HOUSE_ADRES_DETAIL,' ','') LIKE '%'||REPLACE(#houseAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="vin" prepend="AND">
+        <![CDATA[
+                              IMC.VIN LIKE '%'||#vin#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="vhcleNo" prepend="AND">
+        <![CDATA[
+                              NVL(CCM.VHCLE_NO,IMC.VEHI_NO01||IMC.VEHI_NO02) LIKE '%'||#vhcleNo#||'%'
+        ]]>
+        </isNotEmpty>
+    </select>
+    
+    
+    
+    
+    
+	
+	<select id="EC4cstmrIntgrMngSQL.getNextRelSeq" parameterClass="searchVo" resultClass="java.lang.String">
+		<![CDATA[
+			SELECT
+				CSTMR_INFO_RELSEQ.NEXTVAL AS REL_SEQ
+			FROM DUAL	
+		]]>
+	</select>
+
+
+
+
+    <!--
+        쿼리명 : 고객링크테이블등록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.07   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2019.01.07
+    -->
+    <insert id="EC4cstmrIntgrMngSQL.insertCstmrInfoLinkMng">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CSTMR_INFO_LINK_MNG
+		      (
+			        REL_SEQ                        /* PK 순번 */
+			      , REL_KND                        /* 링크 구분 S:판매, A:정비, E:기타 */
+			      , DEALER_CD                      /* 판매-딜러코드 */
+			      , BIRTH_SEX                      /* 판매,정비 - 주민번호앞자리+성별 */
+			      , HAND_PHONE_NO                  /* 핸드폰번호 */
+			      , CUST_NM                        /* 판매,정비 고객명 */
+			      , E_MAIL                         /* 판매,정비 이메일 */
+			      , VIN_COMP                       /* 정비 차대번호1 */
+			      , VIN_TYPE                       /* 정비 차대번호2 */
+			      , VIN_CHECK                      /* 정비 차대번호3 */
+			      , VIN_MDL_YEAR                   /* 정비 차대번호4 */
+			      , VIN_PLAN                       /* 정비 차대번호5 */
+			      , VIN_BODY_NO                    /* 정비 차대번호6 */
+			      , VIN_DUP                        /* 정비 차대번호7 */
+			      , VEHI_NO01                      /* 차량번호1 */
+			      , VEHI_NO02                      /* 차량번호2 */
+			      , CSTMR_CD                       /* 콜고객코드  CA_ITGRT_CSTMR.CSTMR_ESNTL_ID */
+			      , REGIST_DE                      /* 등록일자 */
+			      , REGISTER_ID                    /* 등록자 */
+			      , UPDT_DE                        /* 수정일자 */
+			      , UPDUSR_ID                      /* 수정자 */
+		      )
+		VALUES
+		      (
+			        #relSeq#                         /* PK 순번 */
+			      , #relKnd#                         /* 링크 구분 S:판매, A:정비, C:콜, E:기타 */
+			      , #dealerCd#                       /* 판매-딜러코드 */
+			      , REGEXP_REPLACE(#birthSex#, '[^0-9]+')                       /* 판매,정비 - 주민번호앞자리+성별 */
+			      , REGEXP_REPLACE(#handPhoneNo#, '[^0-9]+')                    /* 핸드폰번호 */
+			      , #custNm#                         /* 판매,정비 고객명 */
+			      , (DECODE(#emailDomain#,NULL,'',#emailAdres#||'@'||#emailDomain#))                          /* 판매,정비 이메일 */
+			      , #vinComp#                        /* 정비 차대번호1 */
+			      , #vinType#                        /* 정비 차대번호2 */
+			      , #vinCheck#                       /* 정비 차대번호3 */
+			      , #vinMdlYear#                     /* 정비 차대번호4 */
+			      , #vinPlan#                        /* 정비 차대번호5 */
+			      , #vinBodyNo#                      /* 정비 차대번호6 */
+			      , #vinDup#                         /* 정비 차대번호7 */
+			      /* , vehiNo01                       차량번호1 */
+			      /* , vehiNo02                       차량번호2 */
+			      , (SUBSTR(#vhcleNo#,1,(REGEXP_INSTR(REPLACE(TO_SINGLE_BYTE(#vhcleNo#),' ',''), '[^[:digit:]]'))))
+			      , (SUBSTR(#vhcleNo#,(REGEXP_INSTR(REPLACE(TO_SINGLE_BYTE(#vhcleNo#),' ',''), '[^[:digit:]]'))+1))
+			      , #cstmrCd#                        /* 콜고객코드  CA_ITGRT_CSTMR.CSTMR_ESNTL_ID */
+			      , SYSDATE                       /* 등록일자 */
+			      , #register#                     /* 등록자 */
+			      , SYSDATE                         /* 수정일자 */
+			      , #updusr#                       /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 고객링크테이블등록에 의한 차량취득테이블 등록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.07   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2019.01.07
+    -->
+    <insert id="EC4cstmrIntgrMngSQL.insertCstmrLinkCarAcqs">
+    <![CDATA[
+            MERGE INTO CA_CAR_ACQS SP          
+            USING (
+                    SELECT   
+                             #cstmrCd#    								AS     CSTMR_ESNTL_ID                 /* 고객 고유 ID */
+                            ,(SELECT NVL(MAX(CSTMR_VHCLE_SEQ),0)+1 
+                            	FROM CA_CAR_ACQS 
+                            	WHERE CSTMR_ESNTL_ID = #cstmrCd#)       AS     CSTMR_VHCLE_SEQ
+                            ,#vin#    				AS     VHCLE_ESNTL_ID                 /* 차량 고유 ID */
+                            ,#acqdt#             			AS     ACQDT                          /* 취득일 */
+                            ,#acqspc#            			AS     ACQSPC                         /* 취득가격 */
+                            ,#acqstx#            			AS     ACQSTX                         /* 취득세 */
+                            ,#acqsTyCode#      		AS     ACQS_TY_CODE                   /* 취득 유형 코드 */
+                            ,#vmcd#              			AS     VMCD                           /* 제작사 브랜드코드 */
+                            ,#vhctCd#           			AS     VHCT_CD                        /* 차종코드 */
+                            ,#vhclMdl#          			AS     VHCL_MDL                       /* 모델코드 */
+                            ,#vhclDetlMdl#     		AS     VHCL_DETL_MDL                  /* 상세모델코드 */
+                            ,#vhcleNo#          			AS     VHCLE_NO                       /* 차량번호 */
+                    FROM DUAL    
+                    ) MIGDATA
+            ON(    
+                    SP.CSTMR_ESNTL_ID||SP.VHCLE_ESNTL_ID||SP.VHCLE_NO
+                    = 
+                    MIGDATA.CSTMR_ESNTL_ID||MIGDATA.VHCLE_ESNTL_ID||MIGDATA.VHCLE_NO
+
+            )                    
+            WHEN MATCHED THEN                     
+             UPDATE SET    
+						 SP.ACQDT			=	 NVL(MIGDATA.ACQDT, SP.ACQDT)                          /* 취득일 */
+						,SP.ACQSPC			=	 NVL(MIGDATA.ACQSPC, SP.ACQSPC)                         /* 취득가격 */
+						,SP.ACQSTX			=	 NVL(MIGDATA.ACQSTX, SP.ACQSTX)                         /* 취득세 */
+						,SP.ACQS_TY_CODE	=	 NVL(MIGDATA.ACQS_TY_CODE, SP.ACQS_TY_CODE)                   /* 취득 유형 코드 */
+						,SP.VMCD			=	 NVL(MIGDATA.VMCD, SP.VMCD)                           /* 제작사 브랜드코드 */
+						,SP.VHCT_CD			=	 NVL(MIGDATA.VHCT_CD, SP.VHCT_CD)                        /* 차종코드 */
+						,SP.VHCL_MDL		=	 NVL(MIGDATA.VHCL_MDL, SP.VHCL_MDL)                       /* 모델코드 */
+						,SP.VHCL_DETL_MDL	=	 NVL(MIGDATA.VHCL_DETL_MDL, SP.VHCL_DETL_MDL)                  /* 상세모델코드 */
+            WHEN NOT MATCHED THEN                 
+             INSERT (
+                             SP.CSTMR_ESNTL_ID
+                            ,SP.CSTMR_VHCLE_SEQ
+                            ,SP.VHCLE_ESNTL_ID
+                            ,SP.ACQDT
+                            ,SP.ACQSPC
+                            ,SP.ACQSTX
+                            ,SP.ACQS_TY_CODE
+                            ,SP.VMCD
+                            ,SP.VHCT_CD
+                            ,SP.VHCL_MDL
+                            ,SP.VHCL_DETL_MDL
+                            ,SP.VHCLE_NO
+            )    
+            VALUES    (        
+                             MIGDATA.CSTMR_ESNTL_ID
+                            ,MIGDATA.CSTMR_VHCLE_SEQ
+                            ,MIGDATA.VHCLE_ESNTL_ID
+                            ,MIGDATA.ACQDT
+                            ,MIGDATA.ACQSPC
+                            ,MIGDATA.ACQSTX
+                            ,MIGDATA.ACQS_TY_CODE
+                            ,MIGDATA.VMCD
+                            ,MIGDATA.VHCT_CD
+                            ,MIGDATA.VHCL_MDL
+                            ,MIGDATA.VHCL_DETL_MDL
+                            ,MIGDATA.VHCLE_NO
+            )
+    ]]>
+    </insert>
+
+
+    <!--
+        쿼리명 : 고객정보 수정
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.07    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.01.07
+    -->
+    <update id="EC4cstmrIntgrMngSQL.updateCstmrIntgrLinkMng">
+    <![CDATA[
+        UPDATE
+                CA_ITGRT_CSTMR
+           SET
+			        CSTMR_NM                           = #cstmrNm#                          /* 콜고객명 */
+			      , HPNO                               = REGEXP_REPLACE(#hpno#, '[^0-9]+')                             /* 핸드폰번호 */
+			      , EMAIL_ADRES                        = #emailAdres#                       /* 이메일주소 */
+			      , EMAIL_DOMAIN                       = #emailDomain#                      /* 이메일도메인 */
+			      , VHCLE_NO                           = #vhcleNo#                          /* 차량번호 */
+			      , HOUSE_ZIP                          = #houseZip#                         /* 집우편번호 */
+			      , HOUSE_ADRES                        = #houseAdres#                       /* 집주소 */
+			      , HOUSE_ADRES_DETAIL                 = #houseAdresDetail#                 /* 집주소상세 */
+			      , UPDT_DE                            = SYSDATE                           /* 수정일자 */
+			      , UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE CSTMR_ESNTL_ID                           = #cstmrCd#                          /* 콜고객코드 */
+    ]]>
+    </update> 
+
+
+    <!--
+        쿼리명 : 고객통합정보 수정
+        설  명 :
+        수정일        수정자    수정내용
+        2019.02.07    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.02.07
+    -->
+    <update id="EC4cstmrIntgrMngSQL.updateCstmrIntgrMng">
+    <![CDATA[
+        UPDATE
+                CA_ITGRT_CSTMR
+           SET
+			        CSTMR_NM                           = #cstmrNm#                          /* 콜고객명 */
+					, HPNO                             = REGEXP_REPLACE(#hpno#, '[^0-9]+')                             /* 핸드폰번호 */
+					, TELNO                            = #telno#                            /* 전화번호 */
+					, SEX_KND                          = #sexKnd#                           /* 성별구분  1,3,9:남자 / 2,4,0:여자 */
+					, BRTHDY                           = REGEXP_REPLACE(#brthdy#, '[^0-9]+')/* 생년월일 */
+					, EMAIL_ADRES                      = #emailAdres#                       /* 이메일주소 */
+					, EMAIL_DOMAIN                     = #emailDomain#                      /* 이메일도메인 */
+					, VHCLE_NO                         = #vhcleNo#                          /* 차량번호 */
+					, VIN                              = #vin#                              /* 차대번호 */
+					, HOUSE_ZIP                        = #houseZip#                         /* 집우편번호 */
+					, HOUSE_ADRES                      = #houseAdres#                       /* 집주소 */
+					, HOUSE_ADRES_DETAIL               = #houseAdresDetail#                 /* 집주소상세 */
+					, OFFICE_ZIP                       = #officeZip#                        /* 직장우편번호 */
+					, OFFICE_ADRES                     = #officeAdres#                      /* 직장주소 */
+					, OFFICE_ADRES_DETAIL              = #officeAdresDetail#                /* 직장주소상세 */
+					, TEL_RECV_YN                      = #telRecvYn#                        /* 전화수신여부 */
+					, SMS_RECV_YN                      = #smsRecvYn#                        /* SMS수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE SMS */
+					, EMAIL_RECV_YN                    = #emailRecvYn#                      /* 이메일수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE EMAIL */
+					, FAX_RECV_YN                      = #faxRecvYn#                        /* FAX수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE FAX */
+					, DM_RECV_YN                       = #dmRecvYn#                         /* DM수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE DM */
+					, MBER_GRAD                        = #mberGrad#                         /* 회원등급 */
+					, CHEV_MEMB_YN                     = #chevMembYn#                       /* 쉐보레멤버여부 */
+					, WEB_MEMB_YN                      = #webMembYn#                        /* 웹멤버여부 */
+					, WUTO_MEMB_YN                     = #wutoMembYn#                       /* 오토멤버여부 */
+					, CSTMR_MEMO                       = #cstmrMemo#                        /* 고객메모 */
+					, UPDT_DE                          = SYSDATE                            /* 수정일자 */
+					, UPDUSR                           = #updusr#                           /* 수정자 */
+         WHERE CSTMR_ESNTL_ID                           = #cstmrCd#                          /* 콜고객코드 */
+    ]]>
+    </update> 
+
+
+    <!--
+        쿼리명 : 고객통합정보 링크테이블 수정
+        설  명 :
+        수정일        수정자    수정내용
+        2019.02.11    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.02.11
+    -->
+    <update id="EC4cstmrIntgrMngSQL.updateCstmrInfoLinkMng">
+    <![CDATA[
+        UPDATE
+                CSTMR_INFO_LINK_MNG
+           SET
+		        DEALER_CD                          = #dealerCd#                         /* 판매-딜러코드 */
+		      , BIRTH_SEX                          = REGEXP_REPLACE(#birthSex#, '[^0-9]+')                         /* 판매,정비 - 주민번호앞자리+성별 */
+		      , HAND_PHONE_NO                      = REGEXP_REPLACE(#handPhoneNo#, '[^0-9]+')                      /* 핸드폰번호 */
+		      , CUST_NM                            = #custNm#                           /* 판매,정비 고객명 */
+		      , E_MAIL                             = #eMail#                            /* 판매,정비 이메일 */
+		      , VIN_COMP                           = #vinComp#                          /* 정비 차대번호1 */
+		      , VIN_TYPE                           = #vinType#                          /* 정비 차대번호2 */
+		      , VIN_CHECK                          = #vinCheck#                         /* 정비 차대번호3 */
+		      , VIN_MDL_YEAR                       = #vinMdlYear#                       /* 정비 차대번호4 */
+		      , VIN_PLAN                           = #vinPlan#                          /* 정비 차대번호5 */
+		      , VIN_BODY_NO                        = #vinBodyNo#                        /* 정비 차대번호6 */
+		      , VIN_DUP                            = #vinDup#                           /* 정비 차대번호7 */
+		      /*, VEHI_NO01                          = vehiNo01                          차량번호1 */
+		      /*, VEHI_NO02                          = vehiNo02                          차량번호2 */
+		      , VEHI_NO01 = (SUBSTR(#vhcleNo#,1,(REGEXP_INSTR(REPLACE(TO_SINGLE_BYTE(#vhcleNo#),' ',''), '[^[:digit:]]'))))
+		      , VEHI_NO02 = (SUBSTR(#vhcleNo#,(REGEXP_INSTR(REPLACE(TO_SINGLE_BYTE(#vhcleNo#),' ',''), '[^[:digit:]]'))+1))
+		      /*, CSTMR_CD                           = cstmrCd                           콜고객코드  CALL_CSTMR_INFO_MNG.CSTMR_CD */
+		      , UPDT_DE                            = SYSDATE                           /* 수정일자 */
+		      , UPDUSR_ID                          = #updusr#                         /* 수정자 */
+         WHERE  REL_SEQ                            = #relSeq#                           /* PK 순번 */
+	     AND	REL_KND                            = #relKnd#                           /* 링크 구분 S:판매, A:정비, E:기타 */
+
+    ]]>
+    </update> 
+    
+    
+
+
+    <!--
+        쿼리명 : 고객링크테이블 최종 처리
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.07    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.01.07
+    -->
+    <update id="EC4cstmrIntgrMngSQL.updateCstmrFinalYn">
+    <![CDATA[
+    	DECLARE
+    		V_VNT NUMBER;
+    	BEGIN
+		     UPDATE CSTMR_INFO_LINK_MNG SET CSTMR_FINAL_YN = 'Y'
+		     WHERE REL_SEQ = #relSeq#;
+    	
+		     UPDATE CSTMR_INFO_LINK_MNG SET CSTMR_FINAL_YN = NULL
+		     WHERE REL_SEQ != #relSeq#
+		     AND CSTMR_CD = #cstmrCd#;
+    	END;
+    ]]>
+    </update> 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+    <!--
+        쿼리명 : 고객소유차량조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.09    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.01.09
+    -->
+    <select id="EC4cstmrIntgrMngSQL.cstmrOwnerCarList" parameterClass="searchVo" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+						        CCA.CSTMR_ESNTL_ID
+						        ,CCA.CSTMR_VHCLE_SEQ
+						        ,CCA.VHCLE_ESNTL_ID
+						        ,CCA.VHCLE_ESNTL_ID AS VIN
+						        ,CCA.ACQDT
+						        ,CCA.ACQSPC
+						        ,CCA.ACQSTX
+						        ,CCA.ACQS_TY_CODE
+						        ,CCA.VMCD
+						        ,CCA.VHCT_CD
+						        ,CCA.VHCL_MDL
+	                            ,NVL(CCA.VHCL_MDL,(SELECT VHCLE_MODEL_ID FROM SI_VHCLE_DETAIL_MODEL WHERE IF_MDL_CODE = IFV.SALE_MDL)) AS MODEL_CD
+	                            ,(CASE
+	                            		WHEN CCA.VHCL_MDL IS NOT NULL THEN
+																			(SELECT A.VHCLE_MODEL_NM 
+											                            	FROM SI_VHCLE_MODEL A 
+											                            	WHERE A.VHCLE_MODEL_ID = CCA.VHCL_MDL)
+	                            		ELSE
+												(SELECT A.VHCLE_MODEL_NM 
+				                            	FROM SI_VHCLE_MODEL A, SI_VHCLE_DETAIL_MODEL B 
+				                            	WHERE A.VHCLE_MODEL_ID = B.VHCLE_MODEL_ID AND B.IF_MDL_CODE = IFV.SALE_MDL)
+	                            		END) AS MODEL_NM
+						        ,CCA.VHCL_DETL_MDL
+						        ,NVL(CCA.VHCLE_NO, IFV.VHCLE_NO) AS VHCLE_NO
+						        ,IFV.DEALER_CD
+						        ,IFV.BUSINESS_ID
+						        /*,IFV.MODEL_CD*/
+						        ,IFV.SPEC_CD
+						        ,IFV.OUT_COLOR_CD
+						        ,IFV.IN_COLOR_CD
+						        ,IFV.IF_KND
+						        ,(DECODE(IFV.IF_KND,'A','정비','판매')) AS IF_KND_NM
+						        ,IFV.TRS_SITE_CD /* 운송의뢰출하장 */
+						        ,IFV.TRS_REQ_DT  /* 운송의뢰일자 */
+						        ,IFV.TRS_RET_DT  /* 반송일자 */
+						        ,IFV.TRS_REQREAL_DT /* 실배송일 */
+						        ,IFV.DELV_DT /* 인도일자 */
+						        ,IFV.TRS_START_DT /* 운송출발일자 */
+						        ,IFV.CONS_START_DT /* 탁송출발일자 */
+						        ,IFV.TAKE_DT /* 고객인수일 */
+						        ,IFV.VEHI_NO01                                            /* 차량번호1 */
+						        ,IFV.VEHI_NO02                                            /* 차량번호2 */
+						        ,IFV.BOSS_NAME                                            /* 소유자 */
+						        ,IFV.MAKER                                                /* 메이커 */
+						        ,IFV.MDL_YEAR                                             /* 년식 */
+						        ,IFV.SALE_MDL                                             /* 차종코드 */
+						        ,IFV.TYPE_YEAR                                            /* 타입년식 */
+						        ,IFV.ENGN_NO                                              /* 엔진번호 */
+						        ,IFV.PROD_NO                                              /* PROD_NO */
+						        ,IFV.DELI_MAST_NO                                         /* 출고번호 */
+						        ,IFV.PROD_EVNT                                            /* 차량상태 */
+						        ,IFV.MFG_DATE                                             /* 제작완료일 */
+						        ,IFV.DELI_DATE                                            /* 출고년월일 */
+						        ,IFV.FRST_INSP_DATE                                       /* 최초입고일자 */
+						        ,IFV.NEXT_INSP_DATE                                       /* 차기입고일자 */
+						        ,IFV.LAST_RCPT_DATE                                       /* 최종입고일자 */
+						        ,IFV.LAST_READ_KM                                         /* 최종주행거리 */
+						        ,IFV.LAST_CUST_TYPE                                       /* 최종공장타입 */
+						        ,IFV.LAST_CUST_CODE                                       /* 최종공장코드 */
+						        ,IFV.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+						        ,IFV.AREA_CODE                                            /* 지역코드 */
+						        ,IFV.COLR_CODE                                            /* 색상코드 */
+						        ,IFV.COLR_BODY                                            /* 차량색상 */
+						        ,IFV.COLR_TRIM                                            /* 트림색상 */
+						        ,IFV.RCPT_CNT                                             /* 입고카운트 */
+						        ,IFV.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+						        ,IFV.SALE_TYPE                                            /* 판매유형 */
+						        ,IFV.USE_CODE                                             /* 용도 */
+						        ,IFV.SPCL_CODE                                            /* 특별관리코드 */
+						        ,IFV.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+						        ,IFV.EXPT_COND                                            /* 수출차량여부 */
+						        ,IFV.REGI_COND                                            /* 등록구분코드 */
+						        ,IFV.REG_DTTM                                             /* 등록일시 */
+						        ,IFV.OPTN_01                                              /* 옵션1 */
+						        ,IFV.OPTN_02                                              /* 옵션2 */
+						        ,IFV.OPTN_03                                              /* 옵션3 */
+						        ,IFV.OPTN_04                                              /* 옵션4 */
+						        ,IFV.OPTN_05                                              /* 옵션5 */
+						        ,IFV.MISN_LOT                                             /* 미션로트 */
+						        ,IFV.ECM_LOT                                              /* ECM로트 */
+						        ,IFV.WARR_RQST_CNT                                        /* 보증청구횟수 */
+						        ,IFV.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+						        ,IFV.JOB_FLAG                                             /* 작업구분 */
+						        ,IFV.RESN_FLAG                                            /* 결함원인코드 */
+						        ,IFV.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+						        ,IFV.DAY_READ_KM                                          /* 일평균주행거리 */
+						        ,IFV.SALE_EMPL_NO                                         /* 판매사원번호 */
+						        ,IFV.AVG_READ_KM                                          /* 전체평균주행거리 */
+						        ,IFV.ENG_TYPE                                             /* ENG_TYPE */
+						        ,IFV.ENG_PART                                             /* ENG_PART */
+						        ,IFV.MODEL_YEAR                                           /* 차량년식 */
+						        ,IFV.OPTION_NM  /* 옵션명 */
+                                ,DECODE(NVL(IFV.ENVCERT_NO,'X'),'X','N','Y') AS ENVCERT_YN /* 저공해여부 */
+                                ,IFV.ENVCERT_NO /* 저공해인증번호 */
+						        ,DCC.COLOR_KOR AS COLOR_NM
+                                ,(CASE WHEN IF_KND = 'A' THEN (SELECT FIRM_NAME FROM IF_REPLC WHERE CUST_TYPE = IFV.LAST_CUST_TYPE AND CUST_CODE = IFV.LAST_CUST_CODE AND MAKER = IFV.MAKER) 
+                                       WHEN IF_KND = 'S' THEN (SELECT BRCH_NM FROM IF_DELIVY WHERE CHASSIS_NO = IFV.VIN) /*최종매출은 CONTRACT_STAT='30' AND OUT_DT IS NOT NULL */
+                                       ELSE '' END) AS LAST_CUST_NM
+						FROM CA_CAR_ACQS CCA
+						,(
+						    SELECT 
+						          ISC.DEALER_CD
+						          ,ISC.BUSINESS_ID
+						          ,ISC.MODEL_CD
+						          ,ISC.SPEC_CD
+						          ,NVL(IMC.COLR_BODY,ISC.OUT_COLOR_CD) AS OUT_COLOR_CD
+						          ,ISC.IN_COLOR_CD
+						            ,(CASE WHEN IMC.VIN IS NOT NULL THEN 'A'
+						                 WHEN ISC.VIN IS NOT NULL THEN 'S' 
+						                 ELSE 'X' END) AS IF_KND
+						            ,VW.VIN
+						            ,IMC.VEHI_NO01||IMC.VEHI_NO02 AS VHCLE_NO
+						            ,ISC.TRS_SITE_CD /* 운송의뢰출하장 */
+						            ,ISC.TRS_REQ_DT  /* 운송의뢰일자 */
+						            ,ISC.TRS_RET_DT  /* 반송일자 */
+						            ,ISC.TRS_REQREAL_DT /* 실배송일 */
+						            ,ISC.DELV_DT /* 인도일자 */
+						            ,ISC.TRS_START_DT /* 운송출발일자 */
+						            ,ISC.CONS_START_DT /* 탁송출발일자 */
+						            ,ISC.TAKE_DT /* 고객인수일 */
+						            ,IMC.VEHI_NO01                                            /* 차량번호1 */
+						            ,IMC.VEHI_NO02                                            /* 차량번호2 */
+						            ,IMC.BOSS_NAME                                            /* 소유자 */
+						            ,IMC.MAKER                                                /* 메이커 */
+						            ,IMC.MDL_YEAR                                             /* 년식 */
+						            ,IMC.SALE_MDL                                             /* 차종코드 */
+						            ,IMC.TYPE_YEAR                                            /* 타입년식 */
+						            ,IMC.ENGN_NO                                              /* 엔진번호 */
+						            ,IMC.PROD_NO                                              /* PROD_NO */
+						            ,IMC.DELI_MAST_NO                                         /* 출고번호 */
+						            ,IMC.PROD_EVNT                                            /* 차량상태 */
+						            ,TO_CHAR(IMC.MFG_DATE,'YYYY-MM-DD') AS MFG_DATE           /* 제작완료일 */
+						            ,TO_CHAR(IMC.DELI_DATE,'YYYY-MM-DD') AS DELI_DATE         /* 출고년월일 */
+						            ,IMC.FRST_INSP_DATE                                       /* 최초입고일자 */
+						            ,IMC.NEXT_INSP_DATE                                       /* 차기입고일자 */
+						            ,TO_CHAR(IMC.LAST_RCPT_DATE,'YYYY-MM-DD') AS LAST_RCPT_DATE  /* 최종입고일자 */
+						            ,IMC.LAST_READ_KM                                         /* 최종주행거리 */
+						            ,IMC.LAST_CUST_TYPE                                       /* 최종공장타입 */
+						            ,IMC.LAST_CUST_CODE                                       /* 최종공장코드 */
+						            ,IMC.SALE_SHOP_CODE                                       /* 판매사업소코드 */
+						            ,IMC.AREA_CODE                                            /* 지역코드 */
+						            ,IMC.COLR_CODE                                            /* 색상코드 */
+						            ,IMC.COLR_BODY                                            /* 차량색상 */
+						            ,IMC.COLR_TRIM                                            /* 트림색상 */
+						            ,IMC.RCPT_CNT                                             /* 입고카운트 */
+						            ,IMC.WARR_RCPT_CNT                                        /* 보증입고카운트 */
+						            ,IMC.SALE_TYPE                                            /* 판매유형 */
+						            ,IMC.USE_CODE                                             /* 용도 */
+						            ,IMC.SPCL_CODE                                            /* 특별관리코드 */
+						            ,IMC.HIST_PRNT_FLAG                                       /* 정비이력출력여부 */
+						            ,IMC.EXPT_COND                                            /* 수출차량여부 */
+						            ,IMC.REGI_COND                                            /* 등록구분코드 */
+						            ,IMC.REG_DTTM                                             /* 등록일시 */
+						            ,IMC.OPTN_01                                              /* 옵션1 */
+						            ,IMC.OPTN_02                                              /* 옵션2 */
+						            ,IMC.OPTN_03                                              /* 옵션3 */
+						            ,IMC.OPTN_04                                              /* 옵션4 */
+						            ,IMC.OPTN_05                                              /* 옵션5 */
+						            ,IMC.MISN_LOT                                             /* 미션로트 */
+						            ,IMC.ECM_LOT                                              /* ECM로트 */
+						            ,IMC.WARR_RQST_CNT                                        /* 보증청구횟수 */
+						            ,IMC.RQST_CUM_DATE                                        /* 보증수리작업일자 */
+						            ,IMC.JOB_FLAG                                             /* 작업구분 */
+						            ,IMC.RESN_FLAG                                            /* 결함원인코드 */
+						            ,IMC.LAST_CHNG_DTTM                                       /* 최종수정일시 */
+						            ,IMC.DAY_READ_KM                                          /* 일평균주행거리 */
+						            ,IMC.SALE_EMPL_NO                                         /* 판매사원번호 */
+						            ,IMC.AVG_READ_KM                                          /* 전체평균주행거리 */
+						            ,IMC.ENG_TYPE                                             /* ENG_TYPE */
+						            ,IMC.ENG_PART                                             /* ENG_PART */
+						            ,IMC.MODEL_YEAR                                           /* 차량년식 */
+						            ,(CASE
+						            		WHEN ISC.VIN IS NOT NULL THEN FN_GET_OPTIONS_NM(IDV.DEALER_CD,IDV.BUSINESS_ID,IDV.MODEL_CD,IDV.CAR_CD,IDV.OPTION_CD)
+						            		ELSE FN_GET_OPTIONS_NM(IMV.DEALER_CD,IMV.BUSINESS_ID,IMV.MODEL_CD,IMV.CAR_CD,IMV.OPTION_CD)
+						              END) AS OPTION_NM
+                                    ,(CASE WHEN ISC.VIN IS NOT NULL THEN DSE.ENVCERT_NO ELSE DME.ENVCERT_NO END) AS ENVCERT_NO /* 인증번호 */
+						       FROM   VW_ITGRT_CAR VW
+						              ,IF_MNTNC_CAR IMC
+						              ,IF_SALE_CAR ISC
+                                      ,IF_DELIVY IDV
+                                      ,IF_DELIVY IMV
+                                      ,DCM_ENVCERT DSE
+                                      ,DCM_ENVCERT DME
+						       WHERE 1=1
+						       AND VW.VIN = IMC.VIN(+)
+						       AND VW.VIN = ISC.VIN(+)
+						       AND VW.VIN IS NOT NULL
+                               /*=========================*/
+                               AND ISC.VIN = IDV.CHASSIS_NO(+)
+                               AND IDV.CONTRACT_STATUS(+) NOT IN ('CC','DD') /*취소 고객제외*/   
+                               /*=========================*/
+                               AND IMC.VIN = IMV.CHASSIS_NO(+)
+                               AND IMV.CONTRACT_STATUS(+) NOT IN ('CC','DD') /*취소 고객제외*/   
+                               /*=========================*/
+                               AND IDV.DEALER_CD = DSE.DEALER_CD(+) AND IDV.CONTRACT_NO= DSE.CONTRACT_NO(+)
+                               AND IMV.DEALER_CD = DME.DEALER_CD(+) AND IMV.CONTRACT_NO= DME.CONTRACT_NO(+)
+						)IFV
+						,DZR_CAR_COLOR DCC
+						WHERE CCA.VHCLE_ESNTL_ID = IFV.VIN(+)
+						AND IFV.DEALER_CD = DCC.DEALER_CD(+) AND IFV.MODEL_CD = DCC.MODEL_CD(+) AND IFV.SPEC_CD = DCC.CAR_CD(+) AND IFV.OUT_COLOR_CD = DCC.COLOR_CD(+)  /*4색상*/
+						AND CCA.CSTMR_ESNTL_ID = #searchCstmrCd#
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+    <select id="EC4cstmrIntgrMngSQL.cstmrOwnerCarListCnt" parameterClass="searchVo" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+		FROM CA_CAR_ACQS CCA
+		,(
+		    SELECT 
+		          ISC.DEALER_CD
+		          ,ISC.BUSINESS_ID
+		          ,ISC.MODEL_CD
+		          ,ISC.SPEC_CD
+		          ,NVL(IMC.COLR_BODY,ISC.OUT_COLOR_CD) AS OUT_COLOR_CD
+		          ,ISC.IN_COLOR_CD
+		            ,(CASE WHEN IMC.VIN IS NOT NULL THEN 'A'
+		                 WHEN ISC.VIN IS NOT NULL THEN 'S' 
+		                 ELSE 'X' END) AS IF_KND
+		            ,VW.VIN
+		            ,IMC.VEHI_NO01||IMC.VEHI_NO02 AS VHCLE_NO
+	       FROM   VW_ITGRT_CAR VW
+	              ,IF_MNTNC_CAR IMC
+	              ,IF_SALE_CAR ISC
+                                 ,IF_DELIVY IDV
+                                 ,IF_DELIVY IMV
+                                 ,DCM_ENVCERT DSE
+                                 ,DCM_ENVCERT DME
+	       WHERE 1=1
+	       AND VW.VIN = IMC.VIN(+)
+	       AND VW.VIN = ISC.VIN(+)
+	       AND VW.VIN IS NOT NULL
+           /*=========================*/
+           AND ISC.VIN = IDV.CHASSIS_NO(+)
+           AND IDV.CONTRACT_STATUS(+) NOT IN ('CC','DD') /*취소 고객제외*/   
+           /*=========================*/
+           AND IMC.VIN = IMV.CHASSIS_NO(+)
+           AND IMV.CONTRACT_STATUS(+) NOT IN ('CC','DD') /*취소 고객제외*/   
+           /*=========================*/
+           AND IDV.DEALER_CD = DSE.DEALER_CD(+) AND IDV.CONTRACT_NO= DSE.CONTRACT_NO(+)
+           AND IMV.DEALER_CD = DME.DEALER_CD(+) AND IMV.CONTRACT_NO= DME.CONTRACT_NO(+)
+		)IFV
+		,DZR_CAR_COLOR DCC
+		WHERE CCA.VHCLE_ESNTL_ID = IFV.VIN(+)
+		AND IFV.DEALER_CD = DCC.DEALER_CD(+) AND IFV.MODEL_CD = DCC.MODEL_CD(+) AND IFV.SPEC_CD = DCC.CAR_CD(+) AND IFV.OUT_COLOR_CD = DCC.COLOR_CD(+)  /*4색상*/
+		AND CCA.CSTMR_ESNTL_ID = #searchCstmrCd#
+    ]]>
+    </select>
+
+
+
+    <!--
+        쿼리명 : 고객통합정보 수정 select
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.11    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.02.11
+    -->
+    <select id="EC4cstmrIntgrMngSQL.selectCstmrIntgrMngMod" parameterClass="cstmrIntgrMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+			        C.CSTMR_ESNTL_ID                  AS "cstmrEsntlId"                             /* 콜고객코드 */
+			      , C.CSTMR_ESNTL_ID                  AS "cstmrCd"                             	  /* 콜고객코드 */
+			      , C.CSTMR_NM                        AS "cstmrNm"                                  /* 콜고객명 */
+			      , C.HPNO                            AS "hpno"                                     /* 핸드폰번호 */
+			      , C.TELNO                           AS "telno"                                    /* 전화번호 */
+			      , C.SEX_KND                         AS "sexKnd"                                   /* 성별구분  1,3,9:남자 / 2,4,0:여자 */
+			      , C.BRTHDY                          AS "brthdy"                                   /* 생년월일 */
+			      , C.EMAIL_ADRES                     AS "emailAdres"                               /* 이메일주소 */
+			      , C.EMAIL_DOMAIN                    AS "emailDomain"                              /* 이메일도메인 */
+			      , C.EMAIL_DOMAIN                    AS "selectEmailDomain"                              /* 이메일도메인 */
+			      , C.VHCLE_NO                        AS "vhcleNo"                                  /* 차량번호 */
+			      , C.VIN                             AS "vin"                                      /* 차대번호 */
+			      , C.HOUSE_ZIP                       AS "houseZip"                                 /* 집우편번호 */
+			      , C.HOUSE_ADRES                     AS "houseAdres"                               /* 집주소 */
+			      , C.HOUSE_ADRES_DETAIL              AS "houseAdresDetail"                         /* 집주소상세 */
+			      , C.OFFICE_ZIP                      AS "officeZip"                                /* 직장우편번호 */
+			      , C.OFFICE_ADRES                    AS "officeAdres"                              /* 직장주소 */
+			      , C.OFFICE_ADRES_DETAIL             AS "officeAdresDetail"                        /* 직장주소상세 */
+			      , C.TEL_RECV_YN                     AS "telRecvYn"                                /* 전화수신여부 */
+			      , C.SMS_RECV_YN                     AS "smsRecvYn"                                /* SMS수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE SMS */
+			      , C.EMAIL_RECV_YN                   AS "emailRecvYn"                              /* 이메일수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE EMAIL */
+			      , C.FAX_RECV_YN                     AS "faxRecvYn"                                /* FAX수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE FAX */
+			      , C.DM_RECV_YN                      AS "dmRecvYn"                                 /* DM수신여부 CA_PR_RECPTN.RECPTN_AGRE_SE_CODE DM */
+			      , C.MBER_GRAD                       AS "mberGrad"                                 /* 회원등급 */
+			      , C.CHEV_MEMB_YN                    AS "chevMembYn"                               /* 쉐보레멤버여부 */
+			      , C.WEB_MEMB_YN                     AS "webMembYn"                                /* 웹멤버여부 */
+			      , C.WUTO_MEMB_YN                    AS "wutoMembYn"                               /* 오토멤버여부 */
+			      , C.CSTMR_MEMO                      AS "cstmrMemo"                                /* 고객메모 */
+			      , C.REGIST_DE                       AS "registDe"                                 /* 등록일자 */
+			      , C.REGISTER                        AS "register"                                 /* 등록자 */
+			      , C.UPDT_DE                         AS "updtDe"                                   /* 수정일자 */
+			      , C.UPDUSR                          AS "updusr"                                   /* 수정자 */
+			      , CLL.REL_SEQ                         AS "relSeq"                                   /* PK 순번 */
+			      , CLL.REL_KND                         AS "relKnd"                                   /* 링크 구분 S:판매, A:정비, E:기타 */
+			      , CLL.DEALER_CD                       AS "dealerCd"                                 /* 판매-딜러코드 */
+			      , CLL.BIRTH_SEX                       AS "birthSex"                                 /* 판매,정비 - 주민번호앞자리+성별 */
+			      , CLL.HAND_PHONE_NO                   AS "handPhoneNo"                              /* 핸드폰번호 */
+			      , CLL.CUST_NM                         AS "custNm"                                   /* 판매,정비 고객명 */
+			      , CLL.E_MAIL                          AS "eMail"                                    /* 판매,정비 이메일 */
+			      , CLL.VIN_COMP                        AS "vinComp"                                  /* 정비 차대번호1 */
+			      , CLL.VIN_TYPE                        AS "vinType"                                  /* 정비 차대번호2 */
+			      , CLL.VIN_CHECK                       AS "vinCheck"                                 /* 정비 차대번호3 */
+			      , CLL.VIN_MDL_YEAR                    AS "vinMdlYear"                               /* 정비 차대번호4 */
+			      , CLL.VIN_PLAN                        AS "vinPlan"                                  /* 정비 차대번호5 */
+			      , CLL.VIN_BODY_NO                     AS "vinBodyNo"                                /* 정비 차대번호6 */
+			      , CLL.VIN_DUP                         AS "vinDup"                                   /* 정비 차대번호7 */
+			      , CLL.VEHI_NO01                       AS "vehiNo01"                                 /* 차량번호1 */
+			      , CLL.VEHI_NO02                       AS "vehiNo02"                                 /* 차량번호2 */
+			      , CLL.CSTMR_FINAL_YN                  AS "cstmrFinalYn"                             /* CALL_CSTMR_INFO_MNG 최종 등록/수정여부 */
+			FROM CA_ITGRT_CSTMR C
+				/*,CSTMR_INFO_LINK_MNG CL*/
+	            /*,(SELECT *
+	              	FROM (
+	                        SELECT RANK() OVER (PARTITION BY CSTMR_ESNTL_ID, VHCLE_ESNTL_ID ORDER BY CSTMR_VHCLE_SEQ DESC )RK
+	                                ,A.*
+	                        FROM CA_CAR_ACQS A
+	                        WHERE CSTMR_ESNTL_ID = /cstmrCd/
+	                        AND VHCLE_ESNTL_ID = /vin/
+	              	)
+	              	WHERE RK = 1) CA*/
+                ,(
+                    SELECT CUST_NM||
+                            HAND_PHONE_NO||
+                            FN_GET_BIRTH_YEAR(BIRTH_SEX)||
+                            /*SUBSTR(BIRTH_SEX,8,1)||*/
+                            E_MAIL AS CLL_KEY
+                         , FN_GET_BIRTH_YEAR(BIRTH_SEX) BIRTH, SUBSTR(BIRTH_SEX,8,1) SEX, X.*
+                    FROM (
+                        SELECT RANK() OVER (PARTITION BY CSTMR_CD ORDER BY NVL(CSTMR_FINAL_YN,'X') DESC, REL_SEQ DESC )RK
+                                ,A.*
+                        FROM CSTMR_INFO_LINK_MNG A
+                        WHERE CSTMR_CD = #cstmrCd#
+                    )X
+                )CLL
+			WHERE C.CSTMR_ESNTL_ID = #cstmrCd#
+			AND CLL.CSTMR_FINAL_YN(+) = 'Y'
+			AND C.CSTMR_ESNTL_ID = CLL.CSTMR_CD(+)
+            AND C.CSTMR_NM||C.HPNO||C.BRTHDY||(DECODE(NVL(C.EMAIL_DOMAIN,'X'),'X',NULL,C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN))
+                = CLL.CLL_KEY(+)
+    ]]>
+    </select>
+    
+    
+    <!--
+        쿼리명 : 고객통합정보 사용여부체크 select
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.12    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.02.12
+    -->
+    <select id="EC4cstmrIntgrMngSQL.cstmrInfoUseChkCnt" parameterClass="cstmrIntgrMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                SUM(chkCnt) cnt
+		FROM (
+				SELECT COUNT(*) chkCnt /* 해피콜 */
+					FROM CA_HPCL
+					WHERE CSTMR_ESNTL_ID IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 홍보 수신여부 */
+					FROM CA_PR_RECPTN
+					WHERE CSTMR_ESNTL_ID IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 콜대상고객수집 */
+					FROM CALL_CSTMR_COLECT_D
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 콜고객수행 */
+					FROM CALL_EXEC_D
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 콜고객설문결과 */
+					FROM CALL_QUEST_RSLT_D
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 긴급출동 */
+					FROM CAR_EMERGENCY_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 인바운드콜상담 */
+					FROM CNSLT_INBOUND_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 인바운드콜상담유형 */
+					FROM CNSLT_INBOUND_TYPE_DETL
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 고객불만접수 */
+					FROM CSTMR_CMPL_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT COUNT(*) chkCnt /* 판매리드 */
+					FROM SALES_LEAD_INFO_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+		)
+    ]]>
+    </select>
+    <select id="EC4cstmrIntgrMngSQL.cstmrInfoUseChkList" parameterClass="cstmrIntgrMngVO" resultClass="java.lang.String">
+    <![CDATA[
+        SELECT
+                SUBJECT AS cstmrInfoUseDscr
+        FROM (
+                SELECT '해피콜' AS SUBJECT, COUNT(*) chkCnt /* 해피콜 */
+                    FROM CA_HPCL
+                    WHERE CSTMR_ESNTL_ID IN (#cstmrEsntlId#,#cstmrCd#)
+                UNION ALL
+                SELECT '홍보수신여부' AS SUBJECT, COUNT(*) chkCnt/* 홍보 수신여부 */
+                    FROM CA_PR_RECPTN
+                    WHERE CSTMR_ESNTL_ID IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '콜대상고객수집' AS SUBJECT, COUNT(*) chkCnt /* 콜대상고객수집 */
+					FROM CALL_CSTMR_COLECT_D
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '콜고객수행' AS SUBJECT, COUNT(*) chkCnt /* 콜고객수행 */
+					FROM CALL_EXEC_D
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '콜고객설문결과' AS SUBJECT, COUNT(*) chkCnt /* 콜고객설문결과 */
+					FROM CALL_QUEST_RSLT_D
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '긴급출동' AS SUBJECT, COUNT(*) chkCnt /* 긴급출동 */
+					FROM CAR_EMERGENCY_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '인바운드콜상담' AS SUBJECT, COUNT(*) chkCnt /* 인바운드콜상담 */
+					FROM CNSLT_INBOUND_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '인바운드콜상담유형' AS SUBJECT, COUNT(*) chkCnt /* 인바운드콜상담유형 */
+					FROM CNSLT_INBOUND_TYPE_DETL
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '고객불만접수' AS SUBJECT, COUNT(*) chkCnt /* 고객불만접수 */
+					FROM CSTMR_CMPL_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+				UNION ALL
+				SELECT '판매리드' AS SUBJECT, COUNT(*) chkCnt /* 판매리드 */
+					FROM SALES_LEAD_INFO_MNG
+					WHERE CSTMR_CD IN (#cstmrEsntlId#,#cstmrCd#)
+        )
+        WHERE chkCnt > 0
+        AND ROWNUM = 1
+    ]]>
+    </select>
+    
+    
+   <!--
+        쿼리명 : 고객통합정보 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.12    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.02.12
+    -->
+    <delete id="EC4cstmrIntgrMngSQL.deleteCstmrIntgrMng">
+        <![CDATA[
+            DELETE
+              FROM
+                    CA_ITGRT_CSTMR
+             WHERE
+				  	CSTMR_ESNTL_ID                           = #cstmrCd#                          /* 콜고객코드 */
+        ]]>
+    </delete>
+    
+    
+   <!--
+        쿼리명 : 고객차량정보 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.12    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.02.12
+    -->
+    <delete id="EC4cstmrIntgrMngSQL.deleteCstmrCarAcqs">
+        <![CDATA[
+            DELETE
+              FROM
+                    CA_CAR_ACQS
+             WHERE
+				  	CSTMR_ESNTL_ID                           = #cstmrCd#                          /* 콜고객코드 */
+        ]]>
+    </delete>
+    
+    
+   <!--
+        쿼리명 : 고객링크테이블정보 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.12    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.02.12
+    -->
+    <delete id="EC4cstmrIntgrMngSQL.deleteCstmrInfoLink">
+        <![CDATA[
+            DELETE
+              FROM
+                    CSTMR_INFO_LINK_MNG
+             WHERE
+				  	CSTMR_CD                           = #cstmrCd#                          /* 콜고객코드 */
+        ]]>
+    </delete>
+    
+    
+    
+
+</sqlMap>

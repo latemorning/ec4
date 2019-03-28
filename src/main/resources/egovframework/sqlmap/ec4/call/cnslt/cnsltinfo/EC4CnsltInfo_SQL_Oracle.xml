@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EC4CnsltntMng">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="cnsltntMngVo" type="egovframework.ec4.call.cnslt.service.CnsltntMngVO"/>
+	<typeAlias  alias="cmnDetailCode" type="egovframework.com.cmm.service.CmmnDetailCode"/>
+	<typeAlias  alias="detailCodeVO" type="egovframework.ec4.cmm.cbase.cmt.service.DetailCodeVO"/>
+
+	<resultMap id="Cnsltnt" class="egovframework.ec4.call.cnslt.service.CnsltntMngVO">
+		<result property="cnsltUserId" column="CNSLT_USER_ID" /> <!-- 콜상담원코드 -->
+		<result property="cnsltUserNm" column="CNSLT_USER_NM" /> <!-- 콜상담원명 -->
+		<result property="hpno" column="HPNO" /> <!-- 핸드폰번호 -->
+		<result property="telno" column="TELNO" /> <!-- 전화번호 -->
+		<result property="brthdy" column="BRTHDY" /> <!-- 생년월일 -->
+		<result property="emailAdres" column="EMAIL_ADRES" /> <!-- 이메일주소 -->
+		<result property="emailDomain" column="EMAIL_DOMAIN" /> <!-- 이메일도메인 -->
+		<result property="vhcleNo" column="VHCLE_NO" /> <!-- 차량번호 -->
+		<result property="vin" column="VIN" /> <!-- 차대번호 -->
+		<result property="houseZip" column="HOUSE_ZIP" /> <!-- 집우편번호 -->
+		<result property="houseAdres" column="HOUSE_ADRES" /> <!-- 집주소 -->
+		<result property="houseAdresDetail" column="HOUSE_ADRES_DETAIL" /> <!-- 집주소상세 -->
+		<result property="officeZip" column="OFFICE_ZIP" /> <!-- 직장우편번호 -->
+		<result property="officeAdres" column="OFFICE_ADRES" /> <!-- 직장주소 -->
+		<result property="officeAdresDetail" column="OFFICE_ADRES_DETAIL" /> <!-- 직장주소상세 -->
+		<result property="telRecvYn" column="TEL_RECV_YN" /> <!-- 전화수신여부 -->
+		<result property="smsRecvYn" column="SMS_RECV_YN" /> <!-- SMS수신여부 -->
+		<result property="emailRecvYn" column="EMAIL_RECV_YN" /> <!-- 이메일수신여부 -->
+		<result property="faxRecvYn" column="FAX_RECV_YN" /> <!-- FAX수신여부 -->
+		<result property="dmRecvYn" column="DM_RECV_YN" /> <!-- DM수신여부 -->
+		<result property="mberGrad" column="MBER_GRAD" /> <!-- 회원등급 -->
+		<result property="chevMembYn" column="CHEV_MEMB_YN" /> <!-- 쉐보레멤버여부 -->
+		<result property="webMembYn" column="WEB_MEMB_YN" /> <!-- 웹멤버여부 -->
+		<result property="wutoMembYn" column="WUTO_MEMB_YN" /> <!-- 오토멤버여부 -->
+		<result property="cnsltntMemo" column="CNSLTNT_MEMO" /> <!-- 상담원메모 -->
+		<result property="registDe" column="REGIST_DE" /> <!-- 등록일자 -->
+		<result property="register" column="REGISTER" /> <!-- 등록자 -->
+		<result property="updtDe" column="UPDT_DE" /> <!-- 수정일자 -->
+		<result property="updusr" column="UPDUSR" /> <!-- 수정자 -->
+
+	</resultMap>
+
+
+
+    <!--
+        쿼리명 : 상담원조회팝업
+        설  명 :
+
+        수정일        수정자    수정내용
+        2018.09.19    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.09.19
+    -->
+    <select id="EC4CnsltntMngSQL.selectCnsltntMngList" parameterClass="cnsltntMngVo" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+							  EMPLYR_ID                       AS "emplyrId"                                 /* 업무사용자 ID */
+							, ORGNZT_ID                       AS "orgnztId"                                 /* 조직 ID */
+							, USER_NM                         AS "userNm"                                   /* 사용자 명 */
+							, PASSWORD                        AS "password"                                 /* 비밀번호 */
+							, EMPL_NO                         AS "emplNo"                                   /* 사원 번호 */
+							, IHIDNUM                         AS "ihidnum"                                  /* 주민번호 */
+							, SEXDSTN_CODE                    AS "sexdstnCode"                              /* 성별 코드 */
+							, BRTHDY                          AS "brthdy"                                   /* 생일 */
+							, FXNUM                           AS "fxnum"                                    /* 팩스번호 */
+							, HOUSE_ADRES                     AS "houseAdres"                               /* 집 주소 */
+							, PASSWORD_HINT                   AS "passwordHint"                             /* 비밀번호 힌트 */
+							, PASSWORD_CNSR                   AS "passwordCnsr"                             /* 비밀번호 정답 */
+							, HOUSE_END_TELNO                 AS "houseEndTelno"                            /* 집 끝 전화번호 */
+							, AREA_NO                         AS "areaNo"                                   /* 지역 번호 */
+							, DETAIL_ADRES                    AS "detailAdres"                              /* 상세 주소 */
+							, ZIP                             AS "zip"                                      /* 우편번호 */
+							, OFFM_TELNO                      AS "offmTelno"                                /* 사무실 전화번호 */
+							, MBTLNUM                         AS "mbtlnum"                                  /* 이동전화번호 */
+							, EMAIL_ADRES                     AS "emailAdres"                               /* 이메일 주소 */
+							, OFCPS_NM                        AS "ofcpsNm"                                  /* 직위 명 */
+							, HOUSE_MIDDLE_TELNO              AS "houseMiddleTelno"                         /* 집 중간 전화번호 */
+							, GROUP_ID                        AS "groupId"                                  /* 그룹 ID */
+							, PSTINST_CODE                    AS "pstinstCode"                              /* 소속기관 코드 */
+							, EMPLYR_STTUS_CODE               AS "emplyrSttusCode"                          /* 업무사용자 상태 코드 */
+							, ESNTL_ID                        AS "esntlId"                                  /* 고유 ID */
+							, CRTFC_DN_VALUE                  AS "crtfcDnValue"                             /* 인증 DN 값 */
+							, SBSCRB_DE                       AS "sbscrbDe"                                 /* 가입 일자 */
+                        FROM
+                              COMTNEMPLYRINFO dc
+                       WHERE
+                              dc.EMPLYR_ID > '0'
+    ]]>
+        <isNotEmpty property="userNm" prepend="AND">
+        <![CDATA[
+                              dc.USER_NM LIKE '%'||#userNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              dc.BRTHDY LIKE '%'||#brthdy#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="mbtlnum" prepend="AND">
+        <![CDATA[
+                              dc.MBTLNUM LIKE '%'||#mbtlnum#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              dc.EMAIL_ADRES LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="detailAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(dc.DETAIL_ADRES,' ','') LIKE '%'||REPLACE(#detailAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                              dc.$sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+    <select id="EC4CnsltntMngSQL.selectCnsltntMngListCnt" parameterClass="cnsltntMngVo" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+          FROM
+                COMTNEMPLYRINFO dc
+         WHERE
+                dc.EMPLYR_ID > '0'
+    ]]>
+        <isNotEmpty property="userNm" prepend="AND">
+        <![CDATA[
+                              dc.USER_NM LIKE '%'||#userNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="brthdy" prepend="AND">
+        <![CDATA[
+                              dc.BRTHDY LIKE '%'||#brthdy#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="mbtlnum" prepend="AND">
+        <![CDATA[
+                              dc.MBTLNUM LIKE '%'||#mbtlnum#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="emailAdres" prepend="AND">
+        <![CDATA[
+                              dc.EMAIL_ADRES LIKE '%'||#emailAdres#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="detailAdres" prepend="AND">
+        <![CDATA[
+                              REPLACE(dc.DETAIL_ADRES,' ','') LIKE '%'||REPLACE(#detailAdres#,' ','')||'%'
+        ]]>
+        </isNotEmpty>
+    </select>
+    
+    
+	<resultMap id="CmmCodeDetail" class="egovframework.com.cmm.service.CmmnDetailCode">
+		<result property="codeId"    	column="CODE_ID"   	columnIndex="1"/>
+		<result property="code"  		column="CODE" 		columnIndex="2"/>
+		<result property="codeNm"   	column="CODE_NM"  	columnIndex="3"/>
+		<result property="codeDc"   	column="CODE_DC"  	columnIndex="4"/>
+		<result property="id"   	    column="ID"  	    columnIndex="5"/>
+		<result property="text"   	    column="TEXT"  	    columnIndex="6"/>
+		<result property="selected"   	column="SELECTED"  	columnIndex="7"/>
+		<result property="disabled"   	column="DISABLED"  	columnIndex="8"/>
+	</resultMap>
+    <select id="EC4CnsltntMngSQL.selectCnsltntComboList" parameterClass="cnsltntMngVo" resultMap="CmmCodeDetail">
+    <![CDATA[
+        SELECT 
+                  ESNTL_ID       AS CODE_ID
+                , ESNTL_ID         AS CODE
+                , USER_NM          AS CODE_NM
+                , ESNTL_ID          AS CODE_DC
+                , ESNTL_ID         AS ID
+                , USER_NM          AS TEXT
+                , DECODE(#searchCnsltUserId#, ESNTL_ID, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+            FROM   COMTNEMPLYRINFO
+           WHERE   ESNTL_ID != '0'   
+    ]]>      
+
+    <![CDATA[
+         ORDER BY USER_NM, EMPLYR_ID
+    ]]>
+    </select>    
+    
+    
+   <!--
+        쿼리명 : 상담원부서 egovMap형태로 return하지 않는다
+        설  명 : egovMap형태로 return하지 않는다
+        수정일        수정자    수정내용
+        2018.12.26    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.12.26
+    -->
+    <select id="EC4CnsltntMngSQL.selectOrgnztInfoComboDfList" parameterClass="cmnDetailCode" resultClass="cmnDetailCode">
+    <![CDATA[
+		SELECT 
+                  ORGNZT_ID   		AS CODE_ID
+                , ORGNZT_ID     	AS CODE
+                , ORGNZT_NM  		AS CODE_NM
+                , ORGNZT_ID  		AS CODE_DC
+                , ORGNZT_ID     	AS ID
+                , ORGNZT_NM  		AS TEXT
+                , DECODE(#codeId#, ORGNZT_ID, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+		    FROM   COMTNORGNZTINFO
+		   WHERE   1=1
+    ]]>      
+			<isNotEmpty property="upCodeIdNm"> <!-- 사용하지않음 -->
+			AND ORGNZT_ID LIKE '%' || #codeId# || '%'
+			</isNotEmpty >
+    <![CDATA[
+         ORDER BY ORGNZT_NM, ORGNZT_ID
+    ]]>
+    </select>
+    
+    
+    
+    
+    
+</sqlMap>

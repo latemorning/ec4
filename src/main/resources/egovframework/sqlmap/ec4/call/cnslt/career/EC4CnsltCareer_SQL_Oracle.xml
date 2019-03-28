@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltCareer">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltCareerMngVO" type="egovframework.ec4.call.cnslt.service.CnsltCareerMngVO"/>
+    
+
+
+
+    <!--
+        쿼리명 : 상담원경력
+        설  명 :
+        수정일        수정자    수정내용
+        2018.09.28   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.09.28
+    -->
+    <insert id="cnsltCareerMngDAO.insertCnsltCareer">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CNSLT_CAREER_MNG
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, CNSLT_USER_ID                  /* 상담원아이디 */
+					, WORK_COMP                      /* 근무회사 */
+					, WORK_BEGIN_DT                  /* 작업시작일시 */
+					, RESIGNED_DT                    /* 퇴사일자 */
+					, WORK_PART                      /* 업무역할 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       /* 메이커코드 */
+					, #cnsltUserId#                    /* 상담원아이디 */
+					, #workComp#                       /* 근무회사 */
+					, #workBeginDt#                    /* 작업시작일시 */
+					, #resignedDt#                     /* 퇴사일자 */
+					, #workPart#                       /* 업무역할 */
+					, SYSDATE                       	/* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 상담원경력 목록
+        설  명 :
+        수정일        수정자    수정내용
+        2018.09.28    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.28
+    -->
+    <select id="cnsltCareerMngDAO.selectCnsltCareerRegList" parameterClass="cnsltCareerMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.CNSLT_USER_ID                  /* 상담원아이디 */
+							, C.WORK_COMP                      /* 근무회사 */
+							, C.WORK_BEGIN_DT                  /* 작업시작일시 */
+							, C.RESIGNED_DT                    /* 퇴사일자 */
+							, C.WORK_PART                      /* 업무역할 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+							, E.USER_NM AS CNSLT_USER_NM
+						FROM CNSLT_CAREER_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+	            <isEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.WORK_BEGIN_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            	]]>
+	            </isEqual>
+	            <isNotEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.RESIGNED_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+	            ]]>
+            	</isNotEqual>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserNm" prepend="AND">
+            <![CDATA[
+                              E.USER_NM LIKE '%'||#searchCnsltUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchWorkComp" prepend="AND">
+            <![CDATA[
+                              C.WORK_COMP LIKE '%'||#searchWorkComp#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchWorkPart" prepend="AND">
+            <![CDATA[
+                              C.WORK_PART LIKE '%'||#searchWorkPart#||'%'
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원경력 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        2018.09.28    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.28
+    -->
+    <select id="cnsltCareerMngDAO.selectCnsltCareerRegListCnt" parameterClass="cnsltCareerMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CNSLT_CAREER_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+	            <isEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.WORK_BEGIN_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            	]]>
+	            </isEqual>
+	            <isNotEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.RESIGNED_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+	            ]]>
+            	</isNotEqual>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserNm" prepend="AND">
+            <![CDATA[
+                              E.USER_NM LIKE '%'||#searchCnsltUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchWorkComp" prepend="AND">
+            <![CDATA[
+                              C.WORK_COMP LIKE '%'||#searchWorkComp#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchWorkPart" prepend="AND">
+            <![CDATA[
+                              C.WORK_PART LIKE '%'||#searchWorkPart#||'%'
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원경력 수정조회
+        설  명 :
+        수정일        수정자    수정내용
+        2018.09.28    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.28
+    -->
+    <select id="cnsltCareerMngDAO.selectCnsltCareerMod" parameterClass="cnsltCareerMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+				  C.MAKR_CD                        /* 메이커코드 */
+				, C.CNSLT_USER_ID                  /* 상담원아이디 */
+				, C.WORK_COMP                      /* 근무회사 */
+				, C.WORK_BEGIN_DT                  /* 작업시작일시 */
+				, C.RESIGNED_DT                    /* 퇴사일자 */
+				, C.WORK_PART                      /* 업무역할 */
+				, C.REGIST_DE                      /* 등록일자 */
+				, C.REGISTER                       /* 등록자 */
+				, C.UPDT_DE                        /* 수정일자 */
+				, C.UPDUSR                         /* 수정자 */
+				, E.USER_NM AS CNSLT_USER_NM
+			FROM CNSLT_CAREER_MNG C
+				,COMTNEMPLYRINFO E
+			WHERE 1=1
+			AND C.CNSLT_USER_ID = E.ESNTL_ID
+			AND C.MAKR_CD = #makrCd#
+			AND C.CNSLT_USER_ID = #cnsltUserId#
+			AND C.WORK_COMP = #workComp#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원경력 수정
+        설  명 :
+        수정일        수정자    수정내용
+        2018.09.28    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.28
+    -->
+    <update id="cnsltCareerMngDAO.updateCnsltCareer">
+    <![CDATA[
+        UPDATE
+                CNSLT_CAREER_MNG
+           SET
+				  WORK_COMP                          = #workComp#                         /* 근무회사 */
+				, WORK_BEGIN_DT                      = #workBeginDt#                      /* 작업시작일시 */
+				, RESIGNED_DT                        = #resignedDt#                       /* 퇴사일자 */
+				, WORK_PART                          = #workPart#                         /* 업무역할 */
+				, UPDT_DE                            = SYSDATE                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+         		MAKR_CD = #makrCd#
+			AND	CNSLT_USER_ID = #cnsltUserId#
+			AND WORK_COMP = #workComp#
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상담원경력 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        2018.09.28    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.09.28
+    -->
+    <delete id="cnsltCareerMngDAO.deleteCnsltCareer">
+        <![CDATA[
+            DELETE
+              FROM
+                    CNSLT_CAREER_MNG
+	         WHERE
+					MAKR_CD = #makrCd#
+				AND	CNSLT_USER_ID = #cnsltUserId#
+				AND WORK_COMP = #workComp#
+        ]]>
+    </delete>
+
+
+
+
+</sqlMap>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- 캠페인ID -->
+    <bean name="ec4CmpgnIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="cmpgnStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="CMPGN_ID"/>
+    </bean>
+    <bean name="cmpgnStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="CMPGN_" />
+        <property name="cipers"   value="14" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 해피콜ID -->
+    <bean name="ec4HpclIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="hpclStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="HPCL_ID"/>
+    </bean>
+    <bean name="hpclStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="HPCL_" />
+        <property name="cipers"   value="15" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 고객 차량 -->
+    <bean name="ec4CstmrCarIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="cstmrCarStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="VHCLE_ESNTL_ID"/>
+    </bean>
+    <bean name="cstmrCarStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="VHCLEST_" />
+        <property name="cipers"   value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 콜스크립트관리ID -->
+    <bean name="ec4CallScriptIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="scriptStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="SCRIPT_ID"/>
+    </bean>
+    <bean name="scriptStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="SCRIPT_" />
+        <property name="cipers"   value="14" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 질문스크립트관리ID -->
+    <bean name="ec4CallQuestIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="questStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="QUEST_ID"/>
+    </bean>
+    <bean name="questStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="QUEST_" />
+        <property name="cipers"   value="14" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 답변스크립트관리ID -->
+    <bean name="ec4CallAnswerIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="answerStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="ANSWER_ID"/>
+    </bean>
+    <bean name="answerStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="ANSWER_" />
+        <property name="cipers"   value="14" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 고객ID -->
+    <bean name="ec4CallCustIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="custStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="CUST_ID"/>
+    </bean>
+    <bean name="custStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="CUST" />
+        <property name="cipers"   value="10" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 해피콜코드ID -->
+    <bean name="ec4CallHpCallIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="hpcallStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="HPCALL_ID"/>
+    </bean>
+    <bean name="hpcallStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="H" />
+        <property name="cipers"   value="10" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 캠페인콜코드ID -->
+    <bean name="ec4CallCpCallIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="cpcallStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="CPCALL_ID"/>
+    </bean>
+    <bean name="cpcallStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="C" />
+        <property name="cipers"   value="10" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- SMS메시지템플릿 -->
+    <bean name="ec4MsgTmplatIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="msgTmplatStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="MSG_TMPLAT_ID"/>
+    </bean>
+    <bean name="msgTmplatStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="MSGTMPL_" />
+        <property name="cipers"   value="12" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+    <!-- 콜 상품 -->
+    <bean name="ec4GoodsManageIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="goodsManageStrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="CALL_GOODS_ID"/>
+    </bean>
+    <bean name="goodsManageStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="GOODS_" />
+        <property name="cipers"   value="14" />
+        <property name="fillChar" value="0" />
+    </bean>
+
+
+</beans>

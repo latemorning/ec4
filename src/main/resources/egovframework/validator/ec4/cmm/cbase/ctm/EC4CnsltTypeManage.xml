@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+
+       <form name="cnsltTypeVO">
+            <field property="codeId" depends="required, maxlength">
+                <arg0 key="cnsltType.codeId" />
+                <arg1 key="15" resource="false"/>
+                <var>
+                <var-name>maxlength</var-name>
+                <var-value>15</var-value>
+                </var>
+            </field>
+            <field property="codeNm" depends="required, maxlength">
+                <arg0 key="cnsltType.codeNm" />
+                <arg1 key="60" resource="false"/>
+                <var>
+                <var-name>maxlength</var-name>
+                <var-value>60</var-value>
+                </var>
+            </field>
+            <field property="sortOrdr" depends="required, integer">
+                <arg0 key="cmm.sortOrdr" />
+                <arg1 key="cmm.sortOrdr" />
+            </field>
+            <field property="cnsltSeCode" depends="required">
+                <arg0 key="cnsltType.cnsltSeCode" />
+            </field>
+            <field property="useAt" depends="required">
+                <arg0 key="cmm.useAt" />
+            </field>
+        </form>
+
+    </formset>
+
+</form-validation>

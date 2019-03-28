@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Hpcl">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="hpclDefaultVO" type="egovframework.ec4.call.outbd.hpcl.service.HpclDefaultVO"/>
+    <typeAlias  alias="cnslrDefaultVO" type="egovframework.ec4.call.outbd.hpcl.service.CnslrDefaultVO"/>
+    <typeAlias  alias="hpclVO" type="egovframework.ec4.call.outbd.hpcl.service.HpclVO"/>
+
+
+    <!--
+        쿼리명 : 해피콜 목록 조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.10    harry     최초 생성
+        2018.08.27    harry     사용하지 않음
+
+        작성자 : harry
+        최초작성일 : 2018.07.10
+    -->
+    <select id="hpclDAO.selectHpclList_not_used" parameterClass="HpclDefaultVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+					  SELECT
+					          h.hpcl_id
+					        , c.cmpgn_id
+                            , c.cmpgn_nm
+                            , chd.cnslr_id
+                            , cns.cnslr_nm
+					        , h.cstmr_esntl_id
+					        , cv.cstmr_nm
+					        , h.hpcl_telno
+					        , h.memo
+					        , h.progrs_sttus_code
+					        , cn.progrs_sttus_code_nm
+					        , TO_CHAR(h.frst_regist_pnttm, 'YYYY-MM-DD') AS frst_regist_pnttm
+					        , h.frst_register_id
+					    FROM
+					          ca_hpcl h
+					        , ca_cstmr_view cv
+					        , ca_cmpgn_hpcl_dstb chd
+					        , ca_cmpgn c
+					        , ca_cnslr cns
+					        , (SELECT code_id, code, code_nm AS progrs_sttus_code_nm
+					             FROM comtccmmndetailcode
+					            WHERE code_id = 'CMPST') cn
+					   WHERE
+					          h.cstmr_esntl_id = cv.cstmr_esntl_id(+)
+					     AND  h.progrs_sttus_code = cn.code(+)
+					     AND  h.hpcl_id = chd.hpcl_id(+)
+					     AND  chd.cmpgn_id = c.cmpgn_id(+)
+					     AND  chd.cnslr_id = cns.cnslr_id(+)
+    ]]>
+	        <isNotEmpty property="searchCmpgnNm" prepend="AND">
+	        <![CDATA[
+                              c.cmpgn_nm LIKE '%'||#searchCmpgnNm#||'%'
+	        ]]>
+	        </isNotEmpty>
+	        <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              cv.cstmr_nm LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+	        <isNotEmpty property="searchHpclTelno" prepend="AND">
+            <![CDATA[
+                              h.hpcl_telno LIKE '%'||#searchHpclTelno#||'%'
+            ]]>
+            </isNotEmpty>
+	        <isNotEmpty property="searchMemo" prepend="AND">
+            <![CDATA[
+                              h.memo LIKE '%'||#searchMemo#||'%'
+            ]]>
+            </isNotEmpty>
+	        <isNotEmpty property="searchProgrsSttusCode" prepend="AND">
+	        <![CDATA[
+                              h.progrs_sttus_code = #searchProgrsSttusCode#
+	        ]]>
+	        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="CSTMR_NM">
+            <![CDATA[
+                              cv.$sortColNm$
+            ]]>
+            </isEqual>
+            <isEqual property="sortColNm" compareValue="CMPGN_NM">
+            <![CDATA[
+                              c.$sortColNm$
+            ]]>
+            </isEqual>
+            <isEqual property="sortColNm" compareValue="PROGRS_STTUS_CODE_NM">
+            <![CDATA[
+                              cn.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEqual property="sortColNm" compareValue="CSTMR_NM">
+            <isNotEqual property="sortColNm" compareValue="CMPGN_NM">
+            <isNotEqual property="sortColNm" compareValue="PROGRS_STTUS_CODE_NM">
+            <![CDATA[
+                              h.$sortColNm$
+            ]]>
+            </isNotEqual>
+            </isNotEqual>
+            </isNotEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 해피콜 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.10    harry     최초 생성
+        2018.08.27    harry     사용하지 않음
+
+        작성자 : harry
+        최초작성일 : 2018.07.10
+    -->
+    <select id="hpclDAO.selectHpclListCnt_not_used" parameterClass="HpclDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) AS cnt
+                        FROM
+                              ca_hpcl h
+                            , ca_cstmr_view cv
+                            , ca_cmpgn_hpcl_dstb chd
+                            , ca_cmpgn c
+                            , (SELECT code_id, code, code_nm AS progrs_sttus_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'CMPST') cn
+                       WHERE
+                              h.cstmr_esntl_id = cv.cstmr_esntl_id(+)
+                         AND  h.progrs_sttus_code = cn.code(+)
+                         AND  h.hpcl_id = chd.hpcl_id(+)
+                         AND  chd.cmpgn_id = c.cmpgn_id(+)
+    ]]>
+            <isNotEmpty property="searchCmpgnNm" prepend="AND">
+            <![CDATA[
+                              c.cmpgn_nm LIKE '%'||#searchCmpgnNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              cv.cstmr_nm LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpclTelno" prepend="AND">
+            <![CDATA[
+                              h.hpcl_telno LIKE '%'||#searchHpclTelno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchMemo" prepend="AND">
+            <![CDATA[
+                              h.memo LIKE '%'||#searchMemo#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchProgrsSttusCode" prepend="AND">
+            <![CDATA[
+                              h.progrs_sttus_code = #searchProgrsSttusCode#
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 콜상담 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.08    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.08.08
+    -->
+    <select id="hpclDAO.selectCallCnsltList" parameterClass="HpclDefaultVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+                              r.replc_se_code
+                            , rscn.replc_se_code_nm
+                            , r.hdqrtrs_nm
+                            , r.replc_nm
+                            , hv.hpcl_id
+                            , hv.mntnc_sys_hpcl_key     AS hpcl_key
+                            , hv.progrs_sttus_code
+                            , pscn.progrs_sttus_code_nm
+                            , cv.cstmr_esntl_id
+                            , cv.cstmr_nm
+                            , ccv.vhcle_esntl_id
+                            , ccv.carnbr
+                            , hv.hpcl_telno
+                            , hv.intrfc_vhcle_id
+                            , DECODE(hv.absnce_call_opetr_id, NULL, DECODE(hv.frst_call_opetr_id, NULL, 0, 1), 2) call_cnt
+                            , hv.chrg_cnslr_esntl_id
+                            , hv.chrg_cnslr_esntl_nm
+                            , hv.frst_call_result_code
+                            , crcn.call_result_code_nm
+                            , hv.frst_call_opetr_id
+                            , hv.frst_call_opetr_nm
+                            , hv.frst_call_process_dt
+                            , hv.altr_esntl_id
+                            , hv.altr_esntl_nm
+                            , TO_CHAR(hv.asgn_dt, 'YYYY-MM-DD HH24:MI:SS') AS asgn_dt
+                        FROM
+                              ca_replc r
+                            , ca_hpcl_view hv
+                            , ca_cstmr_view cv
+                            , ca_cstmr_car_view ccv
+                            , (SELECT code_id, code, code_nm AS replc_se_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'REPLCSE') rscn
+                            , (SELECT code_id, code, code_nm AS progrs_sttus_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'CLSTTCD') pscn
+                            , (SELECT code_id, code, code_nm AS call_result_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'CLRSLTCD') crcn
+                      WHERE
+                             hv.intrfc_replc_id = r.replc_esntl_id
+                        AND  hv.intrfc_cstmr_id = cv.cstmr_esntl_id
+                        AND  hv.intrfc_vhcle_id = ccv.vhcle_esntl_id
+                        AND  r.replc_se_code = rscn.code(+)
+                        AND  hv.progrs_sttus_code = pscn.code(+)
+                        AND  hv.frst_call_result_code = crcn.code(+)
+    ]]>
+            <isNotEmpty property="searchReplcNm" prepend="AND">
+            <![CDATA[
+                             r.replc_nm LIKE '%'||#searchReplcNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHdqrtrsNm" prepend="AND">
+            <![CDATA[
+                             r.hdqrtrs_nm LIKE '%'||#searchHdqrtrsNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchProgrsSttusCode" prepend="AND">
+            <![CDATA[
+                             hv.progrs_sttus_code = #searchProgrsSttusCode#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchProgrsResultCode" prepend="AND">
+            <![CDATA[
+                             hv.frst_call_result_code = #searchProgrsResultCode#
+            ]]>
+            </isNotEmpty>
+            <isEqual property="isDrscTrget" compareValue="Y" prepend="AND" open="(" close=")">
+            <![CDATA[
+                             hv.absnce_call_opetr_id IS NULL
+                        AND  hv.frst_call_result_code = F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLRSLTCD_CLRSLT_090_CD')
+                        AND  hv.progrs_sttus_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+            ]]>
+            </isEqual>
+            <isEqual property="isCallClos" compareValue="Y" prepend="AND" open="(" close=")">
+            <![CDATA[
+                            (hv.frst_call_opetr_id IS NOT NULL AND hv.frst_call_result_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLRSLTCD_CLRSLT_090_CD') OR
+                             hv.absnce_call_opetr_id IS NOT NULL AND hv.absnce_call_result_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLRSLTCD_CLRSLT_090_CD') OR
+                             hv.sms_trnsmis_hist_id IS NOT NULL)
+                        AND  hv.progrs_sttus_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+            ]]>
+            </isEqual>
+            <isEqual property="isCallTrget" compareValue="Y" prepend="AND" open="(" close=")">
+            <![CDATA[
+                             hv.frst_call_opetr_id IS NULL
+                        AND  hv.progrs_sttus_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+            ]]>
+            </isEqual>
+            <isEqual property="isDrscSmsTrget" compareValue="Y" prepend="AND" open="(" close=")">
+            <![CDATA[
+                             hv.absnce_call_opetr_id IS NOT NULL
+                        AND  hv.absnce_call_result_code = F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLRSLTCD_CLRSLT_090_CD')
+                        AND  hv.progrs_sttus_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+            ]]>
+            </isEqual>
+            <isNotEmpty property="roleInfo" prepend="AND">
+            <isEqual property="roleInfo" compareValue="ROLE_COUNSELLER">
+            <![CDATA[
+                             hv.chrg_cnslr_esntl_id = #uniqId#
+            ]]>
+            </isEqual>
+            </isNotEmpty>
+	        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+	                         $sortColNm$
+            ]]>
+	            <isNotEmpty property="sSortDir_0">
+	            <![CDATA[
+	                         $sSortDir_0$
+	            ]]>
+	            </isNotEmpty>
+	        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 콜상담 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.09    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.08.09
+    -->
+    <select id="hpclDAO.selectCallCnsltListCnt" parameterClass="HpclDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM
+                              ca_replc r
+                            , ca_hpcl_view hv
+                            , ca_cstmr_view cv
+                            , ca_cstmr_car_view ccv
+                            , (SELECT code_id, code, code_nm AS replc_se_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'REPLCSE') rscn
+                            , (SELECT code_id, code, code_nm AS progrs_sttus_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'CLSTTCD') pscn
+                            , (SELECT code_id, code, code_nm AS call_result_code_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'CLRSLTCD') crcn
+                      WHERE
+                             hv.intrfc_replc_id = r.replc_esntl_id
+                        AND  hv.intrfc_cstmr_id = cv.cstmr_esntl_id
+                        AND  hv.intrfc_vhcle_id = ccv.vhcle_esntl_id
+                        AND  r.replc_se_code = rscn.code(+)
+                        AND  hv.progrs_sttus_code = pscn.code(+)
+                        AND  hv.frst_call_result_code = crcn.code(+)
+    ]]>
+            <isNotEmpty property="searchReplcNm" prepend="AND">
+            <![CDATA[
+                             r.replc_nm LIKE '%'||#searchReplcNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHdqrtrsNm" prepend="AND">
+            <![CDATA[
+                             r.hdqrtrs_nm LIKE '%'||#searchHdqrtrsNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchProgrsSttusCode" prepend="AND">
+            <![CDATA[
+                             hv.progrs_sttus_code = #searchProgrsSttusCode#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchProgrsResultCode" prepend="AND">
+            <![CDATA[
+                             hv.frst_call_result_code = #searchProgrsResultCode#
+            ]]>
+            </isNotEmpty>
+            <isEqual property="isCallClos" compareValue="Y" prepend="AND" open="(" close=")">
+            <![CDATA[
+                             hv.absnce_call_opetr_id IS NOT NULL
+                         OR  hv.frst_call_opetr_id IS NOT NULL
+                             AND hv.frst_call_result_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLRSLTCD_CLRSLT_090_CD')
+                        AND  hv.progrs_sttus_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+            ]]>
+            </isEqual>
+            <isEqual property="isCallTrget" compareValue="Y" prepend="AND" open="(" close=")">
+            <![CDATA[
+                             hv.absnce_call_opetr_id IS NULL
+                        AND (hv.frst_call_opetr_id IS NULL
+                             OR hv.frst_call_result_code = F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLRSLTCD_CLRSLT_090_CD'))
+                        AND  hv.progrs_sttus_code != F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+            ]]>
+            </isEqual>
+            <isNotEmpty property="roleInfo" prepend="AND">
+            <isEqual property="roleInfo" compareValue="ROLE_COUNSELLER">
+            <![CDATA[
+                             hv.chrg_cnslr_esntl_id = #uniqId#
+            ]]>
+            </isEqual>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 해피콜 - 캠페인 기존 분배 제거
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.13    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.07.13
+    -->
+    <delete id="hpclDAO.removeHpcl">
+        <![CDATA[
+            DELETE
+              FROM
+                    ca_cmpgn_hpcl_dstb
+             WHERE
+                    cmpgn_id = #oldCmpgnId#
+               AND  hpcl_id  = #hpclId#
+        ]]>
+    </delete>
+
+
+    <!--
+        쿼리명 : 해피콜 - 캠페인 분배
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.13    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.13
+    -->
+    <insert id="hpclDAO.dstbHpcl">
+    <![CDATA[
+		INSERT
+		  INTO
+		        ca_cmpgn_hpcl_dstb
+		      (
+                cmpgn_id
+              , hpcl_id
+              , regist_de
+              , register_id
+		      )
+		VALUES
+		      (
+		        #cmpgnId#
+              , #hpclId#
+              , SYSDATE
+              , #frstRegisterId#
+		      )
+    ]]>
+    </insert>
+
+
+    <!--
+        쿼리명 : 해피콜 마감
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.28    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.28
+    -->
+    <update id="hpclDAO.closHpcl">
+    <![CDATA[
+        UPDATE
+                i_mntnc_hpcl_extrl_intrfc
+           SET
+                progrs_sttus_code     = F_GET_PKG_VAL('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT030_CD')
+              , last_updt_pnttm       = SYSDATE
+              , last_updusr_id        = #uniqId#
+         WHERE
+                mntnc_sys_hpcl_key  = #hpclKey#
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상담원 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.17    harry     최초 생성
+        2018.08.10    harry     업무사용자 테이블 데이타를 상담원으로 사용
+
+        작성자 : harry
+        최초작성일 : 2018.07.17
+    -->
+    <select id="hpclDAO.selectCnslrListCnt" parameterClass="CnslrDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) AS cnt
+                        FROM
+                              comtnemplyrinfo ei
+                            , comtnemplyrscrtyestbs ear
+                            , comtnauthorinfo ai
+                            , comtnorgnztinfo oi
+                            , comtnauthorgroupinfo gi
+                      WHERE
+                             ei.esntl_id = ear.scrty_dtrmn_trget_id
+                        AND  ear.author_code = ai.author_code
+                        AND  ei.orgnzt_id = oi.orgnzt_id(+)
+                        AND  ei.group_id = gi.group_id(+)
+                        AND  ai.author_code = 'ROLE_COUNSELLER'
+    ]]>
+        <dynamic prepend="WHERE">
+            <isNotEmpty property="searchUserNm" prepend="AND">
+            <![CDATA[
+                              ei.user_nm LIKE '%'||#searchUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmplyrId" prepend="AND">
+            <![CDATA[
+                              ei.emplyr_id LIKE '%'||#searchEmplyrId#||'%'
+            ]]>
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.17    harry     최초 생성
+        2018.08.10    harry     업무사용자 테이블 데이타를 상담원으로 사용
+
+        작성자 : harry
+        최초작성일 : 2018.07.17
+    -->
+    <select id="hpclDAO.selectCnslrList" parameterClass="CnslrDefaultVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+                              ei.esntl_id
+                            , ei.emplyr_id
+                            , ei.orgnzt_id
+                            , oi.orgnzt_nm
+                            , ei.user_nm
+                            , ei.empl_no
+                            , ei.ofcps_nm
+                            , ei.group_id
+                            , gi.group_nm
+                        FROM
+                              comtnemplyrinfo ei
+                            , comtnemplyrscrtyestbs ear
+                            , comtnauthorinfo ai
+                            , comtnorgnztinfo oi
+                            , comtnauthorgroupinfo gi
+                      WHERE
+                             ei.esntl_id = ear.scrty_dtrmn_trget_id
+                        AND  ear.author_code = ai.author_code
+                        AND  ei.orgnzt_id = oi.orgnzt_id(+)
+                        AND  ei.group_id = gi.group_id(+)
+                        AND  ai.author_code = 'ROLE_COUNSELLER'
+    ]]>
+        <dynamic prepend="WHERE">
+            <isNotEmpty property="searchUserNm" prepend="AND">
+            <![CDATA[
+                              ei.user_nm LIKE '%'||#searchUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmplyrId" prepend="AND">
+            <![CDATA[
+                              ei.emplyr_id LIKE '%'||#searchEmplyrId#||'%'
+            ]]>
+            </isNotEmpty>
+        </dynamic>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="USER_NM">
+            <![CDATA[
+                              ei.$sortColNm$
+            ]]>
+            </isEqual>
+            <isEqual property="sortColNm" compareValue="ORGNZT_NM">
+            <![CDATA[
+                              oi.$sortColNm$
+            ]]>
+            </isEqual>
+            <isEqual property="sortColNm" compareValue="GROUP_NM">
+            <![CDATA[
+                              gi.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원에 분배된 해피콜 카운트 (분배됐으면 1, 아니면 0)
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.14    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.08.14
+    -->
+    <select id="hpclDAO.selectDstbCnt" parameterClass="hpclDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+		SELECT
+		        COUNT(1) AS cnt
+		  FROM
+		        ca_hpcl_dstb
+		 WHERE
+		        hpcl_id = #searchHpclId#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원 분배 update 임시
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.17    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.17
+    -->
+    <update id="hpclDAO.dstbCnslrUpdate">
+    <![CDATA[
+        UPDATE
+                ca_hpcl_dstb
+           SET
+		        chrg_cnslr_esntl_id   = #cnslrId#
+		      , altr_esntl_id         = #lastUpdusrId#
+		      , asgn_dt               = SYSDATE
+		      , last_updt_pnttm       = SYSDATE
+		      , last_updusr_id        = #lastUpdusrId#
+         WHERE
+                hpcl_id = #hpclId#
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상담원 분배 insert 임시
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.14    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.14
+    -->
+    <update id="hpclDAO.dstbCnslrInsert">
+    <![CDATA[
+        INSERT
+          INTO
+                ca_hpcl_dstb
+              (
+                hpcl_id
+              , chrg_cnslr_esntl_id
+              , altr_esntl_id
+              , asgn_dt
+              , frst_regist_pnttm
+              , frst_register_id
+              , last_updt_pnttm
+              , last_updusr_id
+              )
+        VALUES
+              (
+                #hpclId#
+              , #cnslrId#
+              , #lastUpdusrId#
+              , SYSDATE
+              , SYSDATE
+              , #frstRegisterId#
+              , SYSDATE
+              , #lastUpdusrId#
+              )
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 해피콜 상세
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.26    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.26
+    -->
+    <select id="hpclDAO.selectHpcl" parameterClass="hpclVO" resultClass="egovMap">
+    <![CDATA[
+       SELECT
+                hv.hpcl_id
+              , r.replc_se_code
+              , rpse.replc_se_code_nm
+              , r.replc_id
+              , r.replc_nm
+              , r.replc_info
+              , r.hdqrtrs_nm
+              , hv.opertor_nm
+              , hv.work_cn
+              , hv.repair_detail
+              , hv.etc_matter
+              , hv.repair_reqest
+              , hv.chrg_cnslr_esntl_id
+              , F_GET_EMPLYR_NM(hv.chrg_cnslr_esntl_id)                     AS chrg_cnslr_esntl_nm
+              , hv.rcept_no
+              , hv.altr_esntl_id
+              , F_GET_EMPLYR_NM(hv.altr_esntl_id)                           AS altr_esntl_nm
+              , TO_CHAR(hv.asgn_dt, 'YYYY-MM-DD HH24:MI:SS')                AS asgn_dt
+              , hv.remark
+              , hv.refrn_matter
+              , hv.frst_call_opetr_id
+              , F_GET_EMPLYR_NM(hv.frst_call_opetr_id)                      AS frst_call_opetr_nm
+              , TO_CHAR(hv.frst_call_process_dt, 'YYYY-MM-DD HH24:MI:SS')   AS frst_call_process_dt
+              , hv.frst_call_result_code
+              , crcn.frst_call_result_code_nm
+              , hv.absnce_call_opetr_id
+              , F_GET_EMPLYR_NM(hv.absnce_call_opetr_id)                    AS absnce_call_opetr_nm
+              , TO_CHAR(hv.absnce_call_process_dt, 'YYYY-MM-DD HH24:MI:SS') AS absnce_call_process_dt
+              , hv.absnce_call_result_code
+              , crcn2.absnce_call_result_code_nm
+              , (SELECT TO_CHAR(NVL(COUNT(1), 0)) FROM ca_hpcl_process_hist WHERE hpcl_id = hv.hpcl_id) AS call_cnt
+          FROM
+                ca_hpcl_view hv
+              , ca_replc r
+              , (SELECT code_id, code, code_nm AS replc_se_code_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'REPLCSE') rpse
+              , (SELECT code_id, code, code_nm AS frst_call_result_code_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'CLRSLTCD') crcn
+              , (SELECT code_id, code, code_nm AS absnce_call_result_code_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'CLRSLTCD') crcn2
+         WHERE
+                hv.intrfc_replc_id = r.replc_esntl_id
+           AND  r.replc_se_code = rpse.code(+)
+           AND  hv.frst_call_result_code = crcn.code(+)
+           AND  hv.absnce_call_result_code = crcn2.code(+)
+           AND  hv.hpcl_id = #hpclId#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 해피콜 필드 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.26    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.07.26
+    -->
+    <select id="hpclDAO.selectHpclFieldList" parameterClass="HpclVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT
+                hpcl_id
+              , hpcl_field_id
+              , field_nm
+              , field_value
+          FROM
+                ca_hpcl_field
+         WHERE
+                hpcl_id = #hpclId#
+    ]]>
+    </select>
+
+
+
+</sqlMap>

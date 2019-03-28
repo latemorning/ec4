@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+
+        <form name="vhcleModelVO">
+            <field property="vhcleMakrCode" depends="required">
+                <arg0 key="vhcle.vhcleMakrCode" />
+            </field>
+            <field property="vhctyCode" depends="required">
+                <arg0 key="vhcle.vhctyCode" />
+            </field>
+            <field property="vhcleModelNm" depends="required, maxlength">
+                <arg0 key="vhcle.modelNm" />
+                <arg1 key="50" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+        </form>
+
+        <form name="vhcleDetailModelVO">
+            <field property="detailModelNm" depends="required, maxlength">
+                <arg0 key="vhcleDetail.detailModelNm" />
+                <arg1 key="50" resource="false"/>
+                <var>
+                    <var-name>maxlength</var-name>
+                    <var-value>50</var-value>
+                </var>
+            </field>
+            <field property="vhcleModelNm" depends="required">
+                <arg0 key="vhcle.modelNm" />
+            </field>
+            <field property="mdyrBegin" depends="required">
+                <arg0 key="vhcleDetail.mdyrBegin" />
+            </field>
+            <field property="mdyrEnd" depends="required">
+                <arg0 key="vhcleDetail.mdyrEnd" />
+            </field>
+        </form>
+
+
+
+
+    </formset>
+
+</form-validation>

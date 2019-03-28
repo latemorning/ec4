@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <sqlMap resource="egovframework/sqlmap/ec4/cmm/cinfo/cmt/EC4CstmrSQL_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/cmm/cinfo/ccm/EC4CstmrCarSQL_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/cmm/cinfo/cstmr/EC4cstmrIntgrMngSQL_SQL_Oracle.xml"></sqlMap>
+</sqlMapConfig>

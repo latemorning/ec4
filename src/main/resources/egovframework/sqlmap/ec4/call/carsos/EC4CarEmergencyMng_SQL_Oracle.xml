@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CarEmergency">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <!-- <typeAlias  alias="cnsltTypeDefaultVO" type="egovframework.ec4.call.cmpl.service.CnsltTypeDefaultVO"/> -->
+    <typeAlias  alias="carSosReceiptMngVO" type="egovframework.ec4.call.carsos.service.CarSosReceiptMngVO"/>
+    <typeAlias  alias="cmnDetailCode" type="egovframework.com.cmm.service.CmmnDetailCode"/>
+
+
+
+
+
+    <!--
+        쿼리명 : 긴급출동접수 저장
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.02    CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2019.01.02
+    -->
+    <insert id="carSosReceiptMngDAO.insertCarSosReceiptReg">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CAR_EMERGENCY_MNG
+		      (
+			        EMERGENCY_RCPT_NO              /* 접수번호 */
+			      , RCPT_DT                        /* 접수일자 */
+			      , RCPT_USER_ID				   /* 접수자아이디 */
+			      , NETWORK_ID                     /* 네트워크아이디 */
+			      , NETWORK_TYPE                   /* 네트워크유형 */
+			      , CSTMR_CAR_STATUS_ID            /* 고객차량상태 */
+			      , CSTMR_CAR_STTUS_NM             /* 고객차량상태명 */
+			      , CSTMR_CD                       /* 고객코드 */
+			      , CSTMR_NM                       /* 고객명 */
+			      , CSTMR_KND                      /* 고객구분 */
+			      , HPNO                           /* 휴대전화 */
+			      , EMAIL_ADRES                    /* 이메일주소 */
+			      , EMAIL_DOMAIN                   /* 이메일도메인 */
+			      , VHCLE_NO                       /* 차량번호 */
+			      , VECLE_NO1                      /* 차량번호1 */
+			      , VECLE_NO2                      /* 차량번호2 */
+			      , VIN                            /* 차대번호 */
+			      , VIN1                           /* 차대번호1 */
+			      , VIN2                           /* 차대번호2 */
+			      , VHCTY_CODE                     /* 차종코드 */
+			      , CSTMR_PLC                      /* 고객위치 */
+			      , POST_ID                        /* 포스트 */
+			      , ODOMETER                       /* 주행거리 */
+			      , EMERGENCY_DT                   /* 출동일자 */
+			      , EMERGENCY_TIME                 /* 출동시간 */
+			      , ARRIVAL_DT                     /* 도착일자 */
+			      , ARRIVAL_TIME                   /* 도착시간 */
+			      , END_DT                         /* 끝일시 */
+			      , END_TIME                       /* 완료시간 */
+			      , SERVICE_ID                     /* 조치코드 */
+			      , RESULT_TYPE                    /* 상담처리상태 */
+			      , ETC_MEMO                       /* 기타메모 */
+			      , SELF_FLAG                      /* 자체처리정보 */
+			      , EMERGENCY_VHCTY_CODE           /* 출동차종 */
+			      , EMERGENCY_POST_ID              /* 출동포스트 */
+			      , EMERGENCY_VIN1                 /* 출동차대번호1 */
+			      , EMERGENCY_VIN2                 /* 출동차대번호2 */
+			      , EMERGENCY_VIN_CHK_YN           /* 출동차대번호체크여부 */
+			      , ZIP                            /* 우편번호 */
+			      , ADRES                          /* 주소 */
+			      , ADRES_DETAIL                   /* 주소상세 */
+			      , REQ_CSTMR_NM                   /* 의뢰인명 */
+			      , REQ_CSTMR_HPNO                 /* 의뢰인연락처 */
+			      , CNSLT_INCALL_NO				   /* 인바운드콜번호 */
+			      , CALL_CD                        /* 콜코드 */
+			      , CALL_COLECT_GB_CD              /* 콜수집구분코드 */
+			      , CNSLT_USER_ID                  /* 상담원아이디 */
+			      , REGIST_DE                      /* 등록일자 */
+			      , REGISTER                       /* 등록자 */
+			      , UPDT_DE                        /* 수정일자 */
+			      , UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+			        #emergencyRcptNo#                /* 접수번호 */
+			      , TO_CHAR(SYSDATE,'YYYY-MM-DD')    /* 접수일자 */
+			      , #rcptUserId#					 /* 접수자아이디 */
+			      , #networkId#                      /* 네트워크아이디 */
+			      , #networkType#                    /* 네트워크유형 */
+			      , #cstmrCarStatusId#               /* 고객차량상태 */
+			      , #cstmrCarSttusNm#                /* 고객차량상태명 */
+			      , #cstmrCd#                        /* 고객코드 */
+			      , #cstmrNm#                        /* 고객명 */
+			      , #cstmrKnd#                       /* 고객구분 */
+			      , #hpno#                           /* 휴대전화 */
+			      /* , emailAdres                     이메일주소 */
+			      /* , emailDomain                    이메일도메인 */
+			      , SUBSTR(#emailAdres#,1,INSTR(#emailAdres#,'@')-1)
+			      , SUBSTR(#emailAdres#,INSTR(#emailAdres#,'@')+1)
+			      , #vhcleNo#                        /* 차량번호 */
+			      , #vecleNo1#                       /* 차량번호1 */
+			      , #vecleNo2#                       /* 차량번호2 */
+			      , #vin#                            /* 차대번호 */
+			      , #vin1#                           /* 차대번호1 */
+			      , #vin2#                           /* 차대번호2 */
+			      , #vhctyCode#                      /* 차종코드 */
+			      , #cstmrPlc#                       /* 고객위치 */
+			      , #postId#                         /* 포스트 */
+			      , #odometer#                       /* 주행거리 */
+			      , #emergencyDt#                    /* 출동일자 */
+			      , #emergencyTime#                  /* 출동시간 */
+			      , #arrivalDt#                      /* 도착일자 */
+			      , #arrivalTime#                    /* 도착시간 */
+			      , #endDt#                          /* 끝일시 */
+			      , #endTime#                        /* 완료시간 */
+			      , #serviceId#                      /* 조치코드 */
+			      , #resultType#                     /* 상담처리상태 */
+			      , #etcMemo#                        /* 기타메모 */
+			      , #selfFlag#                       /* 자체처리정보 */
+			      , #emergencyVhctyCode#             /* 출동차종 */
+			      , #emergencyPostId#                /* 출동포스트 */
+			      , #emergencyVin1#                  /* 출동차대번호1 */
+			      , #emergencyVin2#                  /* 출동차대번호2 */
+			      , #emergencyVinChkYn#              /* 출동차대번호체크여부 */
+			      , #zip#                            /* 우편번호 */
+			      , #adres#                          /* 주소 */
+			      , #adresDetail#                    /* 주소상세 */
+			      , #reqCstmrNm#                     /* 의뢰인명 */
+			      , #reqCstmrHpno#                   /* 의뢰인연락처 */
+			      , #cnsltIncallNo#					 /* 인바운드콜번호 */
+			      , #callCd#                         /* 콜코드 */
+			      , #callColectGbCd#                 /* 콜수집구분코드 */
+			      , #cnsltUserId#                    /* 상담원아이디 */
+			      , SYSDATE                       /* 등록일자 */
+			      , #register#                       /* 등록자 */
+			      , SYSDATE                         /* 수정일자 */
+			      , #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>  
+
+
+    <!--
+        쿼리명 : 긴급출동접수 수정
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.01.02
+    -->
+    <update id="carSosReceiptMngDAO.updateCarSosReceiptReg">
+    <![CDATA[
+        UPDATE
+                CAR_EMERGENCY_MNG
+           SET
+			      /* , RCPT_DT                            = rcptDt                           접수일자 */
+			      /* , RCPT_USER_ID					   = rcptUserId						접수자아이디 */
+			        NETWORK_ID                         = #networkId#                        /* 네트워크아이디 */
+			      , NETWORK_TYPE                       = #networkType#                      /* 네트워크유형 */
+			      , CSTMR_CAR_STATUS_ID                = #cstmrCarStatusId#                 /* 고객차량상태 */
+			      , CSTMR_CAR_STTUS_NM                 = #cstmrCarSttusNm#                  /* 고객차량상태명 */
+			      , CSTMR_CD                           = #cstmrCd#                          /* 고객코드 */
+			      , CSTMR_NM                           = #cstmrNm#                          /* 고객명 */
+			      , CSTMR_KND                          = #cstmrKnd#                         /* 고객구분 */
+			      , HPNO                               = #hpno#                             /* 휴대전화 */
+			      , EMAIL_ADRES                        = #emailAdres#                       /* 이메일주소 */
+			      , EMAIL_DOMAIN                       = #emailDomain#                      /* 이메일도메인 */
+			      , VHCLE_NO                           = #vhcleNo#                          /* 차량번호 */
+			      , VECLE_NO1                          = #vecleNo1#                         /* 차량번호1 */
+			      , VECLE_NO2                          = #vecleNo2#                         /* 차량번호2 */
+			      , VIN                                = #vin#                              /* 차대번호 */
+			      , VIN1                               = #vin1#                             /* 차대번호1 */
+			      , VIN2                               = #vin2#                             /* 차대번호2 */
+			      , VHCTY_CODE                         = #vhctyCode#                        /* 차종코드 */
+			      , CSTMR_PLC                          = #cstmrPlc#                         /* 고객위치 */
+			      , POST_ID                            = #postId#                           /* 포스트 */
+			      , ODOMETER                           = #odometer#                         /* 주행거리 */
+			      , EMERGENCY_DT                       = #emergencyDt#                      /* 출동일자 */
+			      , EMERGENCY_TIME                     = #emergencyTime#                    /* 출동시간 */
+			      , ARRIVAL_DT                         = #arrivalDt#                        /* 도착일자 */
+			      , ARRIVAL_TIME                       = #arrivalTime#                      /* 도착시간 */
+			      , END_DT                             = #endDt#                            /* 끝일시 */
+			      , END_TIME                           = #endTime#                          /* 완료시간 */
+			      , SERVICE_ID                         = #serviceId#                        /* 조치코드 */
+			      , RESULT_TYPE                        = #resultType#                       /* 상담처리상태 */
+			      , ETC_MEMO                           = #etcMemo#                          /* 기타메모 */
+			      , SELF_FLAG                          = #selfFlag#                         /* 자체처리정보 */
+			      , EMERGENCY_VHCTY_CODE               = #emergencyVhctyCode#               /* 출동차종 */
+			      , EMERGENCY_POST_ID                  = #emergencyPostId#                  /* 출동포스트 */
+			      , EMERGENCY_VIN1                     = #emergencyVin1#                    /* 출동차대번호1 */
+			      , EMERGENCY_VIN2                     = #emergencyVin2#                    /* 출동차대번호2 */
+			      , EMERGENCY_VIN_CHK_YN               = #emergencyVinChkYn#                /* 출동차대번호체크여부 */
+			      , ZIP                                = #zip#                              /* 우편번호 */
+			      , ADRES                              = #adres#                            /* 주소 */
+			      , ADRES_DETAIL                       = #adresDetail#                      /* 주소상세 */
+			      , REQ_CSTMR_NM                       = #reqCstmrNm#                       /* 의뢰인명 */
+			      , REQ_CSTMR_HPNO                     = #reqCstmrHpno#                     /* 의뢰인연락처 */
+			      , CALL_CD                            = #callCd#                           /* 콜코드 */
+			      , CALL_COLECT_GB_CD                  = #callColectGbCd#                   /* 콜수집구분코드 */
+			      , CNSLT_USER_ID                      = #cnsltUserId#                      /* 상담원아이디 */
+			      , UPDT_DE                            = SYSDATE                           /* 수정일자 */
+			      , UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE EMERGENCY_RCPT_NO                  = #emergencyRcptNo#                  /* 접수번호 */
+
+    ]]>
+    </update> 
+
+
+
+
+    <!--
+        쿼리명 : 긴급출동접수 목록
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.01.02
+    -->
+    <select id="carSosReceiptMngDAO.selectCarSosReceiptHistList" parameterClass="carSosReceiptMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+						        EMR.EMERGENCY_RCPT_NO              /* 접수번호 */
+						      , EMR.RCPT_DT                        /* 접수일자 */
+						      , EMR.NETWORK_ID                     /* 네트워크아이디 */
+						      , EMR.NETWORK_TYPE                   /* 네트워크유형 */
+						      , EMR.CSTMR_CAR_STATUS_ID            /* 고객차량상태 */
+						      , EMR.CSTMR_CAR_STTUS_NM             /* 고객차량상태명 */
+						      , EMR.CSTMR_CD                       /* 고객코드 */
+						      , EMR.CSTMR_NM                       /* 고객명 */
+						      , EMR.CSTMR_KND                      /* 고객구분 */
+						      , EMR.HPNO                           /* 휴대전화 */
+						      , EMR.EMAIL_ADRES                    /* 이메일주소 */
+						      , EMR.EMAIL_DOMAIN                   /* 이메일도메인 */
+						      , EMR.VHCLE_NO                       /* 차량번호 */
+						      , EMR.VECLE_NO1                      /* 차량번호1 */
+						      , EMR.VECLE_NO2                      /* 차량번호2 */
+						      , EMR.VIN                            /* 차대번호 */
+						      , EMR.VIN1                           /* 차대번호1 */
+						      , EMR.VIN2                           /* 차대번호2 */
+						      , EMR.VHCTY_CODE                     /* 차종코드 */
+						      , EMR.CSTMR_PLC                      /* 고객위치 */
+						      , EMR.POST_ID                        /* 포스트 */
+						      , EMR.ODOMETER                       /* 주행거리 */
+						      , EMR.EMERGENCY_DT                   /* 출동일자 */
+						      , EMR.EMERGENCY_TIME                 /* 출동시간 */
+						      , EMR.ARRIVAL_DT                     /* 도착일자 */
+						      , EMR.ARRIVAL_TIME                   /* 도착시간 */
+						      , EMR.END_DT                         /* 끝일시 */
+						      , EMR.END_TIME                       /* 완료시간 */
+						      , EMR.SERVICE_ID                     /* 조치코드 */
+						      , EMR.RESULT_TYPE                    /* 상담처리상태 */
+						      , EMR.ETC_MEMO                       /* 기타메모 */
+						      , EMR.SELF_FLAG                      /* 자체처리정보 */
+						      , EMR.EMERGENCY_VHCTY_CODE           /* 출동차종 */
+						      , EMR.EMERGENCY_POST_ID              /* 출동포스트 */
+						      , EMR.EMERGENCY_VIN1                 /* 출동차대번호1 */
+						      , EMR.EMERGENCY_VIN2                 /* 출동차대번호2 */
+						      , EMR.EMERGENCY_VIN_CHK_YN           /* 출동차대번호체크여부 */
+						      , EMR.ZIP                            /* 우편번호 */
+						      , EMR.ADRES                          /* 주소 */
+						      , EMR.ADRES_DETAIL                   /* 주소상세 */
+						      , EMR.REQ_CSTMR_NM                   /* 의뢰인명 */
+						      , EMR.REQ_CSTMR_HPNO                 /* 의뢰인연락처 */
+						      , EMR.CALL_CD                        /* 콜코드 */
+						      , EMR.CALL_COLECT_GB_CD              /* 콜수집구분코드 */
+						      , EMR.CNSLT_USER_ID                  /* 상담원아이디 */
+						      , EMR.REGIST_DE                      /* 등록일자 */
+						      , EMR.REGISTER                       /* 등록자 */
+						      , EMR.UPDT_DE                        /* 수정일자 */
+						      , EMR.UPDUSR                         /* 수정자 */
+						      , EMR.EMAIL_ADRES||''||EMR.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+						      , (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = EMR.CNSLT_USER_ID) AS "CNSLT_NM"
+						      , (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = EMR.RCPT_USER_ID) AS "RCPT_NM"
+						FROM CAR_EMERGENCY_MNG EMR
+						    ,CNSLT_INBOUND_MNG INBD
+						    ,CA_ITGRT_CSTMR CST
+						    ,COMTNEMPLYRINFO REMP
+						    ,COMTNEMPLYRINFO CEMP
+						WHERE 1=1
+						AND EMR.CNSLT_INCALL_NO = INBD.CNSLT_INCALL_NO(+) 
+						AND EMR.CNSLT_USER_ID = INBD.CNSLT_USER_ID(+)
+						AND EMR.CSTMR_CD = INBD.CSTMR_CD(+)
+						AND EMR.CSTMR_CD = CST.CSTMR_ESNTL_ID(+)
+						AND EMR.RCPT_USER_ID = REMP.ESNTL_ID(+)
+						AND EMR.CNSLT_USER_ID = CEMP.ESNTL_ID(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              EMR.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              EMR.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              EMR.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              EMR.EMAIL_ADRES||'@'||EMR.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              INBD.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              EMR.RCPT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              EMR.RCPT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              EMR.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              INBD.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              INBD.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              INBD.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              INBD.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = INBD.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = INBD.CNSLT_USER_ID
+                              			AND CSTMR_CD = INBD.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+            
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 긴급출동접수 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.01.02
+    -->
+    <select id="carSosReceiptMngDAO.selectCarSosReceiptHistListCnt" parameterClass="carSosReceiptMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CAR_EMERGENCY_MNG EMR
+						    ,CNSLT_INBOUND_MNG INBD
+						    ,CA_ITGRT_CSTMR CST
+						    ,COMTNEMPLYRINFO REMP
+						    ,COMTNEMPLYRINFO CEMP
+						WHERE 1=1
+						AND EMR.CNSLT_INCALL_NO = INBD.CNSLT_INCALL_NO(+) 
+						AND EMR.CNSLT_USER_ID = INBD.CNSLT_USER_ID(+)
+						AND EMR.CSTMR_CD = INBD.CSTMR_CD(+)
+						AND EMR.CSTMR_CD = CST.CSTMR_ESNTL_ID(+)
+						AND EMR.RCPT_USER_ID = REMP.ESNTL_ID(+)
+						AND EMR.CNSLT_USER_ID = CEMP.ESNTL_ID(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              EMR.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              EMR.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              EMR.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              EMR.EMAIL_ADRES||'@'||EMR.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              INBD.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              EMR.RCPT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              EMR.RCPT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              EMR.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              INBD.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              INBD.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              INBD.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              INBD.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = INBD.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = INBD.CNSLT_USER_ID
+                              			AND CSTMR_CD = INBD.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 긴급출동접수 수정load
+        설  명 :
+        수정일        수정자    수정내용
+        2019.01.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.01.02
+    -->
+    <select id="carSosReceiptMngDAO.selectCarSosReceiptModLoad" parameterClass="carSosReceiptMngVO" resultClass="egovMap">
+    <![CDATA[
+             SELECT
+			        EMR.EMERGENCY_RCPT_NO              /* 접수번호 */
+			      , EMR.RCPT_DT                        /* 접수일자 */
+			      , EMR.NETWORK_ID                     /* 네트워크아이디 */
+			      , EMR.NETWORK_TYPE                   /* 네트워크유형 */
+			      , EMR.CSTMR_CAR_STATUS_ID            /* 고객차량상태 */
+			      , EMR.CSTMR_CAR_STTUS_NM             /* 고객차량상태명 */
+			      , EMR.CSTMR_CD                       /* 고객코드 */
+			      , EMR.CSTMR_NM                       /* 고객명 */
+			      , EMR.CSTMR_KND                      /* 고객구분 */
+			      , EMR.HPNO                           /* 휴대전화 */
+			      , EMR.EMAIL_ADRES                    /* 이메일주소 */
+			      , EMR.EMAIL_DOMAIN                   /* 이메일도메인 */
+			      , EMR.VHCLE_NO                       /* 차량번호 */
+			      , EMR.VECLE_NO1                      /* 차량번호1 */
+			      , EMR.VECLE_NO2                      /* 차량번호2 */
+			      , EMR.VIN                            /* 차대번호 */
+			      , EMR.VIN1                           /* 차대번호1 */
+			      , EMR.VIN2                           /* 차대번호2 */
+			      , EMR.VHCTY_CODE                     /* 차종코드 */
+			      , EMR.CSTMR_PLC                      /* 고객위치 */
+			      , EMR.POST_ID                        /* 포스트 */
+			      , EMR.ODOMETER                       /* 주행거리 */
+			      , EMR.EMERGENCY_DT                   /* 출동일자 */
+			      , EMR.EMERGENCY_TIME                 /* 출동시간 */
+			      , EMR.ARRIVAL_DT                     /* 도착일자 */
+			      , EMR.ARRIVAL_TIME                   /* 도착시간 */
+			      , EMR.END_DT                         /* 끝일시 */
+			      , EMR.END_TIME                       /* 완료시간 */
+			      , EMR.SERVICE_ID                     /* 조치코드 */
+			      , EMR.RESULT_TYPE                    /* 상담처리상태 */
+			      , EMR.ETC_MEMO                       /* 기타메모 */
+			      , EMR.SELF_FLAG                      /* 자체처리정보 */
+			      , EMR.EMERGENCY_VHCTY_CODE           /* 출동차종 */
+			      , EMR.EMERGENCY_POST_ID              /* 출동포스트 */
+			      , EMR.EMERGENCY_VIN1                 /* 출동차대번호1 */
+			      , EMR.EMERGENCY_VIN2                 /* 출동차대번호2 */
+			      , EMR.EMERGENCY_VIN_CHK_YN           /* 출동차대번호체크여부 */
+			      , EMR.ZIP                            /* 우편번호 */
+			      , EMR.ADRES                          /* 주소 */
+			      , EMR.ADRES_DETAIL                   /* 주소상세 */
+			      , EMR.REQ_CSTMR_NM                   /* 의뢰인명 */
+			      , EMR.REQ_CSTMR_HPNO                 /* 의뢰인연락처 */
+			      , EMR.CALL_CD                        /* 콜코드 */
+			      , EMR.CALL_COLECT_GB_CD              /* 콜수집구분코드 */
+			      , EMR.CNSLT_USER_ID                  /* 상담원아이디 */
+			      , EMR.EMAIL_ADRES||''||EMR.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+			      , (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = EMR.CNSLT_USER_ID) AS "CNSLT_NM"
+			      , (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = EMR.RCPT_USER_ID) AS "RCPT_NM"
+			FROM CAR_EMERGENCY_MNG EMR
+			    ,CNSLT_INBOUND_MNG INBD
+			    ,CA_ITGRT_CSTMR CST
+			    ,COMTNEMPLYRINFO REMP
+			    ,COMTNEMPLYRINFO CEMP
+			WHERE 1=1
+			AND EMR.CNSLT_INCALL_NO = INBD.CNSLT_INCALL_NO(+) 
+			AND EMR.CNSLT_USER_ID = INBD.CNSLT_USER_ID(+)
+			AND EMR.CSTMR_CD = INBD.CSTMR_CD(+)
+			AND EMR.CSTMR_CD = CST.CSTMR_ESNTL_ID(+)
+			AND EMR.RCPT_USER_ID = REMP.ESNTL_ID(+)
+			AND EMR.CNSLT_USER_ID = CEMP.ESNTL_ID(+)
+			AND EMR.EMERGENCY_RCPT_NO = #emergencyRcptNo#
+    ]]>
+    </select>
+
+</sqlMap>

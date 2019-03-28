@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/cmpgn/EC4Cmpgn_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/hpcl/EC4Hpcl_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/cnslt/EC4Cnslt_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/outcall/EC4CallScript_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/outcall/EC4CnsltOutBoundTargetCust_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/outcall/EC4CnsltDistrib_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/outcall/EC4CnsltOutBoundMng_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/smt/prm/EC4ReplcManage_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/smt/stm/EC4MsgTmplat_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/smt/cmt/EC4CntrctManage_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/smt/cgm/EC4GoodsManage_SQL_Oracle.xml"></sqlMap>
+    <sqlMap resource="egovframework/sqlmap/ec4/call/outbd/smt/ctm/EC4CallTypeManage_SQL_Oracle.xml"></sqlMap>
+</sqlMapConfig>

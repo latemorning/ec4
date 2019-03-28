@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltType">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltTypeDefaultVO" type="egovframework.ec4.cmm.cbase.ctm.service.CnsltTypeDefaultVO"/>
+    <typeAlias  alias="cnsltTypeVO" type="egovframework.ec4.cmm.cbase.ctm.service.CnsltTypeVO"/>
+
+
+    <!--
+        쿼리명 : 상담유형 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.18    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.05.18
+    -->
+    <select id="cnsltTypeDAO.selectCnsltTypeList" parameterClass="cnsltTypeDefaultVO" resultClass="egovMap">
+    <![CDATA[
+		SELECT
+		        code_id
+		      , code_nm
+		      , sort_ordr
+		      , use_at
+		  FROM
+		        ca_cnslt_code
+		 WHERE
+		        code_id != '0'
+    ]]>
+        <isNotEmpty property="searchParntsCodeId" prepend="AND">
+        <![CDATA[
+                parnts_code_id = #searchParntsCodeId#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchCnsltSeCode" prepend="AND">
+        <![CDATA[
+                cnslt_se_code = #searchCnsltSeCode#
+        ]]>
+        </isNotEmpty>
+    <![CDATA[
+         ORDER BY
+                sort_ordr
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담유형 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.28    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.05.28
+    -->
+    <select id="cnsltTypeDAO.selectCnsltTypeListCnt" parameterClass="cnsltTypeDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+          FROM
+                ca_cnslt_code
+         WHERE
+                code_id != '0'
+    ]]>
+        <isNotEmpty property="searchParntsCodeId" prepend="AND">
+        <![CDATA[
+                parnts_code_id = #searchParntsCodeId#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchCnsltSeCode" prepend="AND">
+        <![CDATA[
+                cnslt_se_code = #searchCnsltSeCode#
+        ]]>
+        </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담유형 상세
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.28    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.05.28
+    -->
+    <select id="cnsltTypeDAO.selectCnsltType" parameterClass="cnsltTypeVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT
+                cc.code_id
+              , cc.code_nm
+              , cc.parnts_code_id
+              , cc.cnslt_se_code
+              , cn.cnslt_se_nm
+              , cc.sort_ordr
+              , cc.use_at
+          FROM
+                ca_cnslt_code cc
+              , (SELECT code_id, code, code_nm AS cnslt_se_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'CNSE' AND use_at='Y') cn
+         WHERE
+                cc.cnslt_se_code = cn.code(+)
+           AND  cc.code_id = #codeId#
+           AND  cc.cnslt_se_code = #cnsltSeCode#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담유형 등록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.24    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.05.24
+    -->
+    <insert id="cnsltTypeDAO.insertCnsltType">
+    <![CDATA[
+		INSERT
+		  INTO
+		        ca_cnslt_code
+		      (
+		        code_id
+		      , code_nm
+		      , parnts_code_id
+		      , cnslt_se_code
+		      , sort_ordr
+		      , use_at
+		      , frst_regist_pnttm
+		      , frst_register_id
+		      , last_updt_pnttm
+		      , last_updusr_id
+		      )
+		VALUES
+		      (
+		        #codeId#
+		      , #codeNm#
+		      , #parntsCodeId#
+		      , #cnsltSeCode#
+		      , #sortOrdr#
+		      , #useAt#
+		      , SYSDATE
+		      , #frstRegisterId#
+		      , SYSDATE
+		      , #lastUpdusrId#
+		      )
+    ]]>
+    </insert>
+
+
+    <!--
+        쿼리명 : 상담유형 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.28    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.05.28
+    -->
+    <update id="cnsltTypeDAO.updateCnsltType">
+    <![CDATA[
+		UPDATE
+		        ca_cnslt_code
+		   SET
+		        code_nm         = #codeNm#
+		      , sort_ordr       = #sortOrdr#
+		      , use_at          = #useAt#
+		      , last_updt_pnttm = SYSDATE
+		      , last_updusr_id  = #lastUpdusrId#
+		 WHERE
+		        code_id         = #codeId#
+		   AND  cnslt_se_code   = #cnsltSeCode#
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상담유형 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.06.04    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.06.04
+    -->
+    <delete id="cnsltTypeDAO.deleteCnsltType">
+    <![CDATA[
+        DELETE
+          FROM
+                ca_cnslt_code
+         WHERE
+                code_id = #codeId#
+    ]]>
+    </delete>
+
+
+
+
+
+
+    <!--
+        쿼리명 : 상담유형 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.12    cjj     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.12
+    -->
+    <select id="cnsltTypeDAO.selectCallCnsltTypeList" parameterClass="cnsltTypeDefaultVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+							SELECT 
+									LV1.CODE_ID                         AS "codeId"                                   /* 코드 ID */
+									, LV1.CODE_NM                       AS "codeNm"                                   /* 코드 명 */
+									, LV1.PARNTS_CODE_ID                AS "parntsCodeId"                             /* 부모 코드 ID */
+									, LV1.CNSLT_SE_CODE                 AS "cnsltSeCode"                              /* 상담 구분 코드 */
+									, LV1.SORT_ORDR                     AS "sortOrdr"                                 /* 정렬 순서 */
+									, LV1.USE_AT                        AS "useAt"                                    /* 사용 여부 */
+									, LV1.FRST_REGIST_PNTTM             AS "frstRegistPnttm"                          /* 최초 등록 시점 */
+									, LV1.FRST_REGISTER_ID              AS "frstRegisterId"                           /* 최초 등록자 ID */
+									, LV1.LAST_UPDT_PNTTM               AS "lastUpdtPnttm"                            /* 최종 수정 시점 */
+									, LV1.LAST_UPDUSR_ID                AS "lastUpdusrId"                             /* 최종 수정자 ID */
+							        , LV2.CODE_ID 						AS "codeIdLv2"
+							        , LV2.CODE_NM 						AS "codeNmLv2"
+							        , LV2.PARNTS_CODE_ID 				AS "parntsCodeIdLv2"
+							        , LV3.CODE_ID 						AS "codeIdLv3"
+							        , LV3.CODE_NM 						AS "codeNmLv3"
+							        , LV3.PARNTS_CODE_ID 				AS "parntsCodeIdLv3"
+							        , LV4.CODE_ID 						AS "codeIdLv4"
+							        , LV4.CODE_NM 						AS "codeNmLv4"
+							        , LV4.PARNTS_CODE_ID 				AS "parntsCodeIdLv4"
+							    FROM   CA_CNSLT_CODE LV1, CA_CNSLT_CODE LV2, CA_CNSLT_CODE LV3, CA_CNSLT_CODE LV4
+							   WHERE   LV1.CODE_ID != '0' 
+							   AND     LV1.PARNTS_CODE_ID = '0'         AND LV1.CNSLT_SE_CODE = #searchCnsltSeCode#
+							   AND     LV1.CODE_ID = LV2.PARNTS_CODE_ID AND LV2.CNSLT_SE_CODE = #searchCnsltSeCode#
+							   AND     LV2.CODE_ID = LV3.PARNTS_CODE_ID AND LV3.CNSLT_SE_CODE = #searchCnsltSeCode#
+							   AND     LV3.CODE_ID = LV4.PARNTS_CODE_ID AND LV4.CNSLT_SE_CODE = #searchCnsltSeCode#
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="CL_CODE_NM">
+            <![CDATA[
+            				<!-- ORDER BY LV1.PARNTS_CODE_ID, LV1.SORT_ORDR, LV1.CODE_ID -->
+                              LV1.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEqual property="sortColNm" compareValue="CL_CODE_NM">
+            <![CDATA[
+                              LV1.$sortColNm$
+            ]]>
+            </isNotEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담유형 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.12    cjj     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.12
+    -->
+    <select id="cnsltTypeDAO.selectCallCnsltTypeListCnt" parameterClass="cnsltTypeDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+		    FROM   CA_CNSLT_CODE LV1, CA_CNSLT_CODE LV2, CA_CNSLT_CODE LV3, CA_CNSLT_CODE LV4
+		   WHERE   LV1.CODE_ID != '0' 
+		   AND     LV1.PARNTS_CODE_ID = '0'         AND LV1.CNSLT_SE_CODE = #searchCnsltSeCode#
+		   AND     LV1.CODE_ID = LV2.PARNTS_CODE_ID AND LV2.CNSLT_SE_CODE = #searchCnsltSeCode#
+		   AND     LV2.CODE_ID = LV3.PARNTS_CODE_ID AND LV3.CNSLT_SE_CODE = #searchCnsltSeCode#
+		   AND     LV3.CODE_ID = LV4.PARNTS_CODE_ID AND LV4.CNSLT_SE_CODE = #searchCnsltSeCode#
+    ]]>
+    </select>
+
+
+</sqlMap>

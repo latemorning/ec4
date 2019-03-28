@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltSchedule">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltScheduleMngVO" type="egovframework.ec4.call.cnslt.service.CnsltScheduleMngVO"/>
+    
+
+
+
+
+    <!--
+        쿼리명 : 상담원경력 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.28    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.28
+    -->
+    <select id="cnsltScheduleMngDAO.selectCnsltScheduleRegList" parameterClass="cnsltScheduleMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.CNSLT_USER_ID                  /* 상담원아이디 */
+							, C.WORK_COMP                      /* 근무회사 */
+							, C.WORK_BEGIN_DT                  /* 작업시작일시 */
+							, C.RESIGNED_DT                    /* 퇴사일자 */
+							, C.WORK_PART                      /* 업무역할 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+							, E.USER_NM AS CNSLT_USER_NM
+						FROM CNSLT_CAREER_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+	            <isEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.WORK_BEGIN_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            	]]>
+	            </isEqual>
+	            <isNotEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.RESIGNED_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+	            ]]>
+            	</isNotEqual>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원경력 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.28    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.28
+    -->
+    <select id="cnsltScheduleMngDAO.selectCnsltScheduleRegListCnt" parameterClass="cnsltScheduleMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CNSLT_CAREER_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+	            <isEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.WORK_BEGIN_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            	]]>
+	            </isEqual>
+	            <isNotEqual property="searchKnd" compareValue="1">
+	            <![CDATA[
+                              C.RESIGNED_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+	            ]]>
+            	</isNotEqual>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+
+
+</sqlMap>

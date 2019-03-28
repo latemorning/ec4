@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Cstmr">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cstmrDefaultVO" type="egovframework.ec4.cmm.cinfo.ctm.service.CstmrDefaultVO"/>
+    <typeAlias  alias="cstmrVO" type="egovframework.ec4.cmm.cinfo.ctm.service.CstmrVO"/>
+
+
+    <!--
+        쿼리명 : 고객정보 상세
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.26    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.26
+    -->
+    <select id="cstmrDAO.selectCstmr" parameterClass="cstmrVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT
+                cstmr_esntl_id
+              , cstmr_id
+              , cstmr_nm
+              , sexdstn_code
+              , mbtlnum
+              , telno
+              , offm_telno
+              , TO_CHAR(brthdy, 'YYYY-MM-DD') AS brthdy
+              , email
+              , house_zip
+              , house_adres
+              , house_detail_adres
+              , occp_ty_code
+              , office_zip
+              , office_adres
+              , office_detail_adres
+              , fxnum
+              , memo
+              , NVL(call_recptn_agre_at, 'N') AS call_recptn_agre_at
+              , call_recptn_agre_de
+              , call_recptn_reject_de
+              , NVL(blclst_at, 'N') AS blclst_at
+              , frst_regist_pnttm
+              , frst_register_id
+              , last_updt_pnttm
+              , last_updusr_id
+          FROM
+                ca_cstmr_view
+         WHERE
+                cstmr_esntl_id = #cstmrEsntlId#
+    ]]>
+    </select>
+
+</sqlMap>

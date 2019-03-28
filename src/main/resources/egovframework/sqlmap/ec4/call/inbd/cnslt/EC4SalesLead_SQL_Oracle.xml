@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SalesLead">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="salesLeadRegMngVO" type="egovframework.ec4.call.inbd.service.SalesLeadRegMngVO"/>
+    
+
+
+
+    <!--
+        쿼리명 : 상담화면(In) - 판매정보
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <insert id="salesLeadRegMngDAO.insertSalesLead">
+    <![CDATA[
+		INSERT
+		  INTO
+		        SALES_LEAD_INFO_MNG
+		      (
+					  CSTMR_CD                       /* 콜고객코드 */
+					, LEAD_DT                        /* 리드일자 */
+					, LEAD_SEQ                       /* 리드순번 */
+					, LEAD_TYPE                      /* 리드유형 */
+					, BRAND_CD                       /* 브랜드코드 */
+					, VHCTY                          /* 차종 */
+					, MODEL                          /* 모델 */
+					, COL_CD                         /* 색상 */
+					, HPNO                           /* 핸드폰번호 */
+					, TELNO                          /* 전화번호 */
+					, ZIP                            /* 우편번호 */
+					, ADRES                          /* 주소 */
+					, ADRES_DETAIL                   /* 주소상세 */
+					, SHOP_NM                        /* 전시장 */
+					, DELV_DT                        /* 희망출고일 */
+					, CSTMR_MEMO                     /* 고객메모 */
+					, CNSLT_CALL_NO                  /* 콜번호 */
+					, CNSLT_USER_ID                  /* 상담원아이디 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  #cstmrCd#                        /* 콜고객코드 */
+					, TO_CHAR(SYSDATE,'YYYY-MM-DD')    /* 리드일자 */
+					, #leadSeq#                        /* 리드순번 */
+					, #leadType#                       /* 리드유형 */
+					, #brandCd#                        /* 브랜드코드 */
+					, #vhcty#                          /* 차종 */
+					, #modelCd#                        /* 모델 */
+					, #colCd#                          /* 색상 */
+					, #hpno#                           /* 핸드폰번호 */
+					, #telno#                          /* 전화번호 */
+					, #zip#                            /* 우편번호 */
+					, #adres#                          /* 주소 */
+					, #adresDetail#                    /* 주소상세 */
+					, #shopNm#                         /* 전시장 */
+					, #delvDt#                         /* 희망출고일 */
+					, #cstmrMemo#                      /* 고객메모 */
+					, #cnsltCallNo#                    /* 콜번호 */
+					, #cnsltUserId#                    /* 상담원아이디 */
+					, SYSDATE	                       /* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE	                       /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : SALES판매 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <select id="salesLeadRegMngDAO.selectSalesLeadRegList" parameterClass="salesLeadRegMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+								  L.CSTMR_CD                                                      /* 콜고객코드 */
+								, TO_CHAR(L.LEAD_DT,'YYYY-MM-DD')   AS LEAD_DT                    /* 리드일자 */
+								, L.LEAD_SEQ                                                      /* 리드순번 */
+								, L.LEAD_TYPE                                                     /* 리드유형 */
+								, L.BRAND_CD                                                      /* 브랜드코드 */
+								, L.VHCTY                                                         /* 차종 */
+								, L.MODEL AS MODEL_CD                                             /* 모델 */
+								, L.COL_CD                                                        /* 색상 */
+								, L.HPNO                                                          /* 핸드폰번호 */
+								, L.TELNO                                                         /* 전화번호 */
+								, L.ZIP                                                           /* 우편번호 */
+								, L.ADRES                                                         /* 주소 */
+								, L.ADRES_DETAIL                                                  /* 주소상세 */
+								, L.SHOP_NM                                                       /* 전시장 */
+								, L.DELV_DT                                                       /* 희망출고일 */
+								, L.CSTMR_MEMO                                                    /* 고객메모 */
+								, L.CNSLT_CALL_NO                                                 /* 콜번호 */
+								, L.CNSLT_USER_ID                                                 /* 상담원아이디 */
+								, L.REGIST_DE                                                     /* 등록일자 */
+								, L.REGISTER                                                      /* 등록자 */
+								, L.UPDT_DE                                                       /* 수정일자 */
+								, L.UPDUSR                                                        /* 수정자 */
+								, C.CSTMR_NM 
+								, B.CODE_NM AS BRAND_NM
+								, V.CODE_NM AS VHCLE_NM
+								, VHCLE_MODEL_NM AS MODEL_NM
+								, '' AS COLOR_NM
+						FROM SALES_LEAD_INFO_MNG L
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE B
+							, COMTCCMMNDETAILCODE V
+							, SI_VHCLE_MODEL M
+						WHERE L.CSTMR_CD = C.CSTMR_ESNTL_ID
+						AND B.CODE_ID(+) = 'VMCD'
+						AND L.BRAND_CD = B.CODE(+)
+						AND V.CODE_ID(+) = 'VHCT'
+						AND L.VHCTY = V.CODE(+)
+						AND L.MODEL = M.VHCLE_MODEL_ID(+)
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              TO_CHAR(L.LEAD_DT,'YYYY-MM-DD') BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              L.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchShopNm" prepend="AND">
+            <![CDATA[
+                              L.SHOP_NM LIKE '%'||#searchShopNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchTelno" prepend="AND">
+            <![CDATA[
+                              C.TELNO LIKE '%'||#searchTelno#||'%'
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : SALES판매 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <select id="salesLeadRegMngDAO.selectSalesLeadRegListCnt" parameterClass="salesLeadRegMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM SALES_LEAD_INFO_MNG L
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE B
+							, COMTCCMMNDETAILCODE V
+							, SI_VHCLE_MODEL M
+						WHERE L.CSTMR_CD = C.CSTMR_ESNTL_ID
+						AND B.CODE_ID(+) = 'VMCD'
+						AND L.BRAND_CD = B.CODE(+)
+						AND V.CODE_ID(+) = 'VHCT'
+						AND L.VHCTY = V.CODE(+)
+						AND L.MODEL = M.VHCLE_MODEL_ID(+)
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              TO_CHAR(L.LEAD_DT,'YYYY-MM-DD') BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              L.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchShopNm" prepend="AND">
+            <![CDATA[
+                              L.SHOP_NM LIKE '%'||#searchShopNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchTelno" prepend="AND">
+            <![CDATA[
+                              C.TELNO LIKE '%'||#searchTelno#||'%'
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : SALES판매 목록 PK 순번
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.04    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.04
+    -->
+    <select id="salesLeadRegMngDAO.selectLeadSeqChk" parameterClass="salesLeadRegMngVO" resultClass="egovMap">
+    <![CDATA[
+                      SELECT  NVL(#cstmrCd#,'X') as CSTMR_CD,
+                              NVL(MAX(LEAD_SEQ),0)+1 as LEAD_SEQ
+						FROM SALES_LEAD_INFO_MNG 
+						WHERE CSTMR_CD = #cstmrCd#
+						AND TO_CHAR(LEAD_DT,'YYYY-MM-DD') = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : SALES리드판매정보 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.06    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.06
+    -->
+    <select id="salesLeadRegMngDAO.selectSalesLeadMod" parameterClass="salesLeadRegMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+			          L.CSTMR_CD                        AS "cstmrCd"                                  /* 콜고객코드 */
+			        , TO_CHAR(L.LEAD_DT,'YYYY-MM-DD')   AS "leadDt"                                   /* 리드일자 */
+			        , L.LEAD_SEQ                        AS "leadSeq"                                  /* 리드순번 */
+			        , L.LEAD_TYPE                       AS "leadType"                                 /* 리드유형 */
+			        , L.BRAND_CD                        AS "brandCd"                                  /* 브랜드코드 */
+			        , L.VHCTY                           AS "vhcty"                                    /* 차종 */
+			        , L.MODEL                           AS "modelCd"                                  /* 모델 */
+			        , L.COL_CD                          AS "colCd"                                    /* 색상 */
+			        , L.HPNO                            AS "hpno"                                     /* 핸드폰번호 */
+			        , L.TELNO                           AS "telno"                                    /* 전화번호 */
+			        , L.ZIP                             AS "zip"                                      /* 우편번호 */
+			        , L.ADRES                           AS "adres"                                    /* 주소 */
+			        , L.ADRES_DETAIL                    AS "adresDetail"                              /* 주소상세 */
+			        , L.SHOP_NM                         AS "shopNm"                                   /* 전시장 */
+			        , L.DELV_DT                         AS "delvDt"                                   /* 희망출고일 */
+			        , L.CSTMR_MEMO                      AS "cstmrMemo"                                /* 고객메모 */
+			        , L.CNSLT_CALL_NO                   AS "cnsltCallNo"                              /* 콜번호 */
+			        , L.CNSLT_USER_ID                   AS "cnsltUserId"                              /* 상담원아이디 */
+			        , L.REGIST_DE                       AS "registDe"                                 /* 등록일자 */
+			        , L.REGISTER                        AS "register"                                 /* 등록자 */
+			        , L.UPDT_DE                         AS "updtDe"                                   /* 수정일자 */
+			        , L.UPDUSR                          AS "updusr"                                   /* 수정자 */
+			        , C.CSTMR_NM 
+			        , B.CODE_NM AS BRAND_NM
+			        , V.CODE_NM AS VHCLE_NM
+			        , VHCLE_MODEL_NM AS MODEL_NM
+			        , '' AS COLOR_NM
+			        , L.MODEL                           AS CODE                                    	/* 모델 */
+			        , VHCLE_MODEL_NM 					AS CODE_NM
+			        , L.MODEL                           AS ID                                    	/* 모델 */
+			        , VHCLE_MODEL_NM 					AS TEXT
+			FROM SALES_LEAD_INFO_MNG L
+			    , CA_ITGRT_CSTMR C
+			    , COMTCCMMNDETAILCODE B
+			    , COMTCCMMNDETAILCODE V
+			    , SI_VHCLE_MODEL M
+			WHERE L.CSTMR_CD = C.CSTMR_ESNTL_ID
+			AND B.CODE_ID(+) = 'VMCD'
+			AND L.BRAND_CD = B.CODE(+)
+			AND V.CODE_ID(+) = 'VHCT'
+			AND L.VHCTY = V.CODE(+)
+			AND L.MODEL = M.VHCLE_MODEL_ID(+)
+			AND L.CSTMR_CD = #cstmrCd#
+			AND TO_CHAR(L.LEAD_DT,'YYYY-MM-DD') = #leadDt#
+			AND L.LEAD_SEQ = #leadSeq#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : SALES리드판매정보 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.06    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.06
+    -->
+    <update id="salesLeadRegMngDAO.updateSalesLead">
+    <![CDATA[
+        UPDATE
+                SALES_LEAD_INFO_MNG
+           SET
+				  LEAD_TYPE                          = #leadType#                         /* 리드유형 */
+				, BRAND_CD                           = #brandCd#                          /* 브랜드코드 */
+				, VHCTY                              = #vhcty#                            /* 차종 */
+				, MODEL                              = #modelCd#                          /* 모델 */
+				, COL_CD                             = #colCd#                            /* 색상 */
+				, HPNO                               = #hpno#                             /* 핸드폰번호 */
+				, TELNO                              = #telno#                            /* 전화번호 */
+				, ZIP                                = #zip#                              /* 우편번호 */
+				, ADRES                              = #adres#                            /* 주소 */
+				, ADRES_DETAIL                       = #adresDetail#                      /* 주소상세 */
+				, SHOP_NM                            = #shopNm#                           /* 전시장 */
+				, DELV_DT                            = #delvDt#                           /* 희망출고일 */
+				, CSTMR_MEMO                         = #cstmrMemo#                        /* 고객메모 */
+				, CNSLT_CALL_NO                      = #cnsltCallNo#                      /* 콜번호 */
+				, CNSLT_USER_ID                      = #cnsltUserId#                      /* 상담원아이디 */
+				, UPDT_DE                            = SYSDATE                            /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+				  	CSTMR_CD                           = #cstmrCd#                          /* 콜고객코드 */
+				AND TO_CHAR(LEAD_DT,'YYYY-MM-DD')                            = #leadDt#                           /* 리드일자 */
+				AND LEAD_SEQ                           = #leadSeq#                          /* 리드순번 */
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : SALES리드판매정보 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.06    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.09.06
+    -->
+    <delete id="salesLeadRegMngDAO.deleteSalesLead">
+        <![CDATA[
+            DELETE
+              FROM
+                    SALES_LEAD_INFO_MNG
+             WHERE
+				  	CSTMR_CD                           = #cstmrCd#                          /* 콜고객코드 */
+				AND TO_CHAR(LEAD_DT,'YYYY-MM-DD')                            = #leadDt#                           /* 리드일자 */
+				AND LEAD_SEQ                           = #leadSeq#                          /* 리드순번 */
+        ]]>
+    </delete>
+
+
+
+
+</sqlMap>

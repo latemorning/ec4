@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Bussplc">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="searchBussplcVO" type="egovframework.ec4.cmm.cbase.bpc.service.BussplcDefaultVO"/>
+	<typeAlias  alias="cmnDetailCode" type="egovframework.com.cmm.service.CmmnDetailCode"/>
+
+	<resultMap id="bussplcvo" class="egovframework.ec4.cmm.cbase.bpc.service.BussplcVO">
+		<result property="bussplcId" column="VHCLE_MODEL_ID" columnIndex="1"/>
+		<result property="bussplcNm" column="VHCLE_MODEL_NM" columnIndex="2"/>
+	</resultMap>
+
+
+
+
+    <!--
+        쿼리명 : 사업소 콤보박스 목록 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.26    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.26
+    -->
+    <select id="bussplcDAO.selectBussplcSCMSCombList" parameterClass="cmnDetailCode" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+			        'GM'   AS CODE_ID
+			      , BRCH_CD     AS CODE
+			      , BRCH_NM  AS CODE_NM
+			      , BRCH_CD  AS CODE_DC
+			      , BRCH_CD     AS ID
+			      , BRCH_NM  AS TEXT
+			      , DECODE(#codeId#, BRCH_CD, 'true', '') AS SELECTED
+			      , ''                                    AS DISABLED
+			FROM (
+			        SELECT '1' AS LVLCODE
+			                ,'' AS DEALER_CD
+			                ,'N' AS BRCH_CD
+			                ,'네트워크' AS BRCH_NM
+			                ,'' AS BRCH_TEL
+			                ,'' AS BRCH_FAX
+			                ,'' AS BRCH_POST
+			                ,'' AS BRCH_ADDR
+			                ,'' AS BRCH_BANK
+			                ,'' AS BRCH_BANK_NM
+			                ,'' AS BRCH_CENTER
+			                ,'' AS BRCH_BANK_NO
+			                ,0 AS BRCH_CAPACITY
+			                ,'' AS BRCH_OPEN_DT
+			                ,'' AS BRCH_CLOSE_DT
+			                ,'' AS BRCH_CHAIR_NO
+			                ,'' AS BRCH_RENT_CODE
+			                ,'' AS BRCH_JUMIN_NO
+			                ,'' AS BRCH_SA_NO
+			                ,0 AS BRCH_AS_CONTROL
+			                ,'' AS BRCH_OUT_CONTROL
+			                ,'' AS BRCH_ASGN_CONTROL
+			                ,'' AS BRCH_TRAN_DT
+			                ,'' AS BRCH_DEPOSITOR
+			                ,'' AS BRCH_BANK_I
+			                ,'' AS BRCH_BANK_NM_I
+			                ,'' AS BRCH_BANK_NO_I
+			                ,'' AS BRCH_DEPOSITOR_I
+			                ,'' AS BRCH_DRIVE_CONTROL
+			                ,'' AS BRCH_ACCT_LIST
+			                ,'' AS BRCH_OUT_STOP
+			                ,'' AS BRCH_CARD_CONTROL
+			                ,'' AS BRCH_TYPE
+			                ,'' AS UPDT_USER_CD
+			                ,'' AS REG_DATE
+			                ,'' AS UPDT_DATE
+			                ,'' AS BRCH_EMP_NM
+			                ,'' AS BRCH_EMP_TEL
+			                ,'' AS BRCH_EMP_HP
+			                ,'' AS BRCH_BUSINESS_TYPE
+			                ,'' AS BRCH_INDUSTRY_TYPE
+			                ,'' AS BRCH_SORT_ID
+			                ,'' AS BRCH_BUSINESS_NM
+			                ,'' AS ETAX_EMAIL
+			                ,'' AS SIZE_FLAG
+			                ,'' AS SI_GUN_FLAG
+			                ,'' AS SHOWROOM_STRT_DT
+			                ,'' AS SHOWROOM_END_DT
+			                ,0 AS BRCH_POST_REG_NO
+			                ,'' AS BRCH_PARKING_CMT
+			                ,'' AS ZONE_CD
+			                ,'' AS DISTRICT_CD
+			        FROM DZR_BRCH BR WHERE ROWNUM = 1
+			        UNION ALL
+			        SELECT '2' AS LVLCODE
+			                ,'KR09' AS DEALER_CD
+			                ,'*' AS BRCH_CD
+			                ,'한국지엠' AS BRCH_NM
+			                ,'' AS BRCH_TEL
+			                ,'' AS BRCH_FAX
+			                ,'' AS BRCH_POST
+			                ,'' AS BRCH_ADDR
+			                ,'' AS BRCH_BANK
+			                ,'' AS BRCH_BANK_NM
+			                ,'N' AS BRCH_CENTER
+			                ,'' AS BRCH_BANK_NO
+			                ,0 AS BRCH_CAPACITY
+			                ,'' AS BRCH_OPEN_DT
+			                ,'' AS BRCH_CLOSE_DT
+			                ,'' AS BRCH_CHAIR_NO
+			                ,'' AS BRCH_RENT_CODE
+			                ,'' AS BRCH_JUMIN_NO
+			                ,'' AS BRCH_SA_NO
+			                ,0 AS BRCH_AS_CONTROL
+			                ,'' AS BRCH_OUT_CONTROL
+			                ,'' AS BRCH_ASGN_CONTROL
+			                ,'' AS BRCH_TRAN_DT
+			                ,'' AS BRCH_DEPOSITOR
+			                ,'' AS BRCH_BANK_I
+			                ,'' AS BRCH_BANK_NM_I
+			                ,'' AS BRCH_BANK_NO_I
+			                ,'' AS BRCH_DEPOSITOR_I
+			                ,'' AS BRCH_DRIVE_CONTROL
+			                ,'' AS BRCH_ACCT_LIST
+			                ,'' AS BRCH_OUT_STOP
+			                ,'' AS BRCH_CARD_CONTROL
+			                ,'' AS BRCH_TYPE
+			                ,'' AS UPDT_USER_CD
+			                ,'' AS REG_DATE
+			                ,'' AS UPDT_DATE
+			                ,'' AS BRCH_EMP_NM
+			                ,'' AS BRCH_EMP_TEL
+			                ,'' AS BRCH_EMP_HP
+			                ,'' AS BRCH_BUSINESS_TYPE
+			                ,'' AS BRCH_INDUSTRY_TYPE
+			                ,'' AS BRCH_SORT_ID
+			                ,'' AS BRCH_BUSINESS_NM
+			                ,'' AS ETAX_EMAIL
+			                ,'' AS SIZE_FLAG
+			                ,'' AS SI_GUN_FLAG
+			                ,'' AS SHOWROOM_STRT_DT
+			                ,'' AS SHOWROOM_END_DT
+			                ,0 AS BRCH_POST_REG_NO
+			                ,'' AS BRCH_PARKING_CMT
+			                ,'' AS ZONE_CD
+			                ,'' AS DISTRICT_CD
+			        FROM DZR_BRCH BR WHERE ROWNUM = 1
+			        UNION ALL
+			        SELECT '3' AS LVLCODE, BR.* 
+			        FROM DZR_BRCH BR WHERE BR.BRCH_CD IN (SELECT DISTINCT BRCH_CENTER FROM DZR_BRCH) AND DEALER_CD = 'KR09' AND BRCH_CENTER = '*'
+			        UNION ALL
+			        SELECT '4' AS LVLCODE, BR.* 
+			        FROM DZR_BRCH BR WHERE BR.BRCH_CD IN (SELECT DISTINCT BRCH_CD FROM DZR_BRCH)
+			        AND BRCH_CENTER IN (SELECT BRCH_CD FROM DZR_BRCH BR WHERE BR.BRCH_CD IN (SELECT DISTINCT BRCH_CENTER FROM DZR_BRCH) AND DEALER_CD = 'KR09' AND BRCH_CENTER = '*') 
+			)
+			WHERE 1=1
+    ]]>
+        <isEmpty property="upCodeId" prepend="AND">
+        <![CDATA[
+                              BRCH_CENTER IS NULL   /* 1단계 */
+        ]]>
+        </isEmpty>
+        <isNotEmpty property="upCodeId" prepend="AND">
+        <![CDATA[
+                              BRCH_CENTER = #upCodeId#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="lvlCode" prepend="AND">
+        <![CDATA[
+                              LVLCODE = #lvlCode#
+        ]]>
+        </isNotEmpty>
+
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 사업소 콤보박스 목록 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.26    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.26
+    -->
+    <select id="bussplcDAO.selectBussplcCCMSCombList" parameterClass="cmnDetailCode" resultClass="egovMap">
+    <![CDATA[
+			SELECT *
+			FROM(
+    ]]>
+        <isEmpty property="lvlCode">
+        <![CDATA[
+					SELECT 
+					        '' AS LVL
+					      , '' AS CODE_ID
+					      , '' AS CODE
+					      , '' AS CODE_NM
+					      , '' AS CODE_DC
+					      , '' AS ID
+					      , '' AS TEXT
+					      , '' AS SELECTED
+					      , '' AS DISABLED
+					FROM DUAL
+        ]]>
+        </isEmpty>
+        <isEqual property="lvlCode" compareValue="2">
+        <![CDATA[
+					SELECT DISTINCT
+					        '2' 			AS LVL
+					      , 'GM'   			AS CODE_ID
+					      , AREA_GROUP_CD   AS CODE
+					      , CM.CODE_NM  	AS CODE_NM
+					      , AREA_GROUP_CD  	AS CODE_DC
+					      , AREA_GROUP_CD 	AS ID
+					      , CM.CODE_NM  	AS TEXT
+					      , DECODE(#codeId#, AREA_GROUP_CD, 'true', '') AS SELECTED
+					      , ''                                    		AS DISABLED
+					FROM TB_ASM610 RP, COMTCCMMNDETAILCODE CM
+					WHERE RP.AREA_GROUP_CD = CM.CODE AND CM.CODE_ID = 'RPAREA'
+        ]]>
+        </isEqual>
+        <isEqual property="lvlCode" compareValue="3">
+        <![CDATA[
+					SELECT DISTINCT
+					        '3' 			AS LVL
+					      , 'GM'   			AS CODE_ID
+					      , VNDR_GUBN     	AS CODE
+					      , VN.CODE_NM  	AS CODE_NM
+					      , VNDR_GUBN  		AS CODE_DC
+					      , VNDR_GUBN     	AS ID
+					      , VN.CODE_NM  	AS TEXT
+					      , DECODE(#codeId#, VNDR_GUBN, 'true', '') AS SELECTED
+					      , ''                                    	AS DISABLED
+					FROM TB_ASM610 RP, COMTCCMMNDETAILCODE VN
+					WHERE RP.VNDR_GUBN = VN.CODE AND VN.CODE_ID = 'RPVNDR'
+					AND VNDR_GUBN IS NOT NULL
+					AND RP.AREA_GROUP_CD = #upCodeId#
+        ]]>
+        </isEqual>
+        <isEqual property="lvlCode" compareValue="4">
+        <![CDATA[
+					SELECT DISTINCT
+					        '4' 			AS LVL
+					      , 'GM'   			AS CODE_ID
+					      , CUST_CODE     	AS CODE
+					      , RP.FIRM_NAME  	AS CODE_NM
+					      , CUST_CODE  		AS CODE_DC
+					      , CUST_CODE     	AS ID
+					      , RP.FIRM_NAME  	AS TEXT
+					      , DECODE(#code#, CUST_CODE, 'true', '') AS SELECTED
+					      , ''                                    	AS DISABLED
+					FROM TB_ASM610 RP, COMTCCMMNDETAILCODE VN
+					WHERE RP.VNDR_GUBN = VN.CODE AND VN.CODE_ID = 'RPVNDR'
+					AND VNDR_GUBN IS NOT NULL
+					AND RP.AREA_GROUP_CD = #upCodeId#
+        ]]>
+			        <isNotEmpty property="code" prepend="AND">
+			        <![CDATA[
+			        RP.VNDR_GUBN = #code#
+			        ]]>
+			        </isNotEmpty>
+        </isEqual>
+    <![CDATA[
+			)
+			ORDER BY CODE_NM
+    ]]>
+
+    </select>
+
+
+
+
+</sqlMap>

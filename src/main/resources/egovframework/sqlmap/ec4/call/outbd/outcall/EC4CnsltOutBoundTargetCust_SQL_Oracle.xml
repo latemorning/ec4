@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltOutBoundTargetCust">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltOutBoundTargetCustVO" type="egovframework.ec4.call.outbd.service.CnsltOutBoundTargetCustVO"/>
+
+
+
+
+
+
+    <!--
+        쿼리명 : Excel 리스트 고객DB Load 조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.23    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.23
+    -->
+    <select id="cnsltOutBoundTargetCustDAO.selectCnsltTargetCustDBLoad" parameterClass="cnsltOutBoundTargetCustVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT
+				'GM' AS "makrCd" 
+				, C.CSTMR_ESNTL_ID                        AS "cstmrCd"                                  /* 콜고객코드 */
+				, C.CSTMR_NM                        AS "cstmrNm"                                  /* 콜고객명 */
+				, C.HPNO                            AS "hpno"                                     /* 핸드폰번호 */
+				, C.TELNO                           AS "telno"                                    /* 전화번호 */
+				, C.BRTHDY                          AS "brthdy"                                   /* 생년월일 */
+				, C.EMAIL_ADRES                     AS "emailAdres"                               /* 이메일주소 */
+				, C.EMAIL_DOMAIN                    AS "emailDomain"                              /* 이메일도메인 */
+				, C.VHCLE_NO                        AS "vhcleNo"                                  /* 차량번호 */
+				, C.VIN                             AS "vin"                                      /* 차대번호 */
+				, C.HOUSE_ZIP                       AS "houseZip"                                 /* 집우편번호 */
+				, C.HOUSE_ADRES                     AS "houseAdres"                               /* 집주소 */
+				, C.HOUSE_ADRES_DETAIL              AS "houseAdresDetail"                         /* 집주소상세 */
+				, C.OFFICE_ZIP                      AS "officeZip"                                /* 직장우편번호 */
+				, C.OFFICE_ADRES                    AS "officeAdres"                              /* 직장주소 */
+				, C.OFFICE_ADRES_DETAIL             AS "officeAdresDetail"                        /* 직장주소상세 */
+				, C.TEL_RECV_YN                     AS "telRecvYn"                                /* 전화수신여부 */
+				, C.SMS_RECV_YN                     AS "smsRecvYn"                                /* SMS수신여부 */
+				, C.EMAIL_RECV_YN                   AS "emailRecvYn"                              /* 이메일수신여부 */
+				, C.FAX_RECV_YN                     AS "faxRecvYn"                                /* FAX수신여부 */
+				, C.DM_RECV_YN                      AS "dmRecvYn"                                 /* DM수신여부 */
+				, C.MBER_GRAD                       AS "mberGrad"                                 /* 회원등급 */
+				, C.CHEV_MEMB_YN                    AS "chevMembYn"                               /* 쉐보레멤버여부 */
+				, C.WEB_MEMB_YN                     AS "webMembYn"                                /* 웹멤버여부 */
+				, C.WUTO_MEMB_YN                    AS "wutoMembYn"                               /* 오토멤버여부 */
+				, C.CSTMR_MEMO                      AS "cstmrMemo"                                /* 고객메모 */
+				, C.REGIST_DE                       AS "registDe"                                 /* 등록일자 */
+				, C.REGISTER                        AS "register"                                 /* 등록자 */
+				, C.UPDT_DE                         AS "updtDe"                                   /* 수정일자 */
+				, C.UPDUSR                          AS "updusr"                                   /* 수정자 */
+				, (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE EMPLYR_ID = #appCnsltUserId#) AS "appCnsltUserNm"
+			FROM CA_ITGRT_CSTMR C
+			WHERE 1=1
+			 AND (
+			    (C.CSTMR_NM = #cstmrNm# AND C.HPNO = REGEXP_REPLACE(#hpno#, '[^0-9]+'))
+			    OR
+			    (C.CSTMR_NM = #cstmrNm# AND C.EMAIL_ADRES LIKE #emailAdres#)
+			    OR
+			    (C.CSTMR_NM = #cstmrNm# AND C.BRTHDY LIKE #brthdy#)
+			 )
+    ]]>
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 콜고객수집 (콜대상고객등록)
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.30   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.10.30
+    -->
+    <insert id="cnsltOutBoundTargetCustDAO.insertCnsltTargetCust">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CALL_CSTMR_COLECT_D
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, CALL_CD                        /* 콜코드 */
+					, CALL_COLECT_GB_CD              /* 콜수집구분코드 */
+					, CSTMR_CD                       /* 콜고객코드 */
+					, CALL_CSTMR_CD_SEQ              /* 콜고객코드순번 */
+					, SCRIPT_KND                     /* 스크립트구분 */
+					, SCRIPT_CD                      /* 스크립트코드 */
+					, CALL_COLECT_DT                 /* 콜수집일자 */
+					, CALL_GB_CD                     /* 콜구분코드 */
+					, CALL_COLECT_PATH_CD            /* 콜수집경로코드 */
+					, CALL_FILTER_YN                 /* 콜필터여부 */
+					, CALL_ASK_STATE_CD              /* 콜의뢰상태코드 */
+					, CALL_ASK_STATE_RESN_DSCR       /* 콜의뢰상태사유내용 */
+					, SPLT_CD                        /* SPLIT코드 */
+					, ASIGN_CNSLT_USER_ID            /* 배정상담원아이디 */
+					, ASIGN_DT                       /* 배정일자 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       		/* 메이커코드 */
+					, #callCd#                         /* 콜코드 */
+					, #callColectGbCd#                 /* 콜수집구분코드 */
+					, #cstmrCd#                        /* 콜고객코드 */
+					, 1                 /* 콜고객코드순번 */
+					, #scriptKnd#                      /* 스크립트구분 */
+					, #scriptCd#                       /* 스크립트코드 */
+					, #callColectDt#                   /* 콜수집일자 */
+					, #callGbCd#                       /* 콜구분코드 */
+					, #callColectPathCd#               /* 콜수집경로코드 */
+					, #callFilterYn#                   /* 콜필터여부 */
+					, #callAskStateCd#                 /* 콜의뢰상태코드 */
+					, #callAskStateResnDscr#           /* 콜의뢰상태사유내용 */
+					, #spltCd#                         /* SPLIT코드 */
+					, #asignCnsltUserId#               /* 배정상담원아이디 */
+					, #asignDt#                        /* 배정일자 */
+					, SYSDATE                       /* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+    <!--
+        쿼리명 : 콜고객수집 (콜대상고객등록) 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.30    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.30
+    -->
+    <update id="cnsltOutBoundTargetCustDAO.updateCnsltTargetCust">
+    <![CDATA[
+        UPDATE
+                CALL_CSTMR_COLECT_D
+           SET
+				  SCRIPT_KND                         = #scriptKnd#                        /* 스크립트구분 */
+				, SCRIPT_CD                          = #scriptCd#                         /* 스크립트코드 */
+				, CALL_COLECT_DT                     = #callColectDt#                     /* 콜수집일자 */
+				, CALL_GB_CD                         = #callGbCd#                         /* 콜구분코드 */
+				, CALL_COLECT_PATH_CD                = #callColectPathCd#                 /* 콜수집경로코드 */
+				, CALL_FILTER_YN                     = #callFilterYn#                     /* 콜필터여부 */
+				, CALL_ASK_STATE_CD                  = #callAskStateCd#                   /* 콜의뢰상태코드 */
+				, CALL_ASK_STATE_RESN_DSCR           = #callAskStateResnDscr#             /* 콜의뢰상태사유내용 */
+				, SPLT_CD                            = #spltCd#                           /* SPLIT코드 */
+				, ASIGN_CNSLT_USER_ID                = #asignCnsltUserId#                 /* 배정상담원아이디 */
+				, ASIGN_DT                           = #asignDt#                          /* 배정일자 */
+				, UPDT_DE                            = #updtDe#                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+			  	MAKR_CD                            = #gsMakrCd#                         /* 메이커코드 */
+			AND CALL_CD                            = #callCd#                           /* 콜코드 */
+			AND CALL_COLECT_GB_CD                  = #callColectGbCd#                   /* 콜수집구분코드 */
+			AND CSTMR_CD                           = #cstmrCd#                          /* 콜고객코드 */
+			AND CALL_CSTMR_CD_SEQ                  = #callCstmrCdSeq#                   /* 콜고객코드순번 */
+
+
+    ]]>
+    </update>
+
+
+
+
+
+
+
+
+
+    <!--
+        쿼리명 : 대상고객 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.11.05    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.11.05
+    -->
+    <select id="cnsltOutBoundTargetCustDAO.searchCnsltOutBoundTargetCustList" parameterClass="cnsltOutBoundTargetCustVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT
+								  CL.MAKR_CD                        /* 메이커코드 */
+								, CL.CALL_CD                        /* 콜코드 */
+								, CL.CALL_COLECT_GB_CD              /* 콜수집구분코드 */
+								, CL.CSTMR_CD                       /* 콜고객코드 */
+								, CL.CALL_CSTMR_CD_SEQ              /* 콜고객코드순번 */
+								, CL.SCRIPT_KND                     /* 스크립트구분 */
+								, CL.SCRIPT_CD                      /* 스크립트코드 */
+								, CL.CALL_COLECT_DT                 /* 콜수집일자 */
+								, CL.CALL_GB_CD                     /* 콜구분코드 */
+								, CL.CALL_COLECT_PATH_CD            /* 콜수집경로코드 */
+								, CL.CALL_FILTER_YN                 /* 콜필터여부 */
+								, CL.CALL_ASK_STATE_CD              /* 콜의뢰상태코드 */
+								, CL.CALL_ASK_STATE_RESN_DSCR       /* 콜의뢰상태사유내용 */
+								, CL.SPLT_CD                        /* SPLIT코드 */
+								, CL.ASIGN_CNSLT_USER_ID            /* 배정상담원아이디 */
+								, CL.ASIGN_DT                       /* 배정일자 */
+								, CL.REGIST_DE                      /* 등록일자 */
+								, CL.REGISTER                       /* 등록자 */
+								, CL.UPDT_DE                        /* 수정일자 */
+								, CL.UPDUSR                         /* 수정자 */
+								, CUST.CSTMR_NM
+								, CCD.CODE_NM AS SCRIPT_KND_NM
+								, CS.SCRIPT_TITLE AS SCRIPT_CD_NM
+								, EMP.USER_NM AS ASIGN_CNSLT_USER_NM
+								, CGB.CODE_NM AS CALL_COLECT_GB_NM
+						FROM CALL_CSTMR_COLECT_D CL
+							,CA_ITGRT_CSTMR CUST
+							,COMTCCMMNDETAILCODE CCD
+							,CALL_SCRIPT_MNG CS
+							,COMTNEMPLYRINFO EMP
+							,COMTCCMMNDETAILCODE CGB
+						WHERE 1=1
+						AND CL.CSTMR_CD = CUST.CSTMR_ESNTL_ID(+)
+						AND CCD.CODE_ID(+) = 'CALLSCRIPT' AND CL.SCRIPT_KND = CCD.CODE(+)
+						AND CGB.CODE_ID(+) = 'CALLCOLECTGB' AND CL.CALL_COLECT_GB_CD = CGB.CODE(+)
+						AND CL.SCRIPT_CD = CS.SCRIPT_CD(+)
+						AND CL.ASIGN_CNSLT_USER_ID = EMP.EMPLYR_ID(+)
+						/* AND CL.ASIGN_CNSLT_USER_ID IS NULL 분배받지 않은 조건 */
+						AND NOT EXISTS (SELECT 'X' /* 콜수행하지않은 조건 */
+										FROM CALL_EXEC_D
+										WHERE 1=1
+										AND MAKR_CD = CL.MAKR_CD
+										AND CALL_CD = CL.CALL_CD
+										AND CALL_COLECT_GB_CD = CL.CALL_COLECT_GB_CD
+										AND CSTMR_CD = CL.CSTMR_CD
+										AND CALL_CSTMR_CD_SEQ = CL.CALL_CSTMR_CD_SEQ
+										)
+    ]]>
+			<isNotEmpty property="searchCnsltUserId">
+						AND CL.ASIGN_CNSLT_USER_ID = #searchCnsltUserId#
+			</isNotEmpty >
+			<isNotEmpty property="searchCstmrCd">
+						AND CL.CSTMR_CD = #searchCstmrCd#
+			</isNotEmpty >
+			<isNotEmpty property="scriptKnd">
+						AND CL.SCRIPT_KND = #scriptKnd#
+			</isNotEmpty >
+			<isNotEmpty property="scriptCd">
+						AND CL.SCRIPT_CD = #scriptCd#
+			</isNotEmpty >
+			<isEqual property="callAsign" compareValue="Y">
+						AND CL.ASIGN_CNSLT_USER_ID IS NOT NULL
+			</isEqual>
+			<isEqual property="callAsign" compareValue="N">
+						AND CL.ASIGN_CNSLT_USER_ID IS NULL
+			</isEqual>
+            <isNotEmpty property="searchEndDe">
+                        AND CL.CALL_COLECT_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            </isNotEmpty>
+			<isNotEmpty property="searchCnsltUserNm">
+						AND EMP.USER_NM LIKE '%'|| #searchCnsltUserNm# ||'%'
+			</isNotEmpty >
+			<isNotEmpty property="searchCstmrNm">
+						AND CUST.CSTMR_NM LIKE '%'|| #searchCstmrNm# ||'%'
+			</isNotEmpty >
+			<isNotEmpty property="searchHpno">
+						AND CUST.HP_NO LIKE '%'|| REGEXP_REPLACE(#searchHpno#, '[^0-9]+') ||'%'
+			</isNotEmpty >
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 대상고객 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.11.05    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.11.05
+    -->
+    <select id="cnsltOutBoundTargetCustDAO.searchCnsltOutBoundTargetCustListCnt" parameterClass="cnsltOutBoundTargetCustVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+			FROM CALL_CSTMR_COLECT_D CL
+				,CA_ITGRT_CSTMR CUST
+				,COMTCCMMNDETAILCODE CCD
+				,CALL_SCRIPT_MNG CS
+				,COMTNEMPLYRINFO EMP
+				,COMTCCMMNDETAILCODE CGB
+			WHERE 1=1
+			AND CL.CSTMR_CD = CUST.CSTMR_ESNTL_ID(+)
+			AND CCD.CODE_ID(+) = 'CALLSCRIPT' AND CL.SCRIPT_KND = CCD.CODE(+)
+			AND CGB.CODE_ID(+) = 'CALLCOLECTGB' AND CL.CALL_COLECT_GB_CD = CGB.CODE(+)
+			AND CL.SCRIPT_CD = CS.SCRIPT_CD(+)
+			AND CL.ASIGN_CNSLT_USER_ID = EMP.EMPLYR_ID(+)
+			/* AND CL.ASIGN_CNSLT_USER_ID IS NULL 분배받지 않은 조건 */
+			AND NOT EXISTS (SELECT 'X' /* 콜수행하지않은 조건 */
+							FROM CALL_EXEC_D
+							WHERE 1=1
+							AND MAKR_CD = CL.MAKR_CD
+							AND CALL_CD = CL.CALL_CD
+							AND CALL_COLECT_GB_CD = CL.CALL_COLECT_GB_CD
+							AND CSTMR_CD = CL.CSTMR_CD
+							AND CALL_CSTMR_CD_SEQ = CL.CALL_CSTMR_CD_SEQ
+							)
+    ]]>
+			<isNotEmpty property="searchCnsltUserId">
+						AND CL.ASIGN_CNSLT_USER_ID = #searchCnsltUserId#
+			</isNotEmpty >
+			<isNotEmpty property="searchCstmrCd">
+						AND CL.CSTMR_CD = #searchCstmrCd#
+			</isNotEmpty >
+			<isNotEmpty property="scriptKnd">
+						AND CL.SCRIPT_KND = #scriptKnd#
+			</isNotEmpty >
+			<isNotEmpty property="scriptCd">
+						AND CL.SCRIPT_CD = #scriptCd#
+			</isNotEmpty >
+			<isEqual property="callAsign" compareValue="Y">
+						AND CL.ASIGN_CNSLT_USER_ID IS NOT NULL
+			</isEqual>
+			<isEqual property="callAsign" compareValue="N">
+						AND CL.ASIGN_CNSLT_USER_ID IS NULL
+			</isEqual>
+            <isNotEmpty property="searchEndDe">
+                        AND CL.CALL_COLECT_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            </isNotEmpty>
+			<isNotEmpty property="searchCnsltUserNm">
+						AND EMP.USER_NM LIKE '%'|| #searchCnsltUserNm# ||'%'
+			</isNotEmpty >
+			<isNotEmpty property="searchCstmrNm">
+						AND CUST.CSTMR_NM LIKE '%'|| #searchCstmrNm# ||'%'
+			</isNotEmpty >
+			<isNotEmpty property="searchHpno">
+						AND CUST.HP_NO LIKE '%'|| REGEXP_REPLACE(#searchHpno#, '[^0-9]+') ||'%'
+			</isNotEmpty >
+    </select>
+
+
+
+
+
+
+</sqlMap>

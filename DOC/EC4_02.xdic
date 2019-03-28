@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tm:TermDictionary xmlns:tm="http://exerd.com/term-model" version="1.1">
+  <term name="분류" description="" physicalName="CL" physicalDescription="CLASSIFICATION"/>
+  <term name="코드" description="" physicalName="CODE" physicalDescription="CODE"/>
+  <term name="공통" description="" physicalName="CMMN" physicalDescription=""/>
+  <term name="설명" description="" physicalName="DC" physicalDescription="DESCRIPTION"/>
+  <term name="사용" description="" physicalName="USE" physicalDescription="">
+    <synonyms>이용</synonyms>
+  </term>
+  <term name="여부" description="" physicalName="AT" physicalDescription=""/>
+  <term name="최초" description="" physicalName="FRST" physicalDescription="FIRST">
+    <synonyms>1차</synonyms>
+  </term>
+  <term name="등록" description="" physicalName="REGIST" physicalDescription="REGISTRATION"/>
+  <term name="시점" description="" physicalName="PNTTM" physicalDescription=""/>
+  <term name="등록자" description="" physicalName="REGISTER" physicalDescription=""/>
+  <term name="최종" description="" physicalName="LAST" physicalDescription=""/>
+  <term name="수정" description="" physicalName="UPDT" physicalDescription=""/>
+  <term name="수정자" description="" physicalName="UPDUSR" physicalDescription=""/>
+  <term name="ID" description="" physicalName="ID" physicalDescription="">
+    <synonyms>아이디</synonyms>
+  </term>
+  <term name="매핑" description="" physicalName="MAPNG" physicalDescription="MAPPING"/>
+  <term name="생성" description="" physicalName="CREAT" physicalDescription="CREATION"/>
+  <term name="차량" description="" physicalName="VHCLE" physicalDescription="VEHICLES"/>
+  <term name="마스터" description="" physicalName="MST" physicalDescription="MASTER"/>
+  <term name="제조사" description="" physicalName="MAKR" physicalDescription="MAKER"/>
+  <term name="제품" description="" physicalName="GOODS" physicalDescription="GOODS">
+    <synonyms>상품</synonyms>
+  </term>
+  <term name="모델" description="" physicalName="MODEL" physicalDescription="MODEL"/>
+  <term name="연식" description="" physicalName="MY" physicalDescription="MODEL YEAR"/>
+  <term name="시작" description="" physicalName="BEGIN" physicalDescription="BEGIN"/>
+  <term name="종료" description="" physicalName="END" physicalDescription="END"/>
+  <term name="세부" description="" physicalName="DETAIL" physicalDescription="DETAIL">
+    <synonyms>상세</synonyms>
+    <synonyms>내역</synonyms>
+  </term>
+  <term name="우편번호" description="" physicalName="ZIP" physicalDescription="ZIP"/>
+  <term name="일련번호" description="" physicalName="SN" physicalDescription="SN">
+    <synonyms>순번</synonyms>
+  </term>
+  <term name="시도" description="" physicalName="CTPRVN" physicalDescription="CITY AND PROVINCES"/>
+  <term name="시군구" description="" physicalName="SIGNGU" physicalDescription="SI GUN GU"/>
+  <term name="읍면동" description="" physicalName="EMD" physicalDescription="EUP MYUN DONG"/>
+  <term name="리" description="" physicalName="LI" physicalDescription="LI"/>
+  <term name="건물" description="" physicalName="BULD" physicalDescription="BUILDING"/>
+  <term name="번지" description="" physicalName="LNBR" physicalDescription="LOT NUMBER"/>
+  <term name="동" description="" physicalName="DONG" physicalDescription="DONG"/>
+  <term name="호" description="" physicalName="HO" physicalDescription="HO"/>
+  <term name="도로명" description="" physicalName="RDMN" physicalDescription="ROAD NAME"/>
+  <term name="건물번호" description="" physicalName="BDNBR" physicalDescription="BUILDING NUMBER"/>
+  <term name="본번" description="" physicalName="MNNM" physicalDescription="ORIGIN NO"/>
+  <term name="부번" description="" physicalName="SLNO" physicalDescription="VICE NO"/>
+  <term name="명" description="" physicalName="NM" physicalDescription="">
+    <synonyms>이름</synonyms>
+    <physicalSynonyms>NAME</physicalSynonyms>
+  </term>
+  <term name="약관" description="" physicalName="STPLAT" physicalDescription="STIPULATION"/>
+  <term name="내용" description="" physicalName="CN" physicalDescription="CONTENTS"/>
+  <term name="정보" description="" physicalName="INFO" physicalDescription="INFORMATION"/>
+  <term name="제공" description="" physicalName="PROVD" physicalDescription="OFFER"/>
+  <term name="동의" description="" physicalName="AGRE" physicalDescription="AGREEMENT"/>
+  <term name="메뉴" description="" physicalName="MENU" physicalDescription="MENU"/>
+  <term name="업무사용자" description="" physicalName="EMPLYR" physicalDescription="EMPLOYER"/>
+  <term name="프로그램" description="" physicalName="PROGRM" physicalDescription="PROGRAM"/>
+  <term name="저장" description="" physicalName="STRE" physicalDescription="STORE"/>
+  <term name="경로" description="" physicalName="PATH" physicalDescription="PATH,COURSE">
+    <physicalSynonyms>COURS</physicalSynonyms>
+  </term>
+  <term name="보안" description="" physicalName="SCRTY" physicalDescription="SECURITY"/>
+  <term name="설정" description="" physicalName="DTRMN" physicalDescription="DETERMINATION"/>
+  <term name="대상" description="" physicalName="TRGET" physicalDescription="TARGET"/>
+  <term name="회원" description="" physicalName="MBER" physicalDescription="MEMBER"/>
+  <term name="유형" description="" physicalName="TY" physicalDescription="TYPE"/>
+  <term name="권한" description="" physicalName="AUTHOR" physicalDescription="AUTHORITY"/>
+  <term name="휴일" description="" physicalName="RESTDE" physicalDescription="REST DAY"/>
+  <term name="번호" description="" physicalName="NO" physicalDescription="NO">
+    <synonyms>품번</synonyms>
+  </term>
+  <term name="첨부" description="" physicalName="ATCH" physicalDescription="ATTACHING"/>
+  <term name="파일" description="" physicalName="FILE" physicalDescription="FILE"/>
+  <term name="원본" description="" physicalName="ORIGNL" physicalDescription="ORIGINAL">
+    <synonyms>순정</synonyms>
+    <synonyms>출처</synonyms>
+  </term>
+  <term name="확장자" description="" physicalName="EXTSN" physicalDescription="EXTENSION"/>
+  <term name="크기" description="" physicalName="SIZE" physicalDescription="SIZE"/>
+  <term name="일시" description="" physicalName="DT" physicalDescription="DATE"/>
+  <term name="메시지" description="" physicalName="MSG" physicalDescription="MESSAGE"/>
+  <term name="이메일" description="" physicalName="EMAIL" physicalDescription="EMAIL"/>
+  <term name="발신자" description="" physicalName="SNDR" physicalDescription="SENDER"/>
+  <term name="수신자" description="" physicalName="RCVER" physicalDescription="RECEIVER"/>
+  <term name="제목" description="" physicalName="SJ" physicalDescription="SUBJECT"/>
+  <term name="발송" description="" physicalName="SNDNG" physicalDescription="SENDING"/>
+  <term name="결과" description="" physicalName="RESULT" physicalDescription="RESULT"/>
+  <term name="발신" description="" physicalName="DSPTCH" physicalDescription="DISPATCH"/>
+  <term name="생성자" description="" physicalName="CREATR" physicalDescription="CREATOR"/>
+  <term name="롤" description="" physicalName="ROLE" physicalDescription="ROLE"/>
+  <term name="패턴" description="" physicalName="PTTRN" physicalDescription="PATTERN"/>
+  <term name="정렬" description="" physicalName="SORT" physicalDescription="SORTING"/>
+  <term name="그룹" description="" physicalName="GROUP" physicalDescription="GROUP"/>
+  <term name="조직" description="" physicalName="ORGNZT" physicalDescription="ORGANIZATION"/>
+  <term name="비밀번호" description="" physicalName="PASSWORD" physicalDescription="PASSWORD"/>
+  <term name="힌트" description="" physicalName="HINT" physicalDescription="HINT">
+    <synonyms>암시</synonyms>
+  </term>
+  <term name="정답" description="" physicalName="CNSR" physicalDescription="CORRECT ANSWER"/>
+  <term name="주민번호" description="" physicalName="IHIDNUM" physicalDescription="INHABITANTS IDENTIFICATION NUMBER"/>
+  <term name="주소" description="" physicalName="ADRES" physicalDescription="ADDRESS"/>
+  <term name="지역" description="" physicalName="AREA" physicalDescription="AREA"/>
+  <term name="상태" description="" physicalName="STTUS" physicalDescription="STATUS">
+    <synonyms>현황</synonyms>
+  </term>
+  <term name="끝" description="" physicalName="END" physicalDescription="END"/>
+  <term name="전화번호" description="" physicalName="TELNO" physicalDescription="TELEPHONE NUMBER"/>
+  <term name="이동전화번호" description="" physicalName="MBTLNUM" physicalDescription="MOBILE TELEPHONE NUMBER"/>
+  <term name="팩스번호" description="" physicalName="FXNUM" physicalDescription="FAX NUMBER"/>
+  <term name="중간" description="" physicalName="MIDDLE" physicalDescription="MIDDLE"/>
+  <term name="가입" description="" physicalName="SBSCRB" physicalDescription="SUBSCRIBE"/>
+  <term name="날" description="" physicalName="DE" physicalDescription="DATE">
+    <synonyms>일</synonyms>
+    <synonyms>일자</synonyms>
+  </term>
+  <term name="성별" description="" physicalName="SEXDSTN" physicalDescription="SEX DISTINCTION"/>
+  <term name="고유" description="" physicalName="ESNTL" physicalDescription="ESSENTIAL"/>
+  <term name="기업" description="" physicalName="ENTRPRS" physicalDescription="ENTERPRISE"/>
+  <term name="사업자등록번호" description="" physicalName="BIZRNO" physicalDescription="BUSINESS REGISTERATION NUMBER">
+    <synonyms>사업자번호</synonyms>
+  </term>
+  <term name="법인등록번호" description="" physicalName="JURIRNO" physicalDescription="JURIDICAL REGISTERATION NUMBER"/>
+  <term name="회사" description="" physicalName="CMPNY" physicalDescription="COMPANY"/>
+  <term name="대표이사" description="" physicalName="CXFC" physicalDescription="CHIEF EXECUTIVE OFFICE"/>
+  <term name="업종" description="" physicalName="INDUTY" physicalDescription="TYPE OF INDUSTRY"/>
+  <term name="신청인" description="" physicalName="APPLCNT" physicalDescription="APPLICANT"/>
+  <term name="사용자" description="" physicalName="USER" physicalDescription="USER"/>
+  <term name="사원" description="" physicalName="EMPL" physicalDescription="EMPLOYEE"/>
+  <term name="생년월일" description="" physicalName="BRTHDY" physicalDescription="BIRTHDAY">
+    <synonyms>생일</synonyms>
+  </term>
+  <term name="집" description="" physicalName="HOUSE" physicalDescription="HOUSE"/>
+  <term name="사무실" description="" physicalName="OFFM" physicalDescription="OFFICE ROOM"/>
+  <term name="직위" description="" physicalName="OFCPS" physicalDescription="OFFICIAL POSITION">
+    <synonyms>직급</synonyms>
+  </term>
+  <term name="소속기관" description="" physicalName="PSTINST" physicalDescription="POSITION INSTITUTION"/>
+  <term name="인증" description="" physicalName="CRTFC" physicalDescription="CERTIFICATION"/>
+  <term name="DN" description="" physicalName="DN" physicalDescription="DN"/>
+  <term name="변경" description="" physicalName="CHANGE" physicalDescription="CHANGE"/>
+  <term name="프로그램" description="" physicalName="PROGRM" physicalDescription="PROGRAM"/>
+  <term name="한글" description="" physicalName="KOREAN" physicalDescription="KOREAN"/>
+  <term name="매장" description="" physicalName="STR" physicalDescription="STORE"/>
+  <term name="요청" description="" physicalName="REQUST" physicalDescription="REQUEST"/>
+  <term name="요청자" description="" physicalName="RQESTER" physicalDescription="REQUEST PERSON"/>
+  <term name="처리" description="" physicalName="PROCESS" physicalDescription="PROCESS"/>
+  <term name="처리자" description="" physicalName="OPETR" physicalDescription="OPERATOR"/>
+  <term name="요청일" description="" physicalName="RQESTDE" physicalDescription="REQUEST DATE"/>
+  <term name="상위" description="" physicalName="UPPER" physicalDescription="UPPER"/>
+  <term name="순서" description="" physicalName="ORDR" physicalDescription="ORDER"/>
+  <term name="관계" description="" physicalName="RELATE" physicalDescription="RELATION"/>
+  <term name="이미지" description="" physicalName="IMAGE" physicalDescription="IMAGE"/>
+  <term name="부모" description="" physicalName="PARNTS" physicalDescription="PARENTS"/>
+  <term name="자식" description="" physicalName="CHLDRN" physicalDescription="CHILDREN"/>
+  <term name="가격" description="" physicalName="PC" physicalDescription="PRICE"/>
+  <term name="단위" description="" physicalName="UNIT" physicalDescription="UNIT"/>
+  <term name="엔진" description="" physicalName="ENGINE" physicalDescription="ENGINE"/>
+  <term name="형식" description="" physicalName="FOM" physicalDescription="FORM"/>
+  <term name="미션오일" description="" physicalName="ATF" physicalDescription="Automatic Transmission Fluid"/>
+  <term name="용량" description="" physicalName="CPCTY" physicalDescription="CAPACITY"/>
+  <term name="브레이크오일" description="" physicalName="BF" physicalDescription="Brake Fluid"/>
+  <term name="냉각재" description="" physicalName="CULNT" physicalDescription="COOLANT">
+    <synonyms>냉각수</synonyms>
+  </term>
+  <term name="파워스티어링" description="" physicalName="PWSTR" physicalDescription="Power Steering"/>
+  <term name="오일" description="" physicalName="OIL" physicalDescription="OIL"/>
+  <term name="디퍼렌셜" description="" physicalName="DFRT" physicalDescription="Differential"/>
+  <term name="미션" description="" physicalName="TRSM" physicalDescription="Transmission"/>
+  <term name="보조" description="" physicalName="ASSTN" physicalDescription="ASSISTANCE"/>
+  <term name="자료" description="" physicalName="DATA" physicalDescription="DATA"/>
+  <term name="옵션" description="" physicalName="OPTN" physicalDescription="OPTION"/>
+  <term name="규격" description="" physicalName="STD" physicalDescription="STANDARD">
+    <synonyms>표준</synonyms>
+  </term>
+  <term name="부품" description="" physicalName="PARTS" physicalDescription="PARTS"/>
+  <term name="기본" description="" physicalName="BASIC" physicalDescription="BASIC"/>
+  <term name="프리미엄" description="" physicalName="PREMIUM" physicalDescription="PREMIUM"/>
+  <term name="구분" description="" physicalName="SE" physicalDescription="SECTION"/>
+  <term name="잔유" description="" physicalName="BTOL" physicalDescription="BOTTOM OIL"/>
+  <term name="에어" description="" physicalName="AIR" physicalDescription="AIR"/>
+  <term name="클리너" description="" physicalName="CLER" physicalDescription="CLEANER"/>
+  <term name="필터" description="" physicalName="FLTER" physicalDescription="FILTER"/>
+  <term name="포장" description="" physicalName="PACKNG" physicalDescription="PACKING"/>
+  <term name="링크" description="" physicalName="URL" physicalDescription="URL"/>
+  <term name="판매" description="" physicalName="SALE" physicalDescription="SALE"/>
+  <term name="수량" description="" physicalName="QY" physicalDescription="QUANTITY"/>
+  <term name="점수" description="" physicalName="SCORE" physicalDescription="SCORE"/>
+  <term name="포인트" description="" physicalName="POINT" physicalDescription="POINT"/>
+  <term name="이력" description="" physicalName="HIST" physicalDescription="HISTORY"/>
+  <term name="등급" description="" physicalName="GRAD" physicalDescription="GRADE"/>
+  <term name="전산" description="" physicalName="CMPT" physicalDescription="COMPUTATION"/>
+  <term name="품명" description="" physicalName="PRDNM" physicalDescription="PRODUCT NAME"/>
+  <term name="교환" description="" physicalName="EXCHNG" physicalDescription="EXCHANGE"/>
+  <term name="방식" description="" physicalName="MTHD" physicalDescription="METHOD"/>
+  <term name="차종" description="차량그룹" physicalName="VHCTY" physicalDescription="VEHICLE TYPE"/>
+  <term name="공임" description="" physicalName="WAGE" physicalDescription="WAGE">
+    <synonyms>임금</synonyms>
+  </term>
+  <term name="TC" description="" physicalName="TC" physicalDescription="TC"/>
+  <term name="연료" description="" physicalName="FUEL" physicalDescription="FUEL"/>
+  <term name="구동방식" description="" physicalName="DRVTY" physicalDescription="DRIVE TYPE"/>
+  <term name="자동" description="" physicalName="ATMC" physicalDescription="AUTOMATIC"/>
+  <term name="수동" description="" physicalName="PASSIV" physicalDescription="PASSIVITY"/>
+  <term name="가솔린" description="" physicalName="GAS" physicalDescription="GASOLINE"/>
+  <term name="디젤" description="" physicalName="DF" physicalDescription="Diesel Fuel"/>
+  <term name="하이브리드" description="" physicalName="HB" physicalDescription="Hybrid"/>
+  <term name="전기" description="" physicalName="ELCTY" physicalDescription="ELECTRICITY"/>
+  <term name="작업" description="" physicalName="WORK" physicalDescription="WORK"/>
+  <term name="시간" description="" physicalName="TM" physicalDescription="TIME"/>
+  <term name="대리점" description="" physicalName="AGENCY" physicalDescription="AGENCY"/>
+  <term name="자동차정비소" description="" physicalName="ATMC" physicalDescription="AUTOMECHANIC"/>
+  <term name="마스터" description="" physicalName="MASTER" physicalDescription="MASTER"/>
+  <term name="오일필터" description="" physicalName="OF" physicalDescription="Oil Filter"/>
+  <term name="에어크리너" description="" physicalName="AC" physicalDescription="Air Cleaner"/>
+  <term name="택시" description="" physicalName="TAXI" physicalDescription="TAXI"/>
+  <term name="CVT" description="" physicalName="CVT" physicalDescription="CVT무단변속기"/>
+  <term name="SEQ" description="" physicalName="SEQ" physicalDescription="SEQ"/>
+  <term name="우선순위" description="" physicalName="PRIORT" physicalDescription="PRIORITY"/>
+  <term name="예외" description="" physicalName="EXCP" physicalDescription="EXCEPTION"/>
+  <term name="메뉴" physicalName="MENU" physicalDescription="MENU"/>
+  <term name="아이콘" physicalName="ICON" physicalDescription="ICON"/>
+  <term name="클래스" physicalName="CLASS" physicalDescription="CLASS"/>
+  <term name="상담" physicalName="CNSLT" physicalDescription="CONSULTATION"/>
+  <term name="레벨" physicalName="LEVEL" physicalDescription="LEVEL"/>
+  <term name="캠페인" physicalName="CMPGN" physicalDescription="CAMPAIGN"/>
+  <term name="고객" physicalName="CSTMR" physicalDescription="CUSTOMER"/>
+  <term name="메모" physicalName="MEMO" physicalDescription="MEMO"/>
+  <term name="아웃바운드" physicalName="OUTBOUND" physicalDescription="OUTBOUND"/>
+  <term name="인터페이스" physicalName="INTRFC" physicalDescription="INTERFACE">
+    <synonyms>IF</synonyms>
+  </term>
+  <term name="해피콜" physicalName="HPCL" physicalDescription="HAPPY CALL"/>
+  <term name="소스" physicalName="SOURC" physicalDescription="SOURCE">
+    <synonyms>원본</synonyms>
+  </term>
+  <term name="상담원" physicalName="CNSLR" physicalDescription="COUNSELLER"/>
+  <term name="분배" physicalName="DSTB" physicalDescription="DISTRIBUTION">
+    <synonyms>배분</synonyms>
+  </term>
+  <term name="스크립트" physicalName="SCRIPT" physicalDescription="SCRIPT"/>
+  <term name="시스템" physicalName="SYS" physicalDescription="SYSTEM"/>
+  <term name="KEY" physicalName="KEY" physicalDescription="KEY"/>
+  <term name="발생" physicalName="OCCRRNC" physicalDescription="OCCURRENCE"/>
+  <term name="진행" physicalName="PROGRS" physicalDescription="PROGRESS"/>
+  <term name="비고" physicalName="REMARK" physicalDescription="REMARK"/>
+  <term name="입사일" physicalName="ENCPN" physicalDescription="ENTRANCE COMPANY DATE"/>
+  <term name="퇴사일" physicalName="RTMTDE" physicalDescription="Retirement date"/>
+  <term name="재직" physicalName="HFFC" physicalDescription="HOLDING OFFICE"/>
+  <term name="부서" physicalName="DEPT" physicalDescription="DEPARTMENT"/>
+  <term name="담당" physicalName="CHRG" physicalDescription="CHARGE"/>
+  <term name="업무" physicalName="JOB" physicalDescription="DUTY"/>
+  <term name="설문" physicalName="QUSTNR"/>
+  <term name="템플릿" physicalName="TMPLAT" physicalDescription="template"/>
+  <term name="설문지" physicalName="QESTNR"/>
+  <term name="문항" physicalName="QESITM"/>
+  <term name="항목" physicalName="IEM"/>
+  <term name="기타" physicalName="ETC"/>
+  <term name="답변" physicalName="ANSWER"/>
+  <term name="질문" physicalName="QESTN"/>
+  <term name="최대" physicalName="MXMM"/>
+  <term name="선택" physicalName="CHOISE"/>
+  <term name="개수" physicalName="CO"/>
+  <term name="목적" physicalName="PURPS"/>
+  <term name="작성" physicalName="WRITNG"/>
+  <term name="안내" physicalName="GUIDANCE"/>
+  <term name="시작일" physicalName="BGNDE"/>
+  <term name="종료일" physicalName="ENDDE"/>
+  <term name="응답자" physicalName="RESPOND"/>
+  <term name="직업" physicalName="OCCP"/>
+  <term name="응답" physicalName="RSPNS"/>
+  <term name="차대번호" physicalName="VIN" physicalDescription="VIN NUMBER"/>
+  <term name="차량번호" physicalName="CARNBR" physicalDescription="CAR NUMBER"/>
+  <term name="색상" physicalName="COLOR" physicalDescription="COLOR"/>
+  <term name="취득" physicalName="ACQS" physicalDescription="ACQUISITION"/>
+  <term name="상실" physicalName="FRFTR" physicalDescription="FORFEITURE"/>
+  <term name="취득일" physicalName="ACQDT" physicalDescription="ACQUISITION DATE"/>
+  <term name="취득가격" physicalName="ACQSPC" physicalDescription="ACQUISITION PRICE"/>
+  <term name="취득세" physicalName="ACQSTX" physicalDescription="ACQUISITION TAX"/>
+  <term name="상실일" physicalName="FRFTRDT" physicalDescription="FORFEITURE DATE"/>
+  <term name="앞" physicalName="FRONT" physicalDescription="FRONT">
+    <synonyms>전면</synonyms>
+    <synonyms>전방</synonyms>
+  </term>
+  <term name="뒤" physicalName="REAR" physicalDescription="REAR">
+    <synonyms>후방</synonyms>
+  </term>
+  <term name="정비" physicalName="MNTNC" physicalDescription="MAINTENANCE">
+    <synonyms>유지</synonyms>
+  </term>
+  <term name="행위" physicalName="ACTION" physicalDescription="ACTION">
+    <synonyms>액션</synonyms>
+  </term>
+  <term name="내부" physicalName="INNER" physicalDescription="INNER"/>
+  <term name="외부" physicalName="EXTRL" physicalDescription="EXTERNAL"/>
+  <term name="필드" physicalName="FIELD" physicalDescription="FIELD"/>
+  <term name="값" physicalName="VALUE" physicalDescription="VALUE"/>
+  <term name="접수" physicalName="RCEPT" physicalDescription="RECEIPT"/>
+  <term name="홍보" physicalName="PR" physicalDescription="PUBLIC RELATION"/>
+  <term name="수신" physicalName="RECPTN" physicalDescription="RECEPTION"/>
+  <term name="이동전화" physicalName="MOBLPHON" physicalDescription="MOBILE PHONE"/>
+  <term name="거부" physicalName="REJECT" physicalDescription="REJECTION"/>
+  <term name="문자메시지" physicalName="SMS" physicalDescription="Short Message Service"/>
+  <term name="사업소" physicalName="BIZPLC" physicalDescription="PLACE OF BUSINESS"/>
+  <term name="본부" physicalName="HDQRTRS" physicalDescription="HEADQUARTERS"/>
+  <term name="정비자" physicalName="RPARER" physicalDescription="REPAIRER">
+    <synonyms>정비사</synonyms>
+  </term>
+  <term name="정비소" physicalName="REPLC" physicalDescription="PLACE OF REPAIR"/>
+  <term name="주행거리" physicalName="DRVDSTNC" physicalDescription="driving distance"/>
+  <term name="작업자" physicalName="OPERTOR" physicalDescription="OPERATOR"/>
+  <term name="수리" physicalName="REPAIR" physicalDescription="REPAIR"/>
+  <term name="사항" physicalName="MATTER" physicalDescription="MATTER">
+    <synonyms>문제</synonyms>
+  </term>
+  <term name="의뢰" physicalName="REQEST" physicalDescription="REQUEST">
+    <synonyms>요청</synonyms>
+  </term>
+  <term name="할당" physicalName="ASGN" physicalDescription="ASSIGNMENT"/>
+  <term name="할당자" physicalName="ALTR" physicalDescription="ALLOTTER"/>
+  <term name="대표자" physicalName="RPRSNTV" physicalDescription="REPRESENTATIVE"/>
+  <term name="블랙리스트" physicalName="BLCLST" physicalDescription="BLACKLIST"/>
+  <term name="참조" physicalName="REFRN" physicalDescription="REFERENCE"/>
+  <term name="해제" physicalName="RELIS" physicalDescription="RELEASE"/>
+  <term name="논리" physicalName="LOGICL" physicalDescription="LOGICAL"/>
+  <term name="물리" physicalName="PHYSICL" physicalDescription="PHYSICAL"/>
+  <term name="테이블" physicalName="TABLE" physicalDescription="TABLE"/>
+  <term name="기존" physicalName="LEGACY" physicalDescription="LEGACY"/>
+  <term name="콜" physicalName="CALL" physicalDescription="CALL"/>
+  <term name="부재" physicalName="ABSNCE" physicalDescription="ABSENCE"/>
+  <term name="차수" physicalName="ODR" physicalDescription="ORDER"/>
+  <term name="마감" physicalName="CLOS" physicalDescription="CLOSING"/>
+  <term name="SMS" physicalName="SMS" physicalDescription="SMS"/>
+  <term name="LOG" physicalName="LOG" physicalDescription="LOG"/>
+  <term name="전송" physicalName="TRNSMIS" physicalDescription="TRANSMISSION"/>
+  <term name="발송자" physicalName="SENDER" physicalDescription="SENDER"/>
+  <term name="부재중" physicalName="DRSC" physicalDescription="DURING ABSENCE"/>
+  <term name="갈등" physicalName="TRBL" physicalDescription="TROUBLE">
+    <synonyms>고장</synonyms>
+  </term>
+  <term name="범주" physicalName="CTGRY" physicalDescription="CATEGORY"/>
+  <term name="고장코드" physicalName="DTCCODE" physicalDescription="DTC CODE"/>
+  <term name="영어" physicalName="ENGL" physicalDescription="ENGLISH"/>
+  <term name="통합" physicalName="ITGRT" physicalDescription="INTEGRATED"/>
+  <term name="사양" physicalName="SPEC" physicalDescription="SPECIFICATION">
+    <synonyms>스펙</synonyms>
+  </term>
+  <term name="소유자" physicalName="OWNER" physicalDescription="OWNER"/>
+  <term name="위치" physicalName="LC" physicalDescription="LOCATION"/>
+  <term name="지점" physicalName="BHF" physicalDescription="BRANCH OFFICE"/>
+  <term name="영업소" physicalName="BUZPLC" physicalDescription="PLACE OF BUSINESS"/>
+  <term name="출고" physicalName="DELIVY" physicalDescription="DELIVERY"/>
+  <term name="안내문" physicalName="GDCC" physicalDescription="GUIDANCE DOCUMENT"/>
+  <term name="2차" physicalName="SCD" physicalDescription="SECONDARY"/>
+  <term name="발생조건" physicalName="OCCND" physicalDescription="OCCURRENCE CONDITION"/>
+  <term name="단가" physicalName="UNTPC" physicalDescription="UNIT PRICE"/>
+  <term name="기본건수" physicalName="BASSCNT" physicalDescription="BASIC COUNT"/>
+  <term name="담당자" physicalName="CHARGER" physicalDescription="PERSON IN CHARGE"/>
+  <term name="계약" physicalName="CNTRCT" physicalDescription="CONTRACT"/>
+  <term name="리콜" physicalName="RECALL" physicalDescription="RECALL"/>
+  <term name="마케팅" physicalName="MARKT" physicalDescription="MARKETING"/>
+  <term name="활용" physicalName="PRCUSE" physicalDescription="PRACTICAL USE"/>
+  <term name="고객별" physicalName="BYCSTM" physicalDescription="By customer"/>
+  <term name="계약별" physicalName="BYCNTC" physicalDescription="By contract"/>
+  <term name="타시스템" physicalName="OTHSYS" physicalDescription="OTHER SYSTEM"/>
+  <term name="제외" physicalName="EXCL" physicalDescription="EXCLUSION"/>
+</tm:TermDictionary>

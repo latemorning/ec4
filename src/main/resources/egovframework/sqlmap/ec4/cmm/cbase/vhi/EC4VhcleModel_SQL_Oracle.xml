@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="VhcleModel">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="serarchVO" type="egovframework.ec4.cmm.cbase.vhi.service.VhcleModelDefaultVO"/>
+	<typeAlias  alias="serarchTestVO" type="egovframework.ec4.cmm.service.PopupTestDefaultVO"/>
+	<typeAlias  alias="cmnDetailCode" type="egovframework.com.cmm.service.CmmnDetailCode"/>
+	<typeAlias  alias="vhcleDetailModelVO" type="egovframework.ec4.cmm.cbase.vhi.service.VhcleDetailModelVO"/>
+	<typeAlias  alias="vo" type="egovframework.ec4.cmm.cbase.vhi.service.VhcleModelVO"/>
+
+	<resultMap id="vhcleModel" class="egovframework.ec4.cmm.cbase.vhi.service.VhcleModelVO">
+		<result property="vhcleModelId" column="VHCLE_MODEL_ID" columnIndex="1"/>
+		<result property="vhcleModelNm" column="VHCLE_MODEL_NM" columnIndex="2"/>
+		<result property="vhcleMakrCode" column="VHCLE_MAKR_CODE" columnIndex="3"/>
+		<result property="useAt" column="USE_AT" columnIndex="4"/>
+		<result property="frstRegistPnttm" column="FRST_REGIST_PNTTM" columnIndex="5"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID" columnIndex="6"/>
+		<result property="lastUpdtPnttm" column="LAST_UPDT_PNTTM" columnIndex="7"/>
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" columnIndex="8"/>
+	</resultMap>
+
+
+    <!--
+        쿼리명 : 차량정보 관리 등록
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.20    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.20
+    -->
+    <insert id="vhcleModelDAO.insertVhcleModel">
+        <![CDATA[
+            INSERT INTO si_vhcle_model
+                  (
+                    vhcle_model_id
+				  , vhcle_model_nm
+				  , vhcty_code
+				  , vhcle_makr_code
+				  , use_at
+				  , frst_regist_pnttm
+				  , frst_register_id
+				  , last_updt_pnttm
+				  , last_updusr_id
+				  )
+			VALUES
+			      (
+			        #vhcleModelId#
+				  , #vhcleModelNm#
+				  , #vhctyCode#
+				  , #vhcleMakrCode#
+				  , #useAt#
+				  , SYSDATE
+				  , #frstRegisterId#
+				  , SYSDATE
+				  , #lastUpdusrId#
+				  )
+        ]]>
+	</insert>
+
+
+    <!--
+        쿼리명 : 차량정보 관리 수정
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.20    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.20
+    -->
+    <update id="vhcleModelDAO.updateVhcleModel">
+        <![CDATA[
+            UPDATE
+                    si_vhcle_model
+			   SET
+			        vhcle_model_nm  = #vhcleModelNm#
+				  , vhcty_code      = #vhctyCode#
+				  , vhcle_makr_code = #vhcleMakrCode#
+				  , use_at          = #useAt#
+				  , last_updt_pnttm = SYSDATE
+				  , last_updusr_id  = #lastUpdusrId#
+             WHERE
+                    vhcle_model_id  = #vhcleModelId#
+        ]]>
+	</update>
+
+
+    <!--
+        쿼리명 : 차량정보 관리 삭제
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.25    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.25
+    -->
+    <delete id="vhcleModelDAO.deleteVhcleModel">
+		<![CDATA[
+            DELETE
+              FROM
+                    si_vhcle_model
+			 WHERE
+			        vhcle_model_id=#vhcleModelId#
+        ]]>
+	</delete>
+
+
+	<!-- select id="vhcleModelDAO.selectVhcleModel" resultMap="vhcleModel">
+		<![CDATA[
+			SELECT
+				VHCLE_MODEL_ID
+				, VHCLE_MODEL_NM
+				, VHCLE_MAKR_CODE
+				, USE_AT
+				, FRST_REGIST_PNTTM
+				, FRST_REGISTER_ID
+				, LAST_UPDT_PNTTM
+				, LAST_UPDUSR_ID
+			FROM SI_VHCLE_MODEL
+						WHERE VHCLE_MODEL_ID=#vhcleModelId#
+				]]>
+	</select -->
+
+
+
+    <!--
+        쿼리명 : 모델 목록 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.26    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.26
+    -->
+    <select id="vhcleModelDAO.selectVhcleModelList" parameterClass="serarchVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+                              vm.vhcle_model_id
+                            , vm.vhcle_model_nm
+                            , vm.vhcle_makr_code
+                            , vmcd.vhcle_makr_nm
+                            , vm.vhcty_code
+                            , vhct.vhcty_nm
+                            , vm.use_at
+                        FROM
+                              si_vhcle_model vm
+                            , (SELECT code_id, code, code_nm AS vhcty_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'VHCT' AND use_at='Y') vhct
+                            , (SELECT code_id, code, code_nm AS vhcle_makr_nm
+                                 FROM comtccmmndetailcode
+                                WHERE code_id = 'VMCD' AND use_at='Y') vmcd
+                       WHERE
+                              vm.vhcty_code = vhct.code(+)
+                         AND  vm.vhcle_makr_code = vmcd.code(+)
+    ]]>
+        <isNotEmpty property="searchVhcleMakrCode" prepend="AND">
+        <![CDATA[
+                              vm.vhcle_makr_code = #searchVhcleMakrCode#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchVhctyCode" prepend="AND">
+        <![CDATA[
+                              UPPER(vm.vhcty_code) LIKE '%'||UPPER(#searchVhctyCode#)||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchVhcleModelNm" prepend="AND">
+        <![CDATA[
+                              vm.vhcle_model_nm LIKE '%'||#searchVhcleModelNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchUseAt" prepend="AND">
+        <![CDATA[
+                              vm.use_at = #searchUseAt#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="VHCTY_NM">
+            <![CDATA[
+                              vhct.$sortColNm$
+            ]]>
+            </isEqual>
+            <isEqual property="sortColNm" compareValue="VHCLE_MAKR_NM">
+            <![CDATA[
+                              vmcd.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEqual property="sortColNm" compareValue="VHCTY_NM">
+            <isNotEqual property="sortColNm" compareValue="VHCLE_MAKR_NM">
+            <![CDATA[
+                              vm.$sortColNm$
+            ]]>
+            </isNotEqual>
+            </isNotEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 모델 총 갯수 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.26    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.26
+    -->
+    <select id="vhcleModelDAO.selectVhcleModelListCnt" parameterClass="serarchVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) AS cnt
+          FROM
+                si_vhcle_model vm
+              , (SELECT code_id, code, code_nm AS vhcty_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'VHCT' AND use_at='Y') vhct
+              , (SELECT code_id, code, code_nm AS vhcle_makr_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'VMCD' AND use_at='Y') vmcd
+         WHERE
+                vm.vhcty_code = vhct.code(+)
+           AND  vm.vhcle_makr_code = vmcd.code(+)
+    ]]>
+        <isNotEmpty property="searchVhcleMakrCode" prepend="AND">
+        <![CDATA[
+                vm.vhcle_makr_code = #searchVhcleMakrCode#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchVhctyCode" prepend="AND">
+        <![CDATA[
+                UPPER(vm.vhcty_code) LIKE '%'||UPPER(#searchVhctyCode#)||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchVhcleModelNm" prepend="AND">
+        <![CDATA[
+                vm.vhcle_model_nm LIKE '%'||#searchVhcleModelNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchUseAt" prepend="AND">
+        <![CDATA[
+                vm.use_at = #searchUseAt#
+        ]]>
+        </isNotEmpty>
+    </select>
+
+
+
+    <!--
+        쿼리명 : 세부모델 목록 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.30    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.20
+    -->
+    <select id="vhcleModelDAO.selectVhcleDetailModelList" parameterClass="serarchVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+                              vm.vhcle_model_nm
+                            , vm.vhcle_model_id
+                            , vdm.detail_model_id
+                            , vdm.detail_model_nm
+                            , vdm.mdyr_begin
+                            , vdm.mdyr_end
+                            , vdm.use_at
+                            , vdm.if_mdl_code
+                            , vdm.if_model_cd
+                            , vdm.if_car_cd
+                            , vdm.if_mmodel
+                            , DECODE(vm.vhcle_model_nm,NULL,'',vm.vhcle_model_nm) AS link_vhcle_model
+                        FROM
+                              si_vhcle_model vm
+                            , si_vhcle_detail_model vdm
+                       WHERE
+                              vm.vhcle_model_id = vdm.vhcle_model_id
+    ]]>
+        <isNotEmpty property="searchVhcleModelId" prepend="AND">
+        <![CDATA[
+                              vdm.vhcle_model_id = #searchVhcleModelId#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchDetailModelNm" prepend="AND">
+        <![CDATA[
+                              vdm.detail_model_nm LIKE '%'||#searchDetailModelNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchMdyrBegin" prepend="AND">
+        <![CDATA[
+                              vdm.mdyr_begin = #searchMdyrBegin#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchMdyrEnd" prepend="AND">
+        <![CDATA[
+                              vdm.mdyr_end = #searchMdyrEnd#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchUseAt" prepend="AND">
+        <![CDATA[
+                              vdm.use_at = #searchUseAt#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="VHCLE_MODEL_NM">
+            <![CDATA[
+                              vm.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEqual property="sortColNm" compareValue="VHCLE_MODEL_NM">
+            <![CDATA[
+                              vdm.$sortColNm$
+            ]]>
+            </isNotEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 세부모델 총 갯수 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.30    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.20
+    -->
+    <select id="vhcleModelDAO.selectVhcleDetailModelListCnt" parameterClass="serarchVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) AS cnt
+          FROM
+                si_vhcle_model vm
+              , si_vhcle_detail_model vdm
+         WHERE
+                vm.vhcle_model_id = vdm.vhcle_model_id
+    ]]>
+        <isNotEmpty property="searchVhcleModelId" prepend="AND">
+        <![CDATA[
+                vdm.vhcle_model_id = #searchVhcleModelId#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchDetailModelNm" prepend="AND">
+        <![CDATA[
+                vdm.detail_model_nm LIKE '%'||#searchDetailModelNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchMdyrBegin" prepend="AND">
+        <![CDATA[
+                vdm.mdyr_begin = #searchMdyrBegin#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchMdyrEnd" prepend="AND">
+        <![CDATA[
+                vdm.mdyr_end = #searchMdyrEnd#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="searchUseAt" prepend="AND">
+        <![CDATA[
+                vdm.use_at = #searchUseAt#
+        ]]>
+        </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 차량정보 관리 세부모델 등록
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.04.24    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.04.24
+    -->
+    <insert id="vhcleModelDAO.insertVhcleDetailModel">
+        <![CDATA[
+            INSERT INTO si_vhcle_detail_model
+                  (
+                    detail_model_id
+                  , detail_model_nm
+                  , mdyr_begin
+                  , mdyr_end
+                  , vhcle_model_id
+                  , use_at
+                  , frst_regist_pnttm
+                  , frst_register_id
+                  , last_updt_pnttm
+                  , last_updusr_id
+                  , if_mdl_code
+                  )
+            VALUES
+                  (
+                    #detailModelId#
+                  , #detailModelNm#
+                  , #mdyrBegin#
+                  , #mdyrEnd#
+                  , #vhcleModelId#
+                  , #useAt#
+                  , SYSDATE
+                  , #frstRegisterId#
+                  , SYSDATE
+                  , #lastUpdusrId#
+                  , #ifMdlCode#
+                  )
+        ]]>
+    </insert>
+
+    <!--
+        쿼리명 : 세부모델 삭제
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.07    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.05.07
+    -->
+	<delete id="vhcleModelDAO.deleteVhcleDetailModel">
+	<![CDATA[
+        DELETE
+          FROM
+	            si_vhcle_detail_model
+         WHERE
+                detail_model_id = #detailModelId#
+    ]]>
+	</delete>
+
+
+    <!--
+        쿼리명 : 세부모델 수정
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.07    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.05.07
+    -->
+    <update id="vhcleModelDAO.updateVhcleDetailModel">
+    <![CDATA[
+        UPDATE
+                si_vhcle_detail_model
+           SET
+                detail_model_nm = #detailModelNm#
+              , mdyr_begin = #mdyrBegin#
+              , mdyr_end = #mdyrEnd#
+              , use_at = #useAt#
+              , last_updt_pnttm = SYSDATE
+              , last_updusr_id = #lastUpdusrId#
+         WHERE
+                detail_model_id = #detailModelId#
+    ]]>
+    </update>
+
+
+
+    <!--
+        쿼리명 : 팝업 테스트용 임시...
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.05.10    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.05.10
+    -->
+    <select id="ec4CmmUseDAO.selectPopupTestList" parameterClass="serarchTestVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+                              code_id
+                            , code
+                            , code_nm
+                        FROM
+                              comtccmmndetailcode dc
+                       WHERE
+                              dc.code_id = 'VHCT'
+    ]]>
+        <isNotEmpty property="searchCodeNm" prepend="AND">
+        <![CDATA[
+                              dc.code_nm LIKE '%'||#searchCodeNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                              dc.$sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+    <select id="ec4CmmUseDAO.selectPopupTestListCnt" parameterClass="serarchTestVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+          FROM
+                comtccmmndetailcode dc
+         WHERE
+                dc.code_id = 'VHCT'
+    ]]>
+        <isNotEmpty property="searchCodeNm" prepend="AND">
+        <![CDATA[
+                dc.code_nm LIKE '%'||#searchCodeNm#||'%'
+        ]]>
+        </isNotEmpty>
+    </select>
+    
+    
+   <!--
+        쿼리명 : 차량모델 콤보박스에 의한 결과리스트 egovMap형태로 return하지 않는다
+        설  명 : egovMap형태로 return하지 않는다
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.07    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.07
+    -->
+    <select id="vhcleModelDAO.selectVhclMdlComboDfList" parameterClass="cmnDetailCode" resultClass="cmnDetailCode">
+    <![CDATA[
+		SELECT 
+                  VHCLE_MODEL_ID   		AS CODE_ID
+                , VHCLE_MODEL_ID     	AS CODE
+                , VHCLE_MODEL_NM  		AS CODE_NM
+                , VHCLE_MODEL_ID  		AS CODE_DC
+                , VHCLE_MODEL_ID     	AS ID
+                , VHCLE_MODEL_NM  		AS TEXT
+                , DECODE(#codeId#, VHCLE_MODEL_ID, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+		    FROM   SI_VHCLE_MODEL
+		   WHERE   1=1
+		   AND VHCLE_MAKR_CODE = #cnsltSeCode#
+		   AND VHCTY_CODE = DECODE(#upCodeId#,'ALL',VHCTY_CODE,#upCodeId#)   
+    ]]>      
+			<isNotEmpty property="upCodeIdNm"> <!-- 사용하지않음 -->
+			AND VHCLE_MODEL_ID LIKE '%' || #codeId# || '%'
+			</isNotEmpty >
+    <![CDATA[
+         ORDER BY VHCTY_CODE, VHCLE_MODEL_NM, VHCLE_MODEL_ID
+    ]]>
+    </select>
+    
+    
+   <!--
+        쿼리명 : 차량모델 콤보박스에 의한 결과리스트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.22    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.08.22
+    -->
+    <select id="vhcleModelDAO.selectVhclMdlComboList" parameterClass="cmnDetailCode" resultClass="egovMap">
+    <![CDATA[
+		SELECT 
+                  VHCLE_MODEL_ID   		AS CODE_ID
+                , VHCLE_MODEL_ID     	AS CODE
+                , VHCLE_MODEL_NM  		AS CODE_NM
+                , VHCLE_MODEL_ID  		AS CODE_DC
+                , VHCLE_MODEL_ID     	AS ID
+                , VHCLE_MODEL_NM  		AS TEXT
+                , DECODE(#codeId#, VHCLE_MODEL_ID, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+		    FROM   SI_VHCLE_MODEL
+		   WHERE   1=1
+  
+    ]]>      
+			<isNotEmpty property="upCodeIdNm"> <!-- 사용하지않음 -->
+			AND VHCLE_MODEL_ID LIKE '%' || #codeId# || '%'
+			</isNotEmpty >
+    <![CDATA[
+         ORDER BY VHCTY_CODE, VHCLE_MODEL_NM, VHCLE_MODEL_ID
+    ]]>
+    </select>
+    
+    
+   <!--
+        쿼리명 : 차량상세모델 콤보박스에 의한 결과리스트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.22    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.08.22
+    -->
+    <select id="vhcleModelDAO.selectVhclDetlMdlComboList" parameterClass="cmnDetailCode" resultClass="egovMap">
+    <![CDATA[
+		SELECT 
+                  VDM.DETAIL_MODEL_ID   	AS CODE_ID
+                , VDM.DETAIL_MODEL_ID     	AS CODE
+                , VDM.DETAIL_MODEL_NM  		AS CODE_NM
+                , VDM.DETAIL_MODEL_ID  		AS CODE_DC
+                , VDM.DETAIL_MODEL_ID     	AS ID
+                , VDM.DETAIL_MODEL_NM  		AS TEXT
+                , DECODE(#codeId#, VDM.DETAIL_MODEL_ID, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+		    FROM   SI_VHCLE_MODEL VM, SI_VHCLE_DETAIL_MODEL VDM
+		    WHERE   VM.VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID
+		    AND VDM.VHCLE_MODEL_ID = #upCodeId#   
+    ]]>      
+			<isNotEmpty property="upCodeIdNm"> <!-- 사용하지않음 -->
+			AND VDM.VHCLE_MODEL_ID LIKE '%' || #codeId# || '%'
+			</isNotEmpty >
+    <![CDATA[
+         ORDER BY VM.VHCTY_CODE, VM.VHCLE_MODEL_NM, VM.VHCLE_MODEL_ID, VDM.DETAIL_MODEL_NM
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상세모델정보 수정 Load
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.15    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2019.01.15
+    -->
+    <select id="vhcleModelDAO.selectDetailVhcleModelMod" parameterClass="vhcleDetailModelVO" resultClass="egovMap">
+    <![CDATA[
+           SELECT
+                   VM.VHCLE_MODEL_NM
+                 , VM.VHCLE_MODEL_ID
+                 , VDM.DETAIL_MODEL_ID
+                 , VDM.DETAIL_MODEL_NM
+                 , VDM.MDYR_BEGIN
+                 , VDM.MDYR_END
+                 , VDM.USE_AT
+                 , VDM.IF_MDL_CODE
+                 , VDM.IF_MODEL_CD
+                 , VDM.IF_CAR_CD
+                 , VDM.IF_MMODEL
+             FROM
+                   SI_VHCLE_MODEL VM
+                 , SI_VHCLE_DETAIL_MODEL VDM
+            WHERE
+                   VM.VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID
+			AND VDM.DETAIL_MODEL_ID = #detailModelId#
+    ]]>
+    </select>
+    
+    
+    
+    
+    
+
+
+
+    <!--
+        쿼리명 : 인터페이스 세부모델 목록 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.16    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.01.16
+    -->
+    <select id="vhcleModelDAO.selectLinkVhcleDetailModelList" parameterClass="serarchVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+				        SELECT T.*
+				        FROM (
+				                     SELECT
+				                        RTRIM(A.CAR_NM)||' ('||A.MY||')' AS CAR_NM
+				                        ,'' AS DETAIL_MODEL_ID
+				                        , RTRIM(A.CAR_NM) AS DETAIL_MODEL_NM
+				                        ,'1111' MDYR_BEGIN
+				                        ,'' MDYR_END
+				                        ,'' AS VHCLE_MODEL_ID
+				                        ,'' AS VHCLE_MODEL_NM
+				                        ,'Y' USE_AT
+				                        ,A.CAR_CD AS IF_MDL_CODE
+				                        ,A.CAR_CD AS MDL_CODE
+				                        ,A.MODEL_CD
+				                        ,A.MMODEL
+				                        ,'' AS LINK_VHCLE_MODEL
+				                        ,SYSDATE FRST_DATE
+				                        ,'CJJ' FRST_ID
+				                        ,SYSDATE LAST_DATE
+				                        ,'CJJ' LAST_ID
+				                     FROM DZR_CAR_CD A
+				                UNION
+				                    SELECT 
+				                        RTRIM(A.MDL_KOR_NAME)||' ('||REPLACE(A.MDL_CODE,' ','')||')' AS CAR_NM
+				                        ,'' AS DETAIL_MODEL_ID
+				                        ,RTRIM(A.MDL_KOR_NAME) AS DETAIL_MODEL_NM
+				                        ,'1111' MDYR_BEGIN
+				                        ,'' MDYR_END
+				                        ,'' AS VHCLE_MODEL_ID
+				                        ,'' AS VHCLE_MODEL_NM
+				                        ,'Y' USE_AT
+				                        ,REPLACE(A.MDL_CODE,' ','') AS IF_MDL_CODE
+				                        ,REPLACE(A.MDL_CODE,' ','') AS MDL_CODE
+				                        ,'' AS MODEL_CD
+				                        ,'' AS MMODEL
+				                        ,'' AS LINK_VHCLE_MODEL
+				                        ,SYSDATE FRST_DATE
+				                        ,'CJJ' FRST_ID
+				                        ,SYSDATE LAST_DATE
+				                        ,'CJJ' LAST_ID
+				                    FROM TB_ASM530 A
+				        )T
+				        WHERE NOT EXISTS (SELECT 'X' FROM SI_VHCLE_DETAIL_MODEL WHERE IF_MDL_CODE = T.MDL_CODE)
+    ]]>
+        <isNotEmpty property="searchDetailModelNm" prepend="AND">
+        <![CDATA[
+                              T.DETAIL_MODEL_NM LIKE '%'||#searchDetailModelNm#||'%'
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="VHCLE_MODEL_NM">
+            <![CDATA[
+                              T.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEqual property="sortColNm" compareValue="VHCLE_MODEL_NM">
+            <![CDATA[
+                              T.$sortColNm$
+            ]]>
+            </isNotEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 인터페이스 세부모델 총 갯수 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.16    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.01.16
+    -->
+    <select id="vhcleModelDAO.selectLinkVhcleDetailModelListCnt" parameterClass="serarchVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) AS cnt
+        FROM (
+                     SELECT
+                        RTRIM(A.CAR_NM)||' ('||A.MY||')' AS CAR_NM
+                        ,'' AS DETAIL_MODEL_ID
+                        , RTRIM(A.CAR_NM) AS DETAIL_MODEL_NM
+                        ,'1111' MDYR_BEGIN
+                        ,'' MDYR_END
+                        ,'' AS VHCLE_MODEL_ID
+                        ,'' AS VHCLE_MODEL_NM
+                        ,'Y' USE_AT
+                        ,A.CAR_CD AS IF_MDL_CODE
+                        ,A.CAR_CD AS MDL_CODE
+                        ,A.MODEL_CD
+                        ,A.MMODEL
+                        ,'' AS LINK_VHCLE_MODEL
+                        ,SYSDATE FRST_DATE
+                        ,'CJJ' FRST_ID
+                        ,SYSDATE LAST_DATE
+                        ,'CJJ' LAST_ID
+                     FROM DZR_CAR_CD A
+                UNION
+                    SELECT 
+                        RTRIM(A.MDL_KOR_NAME)||' ('||REPLACE(A.MDL_CODE,' ','')||')' AS CAR_NM
+                        ,'' AS DETAIL_MODEL_ID
+                        ,RTRIM(A.MDL_KOR_NAME) AS DETAIL_MODEL_NM
+                        ,'1111' MDYR_BEGIN
+                        ,'' MDYR_END
+                        ,'' AS VHCLE_MODEL_ID
+                        ,'' AS VHCLE_MODEL_NM
+                        ,'Y' USE_AT
+                        ,REPLACE(A.MDL_CODE,' ','') AS IF_MDL_CODE
+                        ,REPLACE(A.MDL_CODE,' ','') AS MDL_CODE
+                        ,'' AS MODEL_CD
+                        ,'' AS MMODEL
+                        ,'' AS LINK_VHCLE_MODEL
+                        ,SYSDATE FRST_DATE
+                        ,'CJJ' FRST_ID
+                        ,SYSDATE LAST_DATE
+                        ,'CJJ' LAST_ID
+                    FROM TB_ASM530 A
+        )T
+        WHERE NOT EXISTS (SELECT 'X' FROM SI_VHCLE_DETAIL_MODEL WHERE IF_MDL_CODE = T.MDL_CODE)
+    ]]>
+        <isNotEmpty property="searchDetailModelNm" prepend="AND">
+        <![CDATA[
+                T.DETAIL_MODEL_NM LIKE '%'||#searchDetailModelNm#||'%'
+        ]]>
+        </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 모델코드 중복체크 조회
+        설  명 :
+
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.01.17    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2019.01.17
+    -->
+    <select id="vhcleModelDAO.selectDupVhctyCodeVhcleModelCnt" parameterClass="vo" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) AS cnt
+        FROM SI_VHCLE_MODEL
+        WHERE UPPER(VHCTY_CODE) = UPPER(#vhctyCode#)
+        AND VHCLE_MODEL_ID != #vhcleModelId#
+    ]]>
+    </select>
+
+</sqlMap>

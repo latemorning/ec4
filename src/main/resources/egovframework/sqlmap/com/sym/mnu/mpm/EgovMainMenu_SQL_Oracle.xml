@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!--
+    SQL File Name : EgovMainMenu_SQL_Oracle.xml
+    Description : 메뉴관련
+
+    Modification Information
+    수정일        수정자    Query Id
+    ##########    ######    ######################################
+    2018.04.02    harry     최초 생성일 모름 기존 파일에 주석 생성
+-->
+<sqlMap namespace="MainMenu">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="menuManageVO" type="egovframework.com.sym.mnu.mpm.service.MenuManageVO"/>
+	<typeAlias  alias="comDefaultVO" type="egovframework.com.cmm.ComDefaultVO"/>
+
+	<select id="menuManageDAO.selectMainMenuHead" parameterClass="MenuManageVO" resultClass="egovMap">
+		<![CDATA[
+            SELECT
+			      B.MENU_NO           AS "menuNo"
+				, B.MENU_ORDR         AS "menuOrdr"
+				, B.MENU_NM           AS "menuNm"
+				, B.UPPER_MENU_NO     AS "upperMenuId"
+				, B.MENU_DC           AS "menuDc"
+				, B.RELATE_IMAGE_PATH AS "relateImagePath"
+				, B.RELATE_IMAGE_NM   AS "relateImageNm"
+				, B.PROGRM_FILE_NM    AS "progrmFileNm"
+				, (SELECT C.URL FROM COMTNPROGRMLIST C WHERE B.PROGRM_FILE_NM = C.PROGRM_FILE_NM) AS "chkURL"
+			FROM COMTNMENUCREATDTLS A, COMTNMENUINFO B
+			WHERE  B.Menu_NO > 0
+			AND    B.UPPER_MENU_NO = 0
+			AND    A.MENU_NO  = B.MENU_NO
+			AND    A.AUTHOR_CODE = (SELECT C.AUTHOR_CODE from COMTNEMPLYRSCRTYESTBS C
+	                                WHERE  C.SCRTY_DTRMN_TRGET_ID = #tmpUniqId#)
+			ORDER BY MENU_ORDR
+		]]>
+	</select>
+
+
+<!--
+    쿼리명 : left menu 조회
+    설  명 : left menu 조회
+
+    수정일        수정자    수정내용
+    ##########    ######    ####################
+    2018.04.02    harry     기존 파일에 주석 생성
+
+    작성자 : harry
+    최초작성일 :
+-->
+	<select id="menuManageDAO.selectMainMenuLeft" parameterClass="MenuManageVO" resultClass="egovMap">
+		<![CDATA[
+            SELECT
+                    mi.menu_no                                     AS "menuNo"
+                  , mi.menu_ordr                                   AS "menuOrdr"
+                  , mi.menu_nm                                     AS "menuNm"
+                  , mi.upper_menu_no                               AS "upperMenuId"
+                  , mi.icon_class_nm                               AS "iconClassNm"
+                  , mi.relate_image_path                           AS "relateImagePath"
+                  , mi.relate_image_nm                             AS "relateImageNm"
+                  , LEVEL                                          AS "level"
+                  , (SELECT  c.url
+                       FROM  COMTNPROGRMLIST c
+                      WHERE  mi.progrm_file_nm = c.progrm_file_nm) AS "chkURL"
+              FROM
+                    (SELECT menu_no
+                          , author_code
+                          , mapng_creat_id
+                       FROM COMTNMENUCREATDTLS
+                      WHERE author_code in (SELECT author_code
+                                              FROM COMTNEMPLYRSCRTYESTBS
+                                             WHERE scrty_dtrmn_trget_id = #tmpUniqId#)
+                    ) mcd
+                  , COMTNMENUINFO mi
+             WHERE
+                    mcd.menu_no = mi.menu_no
+             START WITH
+                    mi.upper_menu_no = 0
+           CONNECT BY PRIOR
+                    mi.menu_no = mi.upper_menu_no
+             ORDER SIBLINGS BY
+                    mi.menu_ordr
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectLastMenuURL" parameterClass="MenuManageVO" resultClass="String">
+		<![CDATA[
+			SELECT URL
+			FROM   COMTNPROGRMLIST
+			WHERE  PROGRM_FILE_NM =
+			       (SELECT PROGRM_FILE_NM FROM COMTNMENUINFO
+				    WHERE MENU_NO = #menuNo#)
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectLastMenuNo" parameterClass="MenuManageVO" resultClass="int">
+		<![CDATA[
+			select MIN(MENU_NO)
+			from   COMTNMENUINFO
+			where  UPPER_MENU_NO = #menuNo#
+			and    MENU_ORDR =
+			      (select MIN(MENU_ORDR)
+			       from COMTNMENUCREATDTLS A, COMTNMENUINFO B
+			       where A.MENU_NO = B.MENU_NO
+			       AND   A.AUTHOR_CODE = (SELECT AUTHOR_CODE from COMTNEMPLYRSCRTYESTBS
+	                                      WHERE  SCRTY_DTRMN_TRGET_ID = #tempValue#)
+			       AND   B.UPPER_MENU_NO = #menuNo#)
+		]]>
+	</select>
+
+	<select id="menuManageDAO.selectLastMenuNoCnt" parameterClass="MenuManageVO" resultClass="int">
+		<![CDATA[
+			select count(MENU_NO)
+			from   COMTNMENUINFO
+			where  UPPER_MENU_NO = #menuNo#
+			and    MENU_ORDR =
+			      (select MIN(MENU_ORDR)
+			       from COMTNMENUCREATDTLS A, COMTNMENUINFO B
+			       where A.MENU_NO = B.MENU_NO
+			       AND   A.AUTHOR_CODE = (SELECT AUTHOR_CODE from COMTNEMPLYRSCRTYESTBS
+	                                      WHERE  SCRTY_DTRMN_TRGET_ID = #tempValue#)
+			       AND   B.UPPER_MENU_NO = #menuNo#)
+		]]>
+	</select>
+</sqlMap>

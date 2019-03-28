@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Cnslt">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltDefaultVO" type="egovframework.ec4.call.outbd.cnslt.service.CnsltDefaultVO"/>
+    <typeAlias  alias="cnsltVO" type="egovframework.ec4.call.outbd.cnslt.service.CnsltVO"/>
+    <typeAlias  alias="loginVO" type="egovframework.com.cmm.LoginVO"/>
+    
+
+    <!--
+        쿼리명 : 상담결과 등록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.17    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.17
+    -->
+    <insert id="outbdCnsltDAO.insertCnsltResult">
+    <![CDATA[
+        INSERT
+          INTO
+                ca_hpcl_process_hist
+              (
+                hpcl_id
+              , odr
+              , call_opetr_esntl_id
+              , call_process_dt
+              , call_result_code
+              )
+       VALUES (
+                #hpclId#
+              , (SELECT NVL(MAX(odr)+1, 1) FROM ca_hpcl_process_hist WHERE hpcl_id = #hpclId#)
+              , #callOpetrEsntlId#
+              , SYSDATE
+              , #callResultCode#
+              )
+    ]]>
+    </insert>
+
+
+    <!--
+        쿼리명 : 해피콜 인터페이스 테이블의 진행상태 및 상담결과 업데이트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.20    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.20
+    -->
+    <update id="outbdCnsltDAO.updateIntrfcResult">
+    <![CDATA[
+        MERGE
+         INTO
+               i_mntnc_hpcl_extrl_intrfc ei
+        USING
+               (SELECT mntnc_sys_hpcl_key FROM i_mntnc_hpcl_inner_intrfc WHERE hpcl_id = #hpclId#) ii
+           ON
+               (ei.mntnc_sys_hpcl_key = ii.mntnc_sys_hpcl_key)
+         WHEN
+      MATCHED
+         THEN
+               UPDATE
+                  SET
+                       progrs_sttus_code = f_get_pkg_val('PKG_GLOBAL_CONST.G_CLSTTCD_CLSTT020_CD')
+                     , progrs_result_code = #callResultCode#
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 수신동의 처리, 나중에 고객관리 패키지로 이동 바람...
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.20    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.20
+    -->
+    <update id="outbdCnsltDAO.updateRecptnAgre">
+    <![CDATA[
+        MERGE
+         INTO
+               ca_pr_recptn pr
+        USING
+               DUAL
+           ON
+               (pr.cstmr_esntl_id = #searchCstmrEsntlId#
+            AND pr.recptn_agre_se_code = #recptnAgreSeCode#)
+         WHEN
+      MATCHED
+         THEN
+               UPDATE
+                  SET
+                       recptn_agre_at = #recptnAgreAt#
+    ]]>
+        <isEqual property="recptnAgreAt" compareValue="Y">
+        <![CDATA[
+                     , recptn_agre_de = SYSDATE
+        ]]>
+        </isEqual>
+        <isEqual property="recptnAgreAt" compareValue="N">
+        <![CDATA[
+                     , recptn_reject_de = SYSDATE
+        ]]>
+        </isEqual>
+    <![CDATA[
+                     , last_updt_pnttm = SYSDATE
+                     , last_updusr_id = #uniqId#
+         WHEN
+          NOT
+      MATCHED
+         THEN
+               INSERT
+                     (
+                       cstmr_esntl_id
+                     , recptn_agre_se_code
+                     , recptn_agre_at
+    ]]>
+        <isEqual property="recptnAgreAt" compareValue="Y">
+        <![CDATA[
+                     , recptn_agre_de
+        ]]>
+        </isEqual>
+        <isEqual property="recptnAgreAt" compareValue="N">
+        <![CDATA[
+                     , recptn_reject_de
+        ]]>
+        </isEqual>
+    <![CDATA[
+                     , frst_regist_pnttm
+                     , frst_register_id
+                     )
+               VALUES(
+                       #searchCstmrEsntlId#
+                     , #recptnAgreSeCode#
+                     , #recptnAgreAt#
+    ]]>
+        <isEqual property="recptnAgreAt" compareValue="Y">
+        <![CDATA[
+                     , SYSDATE
+        ]]>
+        </isEqual>
+        <isEqual property="recptnAgreAt" compareValue="N">
+        <![CDATA[
+                     , SYSDATE
+        ]]>
+        </isEqual>
+    <![CDATA[
+                     , SYSDATE
+                     , #uniqId#
+                     )
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 블랙리스트 처리, 나중에 고객관리 패키지로 이동 바람...
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.21    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.21
+    -->
+    <update id="outbdCnsltDAO.updateBlclst">
+    <![CDATA[
+        MERGE
+         INTO
+               ca_blclst_cstmr bc
+        USING
+               DUAL
+           ON
+               (bc.cstmr_esntl_id = #searchCstmrEsntlId#)
+         WHEN
+      MATCHED
+         THEN
+               UPDATE
+                  SET
+                       blclst_at = #blclstAt#
+    ]]>
+        <isEqual property="blclstAt" compareValue="Y">
+        <![CDATA[
+                     , last_regist_de = SYSDATE
+                     , last_register_id = #uniqId#
+        ]]>
+        </isEqual>
+        <isEqual property="blclstAt" compareValue="N">
+        <![CDATA[
+                     , last_relis_de = SYSDATE
+                     , last_relis_user_id = #uniqId#
+        ]]>
+        </isEqual>
+    <![CDATA[
+         WHEN
+          NOT
+      MATCHED
+         THEN
+               INSERT
+                     (
+                       cstmr_esntl_id
+                     , blclst_at
+    ]]>
+        <isEqual property="blclstAt" compareValue="Y">
+        <![CDATA[
+                     , last_regist_de
+                     , last_register_id
+        ]]>
+        </isEqual>
+        <isEqual property="blclstAt" compareValue="N">
+        <![CDATA[
+                     , last_relis_de
+                     , last_relis_user_id
+        ]]>
+        </isEqual>
+    <![CDATA[
+                     , frst_regist_pnttm
+                     , frst_register_id
+                     )
+               VALUES(
+                       #searchCstmrEsntlId#
+                     , #blclstAt#
+    ]]>
+        <isEqual property="blclstAt" compareValue="Y">
+        <![CDATA[
+                     , SYSDATE
+                     , #uniqId#
+        ]]>
+        </isEqual>
+        <isEqual property="blclstAt" compareValue="N">
+        <![CDATA[
+                     , SYSDATE
+                     , #uniqId#
+        ]]>
+        </isEqual>
+    <![CDATA[
+                     , SYSDATE
+                     , #uniqId#
+                     )
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 이동전화/일반전화 변경, 나중에 고객관리 패키지로 이동 바람...
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.21    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.21
+    -->
+    <update id="outbdCnsltDAO.updateTelnum">
+    <![CDATA[
+		UPDATE
+		        ca_itgrt_cstmr
+		   SET
+		        last_updt_pnttm = SYSDATE
+		      , last_updusr_id  = #uniqId#
+    ]]>
+        <isNotEmpty property="mbtlnumChange">
+        <![CDATA[
+		      , mbtlnum         = #mbtlnumChange#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty property="telnoChange">
+        <![CDATA[
+		      , telno           = #telnoChange#
+        ]]>
+        </isNotEmpty>
+    <![CDATA[
+		 WHERE
+		        cstmr_esntl_id  = #searchCstmrEsntlId#
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 참고사항/비고 저장
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.22    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.22
+    -->
+    <update id="outbdCnsltDAO.updateRemark">
+    <![CDATA[
+        UPDATE
+                i_mntnc_hpcl_inner_intrfc
+           SET
+                remark       = #remark#
+              , refrn_matter = #refrnMatter#
+         WHERE
+                hpcl_id      = #hpclId#
+    ]]>
+    </update>
+
+</sqlMap>

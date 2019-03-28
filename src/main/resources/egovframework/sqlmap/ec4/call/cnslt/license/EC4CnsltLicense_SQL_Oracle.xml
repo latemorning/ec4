@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltLicense">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltLicenseMngVO" type="egovframework.ec4.call.cnslt.service.CnsltLicenseMngVO"/>
+    
+
+
+
+    <!--
+        쿼리명 : 상담원자격증
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.09.17
+    -->
+    <insert id="cnsltLicenseMngDAO.insertCnsltLicense">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CNSLT_LICENSE_MNG
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, CNSLT_USER_ID                  /* 상담원아이디 */
+					, LICENSE_NO                     /* 자격증번호 */
+					, LICENSE_NM                     /* 자격증명 */
+					, LICENSE_GET_DT                 /* 자격증취득일자 */
+					, LICENSE_GRADE                  /* 자격증등급 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       /* 메이커코드 */
+					, #cnsltUserId#                    /* 상담원아이디 */
+					, #licenseNo#                      /* 자격증번호 */
+					, #licenseNm#                      /* 자격증명 */
+					, #licenseGetDt#                   /* 자격증취득일자 */
+					, #licenseGrade#                   /* 자격증등급 */
+					, SYSDATE                       	/* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 상담원자격증 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.17
+    -->
+    <select id="cnsltLicenseMngDAO.selectCnsltLicenseRegList" parameterClass="cnsltLicenseMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.CNSLT_USER_ID                  /* 상담원아이디 */
+							, C.LICENSE_NO                     /* 자격증번호 */
+							, C.LICENSE_NM                     /* 자격증명 */
+							, C.LICENSE_GET_DT                 /* 자격증취득일자 */
+							, C.LICENSE_GRADE                  /* 자격증등급 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+							, E.USER_NM AS CNSLT_USER_NM
+						FROM CNSLT_LICENSE_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_GET_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserNm" prepend="AND">
+            <![CDATA[
+                              E.USER_NM LIKE '%'||#searchCnsltUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchLicenseNo" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_NO LIKE '%'||#searchLicenseNo#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchLicenseNm" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_NM LIKE '%'||#searchLicenseNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchLicenseGrade" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_GRADE LIKE '%'||#searchLicenseGrade#||'%'
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원자격증 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.09.17
+    -->
+    <select id="cnsltLicenseMngDAO.selectCnsltLicenseRegListCnt" parameterClass="cnsltLicenseMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CNSLT_LICENSE_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_GET_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserNm" prepend="AND">
+            <![CDATA[
+                              E.USER_NM LIKE '%'||#searchCnsltUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchLicenseNo" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_NO LIKE '%'||#searchLicenseNo#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchLicenseNm" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_NM LIKE '%'||#searchLicenseNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchLicenseGrade" prepend="AND">
+            <![CDATA[
+                              C.LICENSE_GRADE LIKE '%'||#searchLicenseGrade#||'%'
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원자격증 수정조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.17
+    -->
+    <select id="cnsltLicenseMngDAO.selectCnsltLicenseMod" parameterClass="cnsltLicenseMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+				  C.MAKR_CD                        /* 메이커코드 */
+				, C.CNSLT_USER_ID                  /* 상담원아이디 */
+				, C.LICENSE_NO                     /* 자격증번호 */
+				, C.LICENSE_NM                     /* 자격증명 */
+				, C.LICENSE_GET_DT                 /* 자격증취득일자 */
+				, C.LICENSE_GRADE                  /* 자격증등급 */
+				, C.REGIST_DE                      /* 등록일자 */
+				, C.REGISTER                       /* 등록자 */
+				, C.UPDT_DE                        /* 수정일자 */
+				, C.UPDUSR                         /* 수정자 */
+				, E.USER_NM AS CNSLT_USER_NM
+			FROM CNSLT_LICENSE_MNG C
+				,COMTNEMPLYRINFO E
+			WHERE 1=1
+			AND C.CNSLT_USER_ID = E.ESNTL_ID
+			AND C.MAKR_CD = #makrCd#
+			AND C.CNSLT_USER_ID = #cnsltUserId#
+			AND C.LICENSE_NO = #licenseNo#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원자격증 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.17
+    -->
+    <update id="cnsltLicenseMngDAO.updateCnsltLicense">
+    <![CDATA[
+        UPDATE
+                CNSLT_LICENSE_MNG
+           SET
+				  LICENSE_NM                         = #licenseNm#                        /* 자격증명 */
+				, LICENSE_GET_DT                     = #licenseGetDt#                     /* 자격증취득일자 */
+				, LICENSE_GRADE                      = #licenseGrade#                     /* 자격증등급 */
+				, UPDT_DE                            = SYSDATE                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+         		MAKR_CD = #makrCd#
+			AND	CNSLT_USER_ID = #cnsltUserId#
+			AND LICENSE_NO = #licenseNo#
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상담원자격증 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.09.17
+    -->
+    <delete id="cnsltLicenseMngDAO.deleteCnsltLicense">
+        <![CDATA[
+            DELETE
+              FROM
+                    CNSLT_LICENSE_MNG
+	         WHERE
+					MAKR_CD = #makrCd#
+				AND	CNSLT_USER_ID = #cnsltUserId#
+				AND LICENSE_NO = #licenseNo#
+        ]]>
+    </delete>
+
+
+
+
+</sqlMap>

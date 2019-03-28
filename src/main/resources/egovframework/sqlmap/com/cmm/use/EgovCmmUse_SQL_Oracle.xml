@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CmmUse">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="ComDefaultCodeVO" type="egovframework.com.cmm.ComDefaultCodeVO"/>
+
+	<resultMap id="CmmCodeDetail" class="egovframework.com.cmm.service.CmmnDetailCode">
+		<result property="codeId"    	column="CODE_ID"   	columnIndex="1"/>
+		<result property="code"  		column="CODE" 		columnIndex="2"/>
+		<result property="codeNm"   	column="CODE_NM"  	columnIndex="3"/>
+		<result property="codeDc"   	column="CODE_DC"  	columnIndex="4"/>
+		<result property="id"   	    column="ID"  	    columnIndex="5"/>
+		<result property="text"   	    column="TEXT"  	    columnIndex="6"/>
+		<result property="selected"   	column="SELECTED"  	columnIndex="7"/>
+		<result property="disabled"   	column="DISABLED"  	columnIndex="8"/>
+		<result property="upCode"  		column="UP_CODE" 	columnIndex="9"/>
+	</resultMap>
+
+	<select id="CmmUseDAO.selectCmmCodeDetail" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+		<![CDATA[
+			SELECT
+			        CODE_ID
+			      , CODE
+			      , CODE_NM
+			      , CODE_DC
+			      , '' AS ID
+                  , '' AS TEXT
+                  , '' AS SELECTED
+                  , '' AS DISABLED
+			      , UP_CODE
+			FROM
+			COMTCCMMNDETAILCODE
+			WHERE
+			USE_AT      = 'Y'
+			AND CODE_ID = #codeId#
+		]]>
+	</select>
+
+    <select id="CmmUseDAO.selectOgrnztIdDetail" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+            <![CDATA[
+            SELECT
+                    #tableNm#     CODE_ID
+                  , ORGNZT_ID     CODE
+                  , ORGNZT_NM     CODE_NM
+                  , ORGNZT_DC     CODE_DC
+                  , '' AS ID
+                  , '' AS TEXT
+                  , '' AS SELECTED
+                  , '' AS DISABLED
+                  , '' AS UP_CODE
+            FROM
+                COMTNORGNZTINFO
+            WHERE 1=1
+            ]]>
+            <isEqual prepend="AND" property="haveDetailCondition" compareValue="Y">
+                ORGNZT_ID  LIKE  #detailCondition#
+            </isEqual>
+    </select>
+
+    <select id="CmmUseDAO.selectGroupIdDetail" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+            <![CDATA[
+            SELECT
+                    #tableNm#    CODE_ID
+                  , GROUP_ID     CODE
+                  , GROUP_NM     CODE_NM
+                  , GROUP_DC     CODE_DC
+                  , '' AS ID
+                  , '' AS TEXT
+                  , '' AS SELECTED
+                  , '' AS DISABLED
+                  , '' AS UP_CODE
+            FROM
+                COMTNAUTHORGROUPINFO
+            WHERE 1=1
+            ]]>
+            <isEqual prepend="AND" property="haveDetailCondition" compareValue="Y">
+                GROUP_ID  LIKE  #detailCondition#
+            </isEqual>
+    </select>
+
+
+    <!--
+        분류코드 테이블 내용을 코드 형식으로 반환
+        2018.05.15 harry
+    -->
+    <select id="CmmUseDAO.selectClCodeDetail" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+        <![CDATA[
+            SELECT
+                    #tableNm#   CODE_ID
+                  , cl_code     CODE
+                  , cl_code_nm  CODE_NM
+                  , cl_code_dc  CODE_DC
+                  , '' AS ID
+                  , '' AS TEXT
+                  , '' AS SELECTED
+                  , '' AS DISABLED
+                  , '' AS UP_CODE
+              FROM
+                    comtccmmnclcode
+             WHERE
+                    1 = 1
+        ]]>
+    </select>
+
+
+    <!--
+        공통코드 테이블 내용을 코드 형식으로 반환
+        2018.05.15 harry
+    -->
+    <select id="CmmUseDAO.selectCodeDetail" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+        <![CDATA[
+            SELECT
+                    #tableNm#   AS CODE_ID
+                  , code_id     AS CODE
+                  , code_id_nm  AS CODE_NM
+                  , code_id_dc  AS CODE_DC
+                  , code_id     AS ID
+                  , code_id_nm  AS TEXT
+                  , DECODE(#codeId#, code_id, 'true', '') AS SELECTED
+                  , ''                                    AS DISABLED
+                  , '' AS UP_CODE
+              FROM
+                    comtccmmncode
+             WHERE
+                    1 = 1
+        ]]>
+            <isEqual prepend="AND" property="haveDetailCondition" compareValue="Y">
+            <![CDATA[
+                    cl_code = #detailCondition#
+            ]]>
+            </isEqual>
+    </select>
+
+
+    <!--
+        공통코드 테이블 내용을 코드 형식으로 반환
+        2018.07.25 cjj
+    -->
+    <select id="CmmUseDAO.selectDetailCode" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
+        <![CDATA[
+            SELECT
+                    CODE_ID
+                  , CODE
+                  , CODE_NM
+                  , CODE_DC
+                  , CODE AS ID
+                  , CODE_NM AS TEXT
+                  , DECODE(#code#, code, 'true', '') AS SELECTED
+                  , ''                                    AS DISABLED
+                  , UP_CODE
+              FROM
+                    COMTCCMMNDETAILCODE
+             WHERE
+                    1 = 1
+        ]]>
+			<isNotEmpty property="detailCondition">
+			AND UP_CODE = #detailCondition#
+			</isNotEmpty >
+			<isNotEmpty property="codeId">
+			AND CODE_ID = #codeId#
+			</isNotEmpty >
+    </select>
+
+</sqlMap>

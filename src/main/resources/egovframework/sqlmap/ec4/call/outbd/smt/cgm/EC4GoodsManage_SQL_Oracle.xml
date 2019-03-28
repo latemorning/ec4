@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="GoodsManage">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="goodsManageDefaultVO" type="egovframework.ec4.call.outbd.smt.cgm.service.GoodsManageDefaultVO"/>
+    <typeAlias  alias="goodsManageVO" type="egovframework.ec4.call.outbd.smt.cgm.service.GoodsManageVO"/>
+
+    <!--
+        쿼리명 : 상품관리 목록 조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.13    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2019.02.13
+    -->
+    <select id="goodsManageDAO.selectGoodsManageList" parameterClass="GoodsManageDefaultVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+					  SELECT
+					          goods_code
+					        , goods_nm
+					        , call_occnd
+					        , sms_occnd
+					        , call_untpc
+					        , sms_untpc
+					        , sms_basscnt
+					        , sort_ordr
+					        , use_at
+					        , remark
+					        , TO_CHAR(frst_regist_pnttm, 'YYYY-MM-DD HH24:MI:SS') AS frst_regist_pnttm
+					        , frst_register_id
+					        , TO_CHAR(last_updt_pnttm, 'YYYY-MM-DD HH24:MI:SS') AS last_updt_pnttm
+					        , last_updusr_id
+					    FROM
+					          ob_call_goods
+					   WHERE
+                              1 = 1
+    ]]>
+	        <isNotEmpty property="searchGoodsNm" prepend="AND">
+	        <![CDATA[
+                              goods_nm LIKE '%'||#searchGoodsNm#||'%'
+	        ]]>
+	        </isNotEmpty>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+                              $sortColNm$
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상품관리 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.13    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2019.02.13
+    -->
+    <select id="goodsManageDAO.selectGoodsManageListCnt" parameterClass="GoodsManageDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) AS cnt
+                        FROM
+                              ob_call_goods
+                       WHERE
+                              1 = 1
+    ]]>
+            <isNotEmpty property="searchGoodsNm" prepend="AND">
+            <![CDATA[
+                              goods_nm LIKE '%'||#searchGoodsNm#||'%'
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 상품 등록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.14    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2019.02.14
+    -->
+    <insert id="goodsManageDAO.insertGoodsManage">
+    <![CDATA[
+		INSERT
+		  INTO
+		        ob_call_goods
+		      (
+                goods_code
+              , goods_nm
+              , call_occnd
+              , sms_occnd
+              , call_untpc
+              , sms_untpc
+              , sms_basscnt
+              , sort_ordr
+              , use_at
+              , remark
+              , frst_regist_pnttm
+              , frst_register_id
+              , last_updt_pnttm
+              , last_updusr_id
+		      )
+		VALUES
+		      (
+                #goodsCode#
+              , #goodsNm#
+              , #callOccnd#
+              , #smsOccnd#
+              , #callUntpc#
+              , #smsUntpc#
+              , #smsBasscnt#
+              , #sortOrdr#
+              , #useAt#
+              , #remark#
+              , SYSDATE
+              , #frstRegisterId#
+              , SYSDATE
+              , #lastUpdusrId#
+		      )
+    ]]>
+    </insert>
+
+
+    <!--
+        쿼리명 : 상품 상세
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.22    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2019.02.22
+    -->
+    <select id="goodsManageDAO.selectGoodsManage" parameterClass="goodsManageDefaultVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT
+                a.goods_code
+              , a.goods_nm
+              , a.call_occnd
+              , a.sms_occnd
+              , a.call_untpc
+              , a.sms_untpc
+              , a.sms_basscnt
+              , a.sort_ordr
+              , a.use_at
+              , a.remark
+              , TO_CHAR(a.frst_regist_pnttm, 'YYYY-MM-DD HH24:MI:SS') AS frst_regist_pnttm
+              , a.frst_register_id
+              , TO_CHAR(a.last_updt_pnttm, 'YYYY-MM-DD HH24:MI:SS') AS last_updt_pnttm
+              , a.last_updusr_id
+          FROM
+                ob_call_goods a
+         WHERE
+                a.goods_code = #searchGoodsCode#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상품 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.22    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2019.02.22
+    -->
+    <update id="goodsManageDAO.updateGoodsManage">
+    <![CDATA[
+		UPDATE
+		        ob_call_goods
+		   SET
+                goods_nm        = #goodsNm#
+              , call_occnd      = #callOccnd#
+              , sms_occnd       = #smsOccnd#
+              , call_untpc      = #callUntpc#
+              , sms_untpc       = #smsUntpc#
+              , sms_basscnt     = #smsBasscnt#
+              , sort_ordr       = #sortOrdr#
+              , use_at          = #useAt#
+              , remark          = #remark#
+              , last_updt_pnttm = SYSDATE
+              , last_updusr_id  = #lastUpdusrId#
+		 WHERE
+		        goods_code      = #goodsCode#
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상품 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.14    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2019.02.14
+    -->
+    <delete id="goodsManageDAO.deleteGoodsManage">
+        <![CDATA[
+            DELETE
+              FROM
+                    ob_call_goods
+             WHERE
+                    goods_code = #goodsCode#
+        ]]>
+    </delete>
+
+</sqlMap>

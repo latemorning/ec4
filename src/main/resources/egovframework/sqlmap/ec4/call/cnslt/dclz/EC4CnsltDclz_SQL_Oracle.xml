@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltDclz">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltDclzMngVO" type="egovframework.ec4.call.cnslt.service.CnsltDclzMngVO"/>
+    
+
+
+
+    <!--
+        쿼리명 : 상담화면(In) - 판매정보
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <insert id="cnsltDclzMngDAO.insertCnsltDclz">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CNSLT_ATTEND_MNG
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, CNSLT_USER_ID                  /* 상담원아이디 */
+					, ATTEND_DT                      /* 근태일자 */
+					, WORK_IN_DT                     /* 출근일자 */
+					, WORK_IN_TIME                   /* 출근시간 */
+					, WORK_OUT_DT                    /* 퇴근일자 */
+					, WORK_OUT_TIME                  /* 퇴근시간 */
+					, WORK_GROUP                     /* 작업그룹 */
+					, EDU_TIME                       /* 교육시간 */
+					, EXTND_TIME                     /* 연장근무시간 */
+					, HOLI_WORK_YN                   /* 휴일특근여부 */
+					, VACATN_YN                      /* 휴가여부 */
+					, ALTER_VACATN_YN                /* 대체휴가여부 */
+					, SAT_OFF_YN                     /* 토요휴무여부 */
+					, REAL_WORK_TIME                 /* 실근무시간 */
+					, LATE_YN                        /* 지각여부 */
+					, EARLY_LEAV_YN                  /* 조퇴여부 */
+					, OUT_WORK_TIME                  /* 외근시간 */
+					, WORK_BREAK_TIME                /* 근무이탈시간 */
+					, OFF_WORK_YN                    /* 결근여부 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       /* 메이커코드 */
+					, #cnsltUserId#                    /* 상담원아이디 */
+					, #attendDt#                       /* 근태일자 */
+					, #workInDt#                       /* 출근일자 */
+					, #workInTime#                     /* 출근시간 */
+					, #workOutDt#                      /* 퇴근일자 */
+					, #workOutTime#                    /* 퇴근시간 */
+					, #workGroup#                      /* 작업그룹 */
+					, #eduTime#                        /* 교육시간 */
+					, #extndTime#                      /* 연장근무시간 */
+					, #holiWorkYn#                     /* 휴일특근여부 */
+					, #vacatnYn#                       /* 휴가여부 */
+					, #alterVacatnYn#                  /* 대체휴가여부 */
+					, #satOffYn#                       /* 토요휴무여부 */
+					, #realWorkTime#                   /* 실근무시간 */
+					, #lateYn#                         /* 지각여부 */
+					, #earlyLeavYn#                    /* 조퇴여부 */
+					, #outWorkTime#                    /* 외근시간 */
+					, #workBreakTime#                  /* 근무이탈시간 */
+					, #offWorkYn#                      /* 결근여부 */
+					, SYSDATE                       	/* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 상담원근태 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <select id="cnsltDclzMngDAO.selectCnsltDclzRegList" parameterClass="cnsltDclzMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.CNSLT_USER_ID                  /* 상담원아이디 */
+							, C.ATTEND_DT                      /* 근태일자 */
+							, C.WORK_IN_DT                     /* 출근일자 */
+							, C.WORK_IN_TIME                   /* 출근시간 */
+							, C.WORK_OUT_DT                    /* 퇴근일자 */
+							, C.WORK_OUT_TIME                  /* 퇴근시간 */
+							, C.WORK_GROUP                     /* 작업그룹 */
+							, C.EDU_TIME                       /* 교육시간 */
+							, C.EXTND_TIME                     /* 연장근무시간 */
+							, C.HOLI_WORK_YN                   /* 휴일특근여부 */
+							, C.VACATN_YN                      /* 휴가여부 */
+							, C.ALTER_VACATN_YN                /* 대체휴가여부 */
+							, C.SAT_OFF_YN                     /* 토요휴무여부 */
+							, C.REAL_WORK_TIME                 /* 실근무시간 */
+							, C.LATE_YN                        /* 지각여부 */
+							, C.EARLY_LEAV_YN                  /* 조퇴여부 */
+							, C.OUT_WORK_TIME                  /* 외근시간 */
+							, C.WORK_BREAK_TIME                /* 근무이탈시간 */
+							, C.OFF_WORK_YN                    /* 결근여부 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+							, E.USER_NM AS CNSLT_USER_NM
+						FROM CNSLT_ATTEND_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              C.ATTEND_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserNm" prepend="AND">
+            <![CDATA[
+                              E.USER_NM LIKE '%'||#searchCnsltUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              E.MBTLNUM LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원근태 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <select id="cnsltDclzMngDAO.selectCnsltDclzRegListCnt" parameterClass="cnsltDclzMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CNSLT_ATTEND_MNG C
+							,COMTNEMPLYRINFO E
+						WHERE 1=1
+						AND C.CNSLT_USER_ID = E.ESNTL_ID
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              C.ATTEND_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserId" prepend="AND">
+            <![CDATA[
+                              C.CNSLT_USER_ID   = #searchCnsltUserId#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltUserNm" prepend="AND">
+            <![CDATA[
+                              E.USER_NM LIKE '%'||#searchCnsltUserNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              E.MBTLNUM LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담원근태 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.17
+    -->
+    <select id="cnsltDclzMngDAO.selectCnsltDclzMod" parameterClass="cnsltDclzMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+				  C.MAKR_CD                        /* 메이커코드 */
+				, C.CNSLT_USER_ID                  /* 상담원아이디 */
+				, C.ATTEND_DT                      /* 근태일자 */
+				, C.WORK_IN_DT                     /* 출근일자 */
+				, C.WORK_IN_TIME                   /* 출근시간 */
+				, C.WORK_OUT_DT                    /* 퇴근일자 */
+				, C.WORK_OUT_TIME                  /* 퇴근시간 */
+				, C.WORK_GROUP                     /* 작업그룹 */
+				, C.EDU_TIME                       /* 교육시간 */
+				, C.EXTND_TIME                     /* 연장근무시간 */
+				, C.HOLI_WORK_YN                   /* 휴일특근여부 */
+				, C.VACATN_YN                      /* 휴가여부 */
+				, C.ALTER_VACATN_YN                /* 대체휴가여부 */
+				, C.SAT_OFF_YN                     /* 토요휴무여부 */
+				, C.REAL_WORK_TIME                 /* 실근무시간 */
+				, C.LATE_YN                        /* 지각여부 */
+				, C.EARLY_LEAV_YN                  /* 조퇴여부 */
+				, C.OUT_WORK_TIME                  /* 외근시간 */
+				, C.WORK_BREAK_TIME                /* 근무이탈시간 */
+				, C.OFF_WORK_YN                    /* 결근여부 */
+				, C.REGIST_DE                      /* 등록일자 */
+				, C.REGISTER                       /* 등록자 */
+				, C.UPDT_DE                        /* 수정일자 */
+				, C.UPDUSR                         /* 수정자 */
+				, E.USER_NM AS CNSLT_USER_NM
+				, SUBSTR(C.WORK_IN_TIME,1,2) AS WORK_IN_TIME_HOUR
+				, SUBSTR(C.WORK_IN_TIME,4,2) AS WORK_IN_TIME_MINUTE
+				, SUBSTR(C.WORK_OUT_TIME,1,2) AS WORK_OUT_TIME_HOUR
+				, SUBSTR(C.WORK_OUT_TIME,4,2) AS WORK_OUT_TIME_MINUTE
+			FROM CNSLT_ATTEND_MNG C
+				,COMTNEMPLYRINFO E
+			WHERE 1=1
+			AND C.CNSLT_USER_ID = E.ESNTL_ID
+			AND C.MAKR_CD = #makrCd#
+			AND C.CNSLT_USER_ID = #cnsltUserId#
+			AND C.ATTEND_DT = #attendDt#
+    ]]>
+    </select>
+
+
+
+    <!--
+        쿼리명 : 상담원근태 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.09.17
+    -->
+    <update id="cnsltDclzMngDAO.updateCnsltDclz">
+    <![CDATA[
+        UPDATE
+                CNSLT_ATTEND_MNG
+           SET
+				  WORK_IN_DT                         = #workInDt#                         /* 출근일자 */
+				, WORK_IN_TIME                       = #workInTime#                       /* 출근시간 */
+				, WORK_OUT_DT                        = #workOutDt#                        /* 퇴근일자 */
+				, WORK_OUT_TIME                      = #workOutTime#                      /* 퇴근시간 */
+				, WORK_GROUP                         = #workGroup#                        /* 작업그룹 */
+				, EDU_TIME                           = #eduTime#                          /* 교육시간 */
+				, EXTND_TIME                         = #extndTime#                        /* 연장근무시간 */
+				, HOLI_WORK_YN                       = #holiWorkYn#                       /* 휴일특근여부 */
+				, VACATN_YN                          = #vacatnYn#                         /* 휴가여부 */
+				, ALTER_VACATN_YN                    = #alterVacatnYn#                    /* 대체휴가여부 */
+				, SAT_OFF_YN                         = #satOffYn#                         /* 토요휴무여부 */
+				, REAL_WORK_TIME                     = #realWorkTime#                     /* 실근무시간 */
+				, LATE_YN                            = #lateYn#                           /* 지각여부 */
+				, EARLY_LEAV_YN                      = #earlyLeavYn#                      /* 조퇴여부 */
+				, OUT_WORK_TIME                      = #outWorkTime#                      /* 외근시간 */
+				, WORK_BREAK_TIME                    = #workBreakTime#                    /* 근무이탈시간 */
+				, OFF_WORK_YN                        = #offWorkYn#                        /* 결근여부 */
+				, UPDT_DE                            = SYSDATE                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+         		MAKR_CD = #makrCd#
+			AND	CNSLT_USER_ID = #cnsltUserId#
+			AND ATTEND_DT = #attendDt#
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 상담원근태 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.09.17    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.09.17
+    -->
+    <delete id="cnsltDclzMngDAO.deleteCnsltDclz">
+        <![CDATA[
+            DELETE
+              FROM
+                    CNSLT_ATTEND_MNG
+	         WHERE
+					MAKR_CD = #makrCd#
+				AND	CNSLT_USER_ID = #cnsltUserId#
+				AND ATTEND_DT = #attendDt#
+        ]]>
+    </delete>
+
+
+
+
+</sqlMap>

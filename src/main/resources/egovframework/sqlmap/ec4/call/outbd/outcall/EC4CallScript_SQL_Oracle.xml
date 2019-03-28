@@ -1,0 +1,882 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CallScript">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="callScriptMngVO" type="egovframework.ec4.call.outbd.service.CallScriptMngVO"/>
+
+
+
+
+    <!--
+        쿼리명 : 콜스크립트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <insert id="callScriptMngDAO.insertCallScript">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CALL_SCRIPT_MNG
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, SCRIPT_KND                     /* 스크립트구분 */
+					, SCRIPT_CD                      /* 스크립트코드 */
+					, SCRIPT_TITLE                   /* 스크립트제목 */
+					, SCRIPT_BEGIN_DT                /* 스크립트시작일자 */
+					, SCRIPT_END_DT                  /* 스크립트종료일자 */
+					, USE_YN                         /* 사용여부 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       /* 메이커코드 */
+					, #scriptKnd#                      /* 스크립트구분 */
+					, #scriptCd#                       /* 스크립트코드 */
+					, #scriptTitle#                    /* 스크립트제목 */
+					, #scriptBeginDt#                  /* 스크립트시작일자 */
+					, #scriptEndDt#                    /* 스크립트종료일자 */
+					, #useYn#                          /* 사용여부 */
+					, SYSDATE                       	/* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 콜스크립트 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallScriptList" parameterClass="callScriptMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.SCRIPT_KND                     /* 스크립트구분 */
+							, C.SCRIPT_CD                      /* 스크립트코드 */
+							, C.SCRIPT_TITLE                   /* 스크립트제목 */
+							, C.SCRIPT_BEGIN_DT                /* 스크립트시작일자 */
+							, C.SCRIPT_END_DT                  /* 스크립트종료일자 */
+							, C.USE_YN                         /* 사용여부 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+							, CM.CODE_NM AS SCRIPT_KND_NM
+						FROM CALL_SCRIPT_MNG C, COMTCCMMNDETAILCODE CM
+						WHERE 1=1
+                        AND CM.CODE_ID(+) = 'CALLSCRIPT'
+                        AND C.SCRIPT_KND = CM.CODE(+)
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_BEGIN_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchScriptKnd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_KND  = #searchScriptKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchScriptTitle" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_TITLE  LIKE '%'|| #searchScriptTitle# ||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchScriptCd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_CD  = #searchScriptCd#
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 콜스크립트 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallScriptListCnt" parameterClass="callScriptMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CALL_SCRIPT_MNG C, COMTCCMMNDETAILCODE CM
+						WHERE 1=1
+                        AND CM.CODE_ID(+) = 'CALLSCRIPT'
+                        AND C.SCRIPT_KND = CM.CODE(+)
+    ]]>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_BEGIN_DT  BETWEEN #searchBeginDe# AND #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchScriptKnd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_KND  = #searchScriptKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchScriptTitle" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_TITLE  LIKE '%'|| #searchScriptTitle# ||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchScriptCd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_CD  = #searchScriptCd#
+            ]]>
+            </isNotEmpty>
+            
+    </select>
+
+
+    <!--
+        쿼리명 : 콜스크립트 수정조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallScriptMod" parameterClass="callScriptMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+				  C.MAKR_CD                        /* 메이커코드 */
+				, C.SCRIPT_KND                     /* 스크립트구분 */
+				, C.SCRIPT_CD                      /* 스크립트코드 */
+				, C.SCRIPT_TITLE                   /* 스크립트제목 */
+				, C.SCRIPT_BEGIN_DT                /* 스크립트시작일자 */
+				, C.SCRIPT_END_DT                  /* 스크립트종료일자 */
+				, C.USE_YN                         /* 사용여부 */
+				, C.REGIST_DE                      /* 등록일자 */
+				, C.REGISTER                       /* 등록자 */
+				, C.UPDT_DE                        /* 수정일자 */
+				, C.UPDUSR                         /* 수정자 */
+				, CM.CODE_NM AS SCRIPT_KND_NM
+			FROM CALL_SCRIPT_MNG C, COMTCCMMNDETAILCODE CM
+			WHERE 1=1
+			AND C.MAKR_CD = #makrCd#
+			AND C.SCRIPT_KND = #scriptKnd#
+			AND C.SCRIPT_CD = #scriptCd#
+			AND CM.CODE_ID(+) = 'CALLSCRIPT'
+			AND C.SCRIPT_KND = CM.CODE(+)
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 콜스크립트 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <update id="callScriptMngDAO.updateCallScript">
+    <![CDATA[
+        UPDATE
+                CALL_SCRIPT_MNG
+           SET
+				  SCRIPT_TITLE                       = #scriptTitle#                      /* 스크립트제목 */
+				, SCRIPT_BEGIN_DT                    = #scriptBeginDt#                    /* 스크립트시작일자 */
+				, SCRIPT_END_DT                      = #scriptEndDt#                      /* 스크립트종료일자 */
+				, USE_YN                             = #useYn#                            /* 사용여부 */
+				, UPDT_DE                            = SYSDATE                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+         		MAKR_CD = #makrCd#
+			AND SCRIPT_KND = #scriptKnd#
+			AND SCRIPT_CD = #scriptCd#
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 콜스크립트 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <delete id="callScriptMngDAO.deleteCallScript">
+        <![CDATA[
+            DELETE
+              FROM
+                    CALL_SCRIPT_MNG
+	         WHERE
+					MAKR_CD = #makrCd#
+			AND SCRIPT_KND = #scriptKnd#
+			AND SCRIPT_CD = #scriptCd#
+        ]]>
+    </delete>
+
+
+
+
+
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Quest ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+
+
+
+
+
+
+    <!--
+        쿼리명 : 질문스크립트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <insert id="callScriptMngDAO.insertCallQuest">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CALL_SCRIPT_QUEST_MNG
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, SCRIPT_KND                     /* 스크립트구분 */
+					, SCRIPT_CD                      /* 스크립트코드 */
+					, QUEST_CD                       /* 질문코드 */
+					, QUEST_SORT_SEQ                 /* 질문정렬순번 */
+					, QUEST_DSCR                     /* 질문내용 */
+					, QUEST_TYPE                     /* 질문유형 */
+					, USE_YN                         /* 사용여부 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       /* 메이커코드 */
+					, #scriptKnd#                      /* 스크립트구분 */
+					, #scriptCd#                       /* 스크립트코드 */
+					, #questCd#                        /* 질문코드 */
+					, #questSortSeq#                   /* 질문정렬순번 */
+					, #questDscr#                      /* 질문내용 */
+					, #questType#                      /* 질문유형 */
+					, #useYn#                          /* 사용여부 */
+					, SYSDATE                       	/* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 질문스크립트 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallQuestList" parameterClass="callScriptMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.SCRIPT_KND                     /* 스크립트구분 */
+							, C.SCRIPT_CD                      /* 스크립트코드 */
+							, C.QUEST_CD                       /* 질문코드 */
+							, C.QUEST_SORT_SEQ                 /* 질문정렬순번 */
+							, C.QUEST_DSCR                     /* 질문내용 */
+							, C.QUEST_TYPE                     /* 질문유형 */
+							, C.USE_YN                         /* 사용여부 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+							, CM.CODE_NM AS QUEST_TYPE_NM
+						FROM CALL_SCRIPT_QUEST_MNG C, COMTCCMMNDETAILCODE CM
+						WHERE 1=1
+						AND C.SCRIPT_CD  =  #searchScriptCd#
+						AND CM.CODE_ID(+) = 'COM018'
+						AND C.QUEST_TYPE = CM.CODE(+)
+    ]]>
+            <isNotEmpty property="searchScriptCd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_CD  =  #searchScriptCd#
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEmpty property="sortColNm">
+            <![CDATA[
+                              QUEST_SORT_SEQ
+            ]]>
+            </isEmpty>
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 질문스크립트 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallQuestListCnt" parameterClass="callScriptMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CALL_SCRIPT_QUEST_MNG C, COMTCCMMNDETAILCODE CM
+						WHERE 1=1
+						AND C.SCRIPT_CD  =  #searchScriptCd#
+						AND CM.CODE_ID(+) = 'COM018'
+						AND C.QUEST_TYPE = CM.CODE(+)
+    ]]>
+            <isNotEmpty property="searchScriptCd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_CD  =  #searchScriptCd#
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 질문스크립트 수정조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallQuestMod" parameterClass="callScriptMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+				  C.MAKR_CD                        /* 메이커코드 */
+				, C.SCRIPT_KND                     /* 스크립트구분 */
+				, C.SCRIPT_CD                      /* 스크립트코드 */
+				, C.QUEST_CD                       /* 질문코드 */
+				, C.QUEST_SORT_SEQ                 /* 질문정렬순번 */
+				, C.QUEST_DSCR                     /* 질문내용 */
+				, C.QUEST_TYPE                     /* 질문유형 */
+				, C.USE_YN                         /* 사용여부 */
+				, C.REGIST_DE                      /* 등록일자 */
+				, C.REGISTER                       /* 등록자 */
+				, C.UPDT_DE                        /* 수정일자 */
+				, C.UPDUSR                         /* 수정자 */
+				, CM.CODE_NM AS QUEST_TYPE_NM
+				, S.SCRIPT_TITLE
+				, S.SCRIPT_BEGIN_DT
+				, S.SCRIPT_END_DT
+				, CM2.CODE_NM AS SCRIPT_KND_NM
+			FROM CALL_SCRIPT_QUEST_MNG C, COMTCCMMNDETAILCODE CM, CALL_SCRIPT_MNG S, COMTCCMMNDETAILCODE CM2
+			WHERE 1=1
+			AND C.MAKR_CD = #makrCd#
+			AND C.SCRIPT_KND = #scriptKnd#
+			AND C.SCRIPT_CD = #scriptCd#
+			AND C.QUEST_CD = #questCd#
+            AND CM.CODE_ID(+) = 'COM018'
+            AND C.QUEST_TYPE = CM.CODE(+)
+            AND CM2.CODE_ID(+) = 'CALLSCRIPT'
+            AND C.SCRIPT_KND = CM2.CODE(+)
+			AND C.MAKR_CD = S.MAKR_CD
+			AND C.SCRIPT_KND = S.SCRIPT_KND
+			AND C.SCRIPT_CD = S.SCRIPT_CD
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 질문스크립트 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <update id="callScriptMngDAO.updateCallQuest">
+    <![CDATA[
+        UPDATE
+                CALL_SCRIPT_QUEST_MNG
+           SET
+				  QUEST_SORT_SEQ                     = #questSortSeq#                     /* 질문정렬순번 */
+				, QUEST_DSCR                         = #questDscr#                        /* 질문내용 */
+				, QUEST_TYPE                         = #questType#                        /* 질문유형 */
+				, USE_YN                             = #useYn#                            /* 사용여부 */
+				, UPDT_DE                            = SYSDATE                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+         		MAKR_CD = #makrCd#
+			AND SCRIPT_KND = #scriptKnd#
+			AND SCRIPT_CD = #scriptCd#
+			AND QUEST_CD = #questCd#
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 질문스크립트 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <delete id="callScriptMngDAO.deleteCallQuest">
+        <![CDATA[
+            DELETE
+              FROM
+                    CALL_SCRIPT_QUEST_MNG
+	         WHERE
+					MAKR_CD = #makrCd#
+			AND SCRIPT_KND = #scriptKnd#
+			AND SCRIPT_CD = #scriptCd#
+			AND QUEST_CD = #questCd#
+        ]]>
+    </delete>
+
+
+
+
+
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ Answer ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+<!-- ▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥▥ -->
+
+
+
+
+
+
+    <!--
+        쿼리명 : 답변스크립트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02   CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <insert id="callScriptMngDAO.insertCallAnswer">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CALL_SCRIPT_ANSWER_MNG
+		      (
+					  MAKR_CD                        /* 메이커코드 */
+					, SCRIPT_KND                     /* 스크립트구분 */
+					, SCRIPT_CD                      /* 스크립트코드 */
+					, QUEST_CD                       /* 질문코드 */
+					, ANSR_CD                        /* 답변코드 */
+					, ANSR_SORT_SEQ                  /* 답변정렬순번 */
+					, ANSR_DSCR                      /* 답변내용 */
+					, SCORE_NM                       /* 점수명 */
+					, SCORE_VAL                      /* 점수값 */
+					, USE_YN                         /* 사용여부 */
+					, REGIST_DE                      /* 등록일자 */
+					, REGISTER                       /* 등록자 */
+					, UPDT_DE                        /* 수정일자 */
+					, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+					  'GM'                       /* 메이커코드 */
+					, #scriptKnd#                      /* 스크립트구분 */
+					, #scriptCd#                       /* 스크립트코드 */
+					, #questCd#                        /* 질문코드 */
+					, #ansrCd#                         /* 답변코드 */
+					, #ansrSortSeq#                    /* 답변정렬순번 */
+					, #ansrDscr#                       /* 답변내용 */
+					, #scoreNm#                        /* 점수명 */
+					, #scoreVal#                       /* 점수값 */
+					, #useYn#                          /* 사용여부 */
+					, SYSDATE                       	/* 등록일자 */
+					, #register#                       /* 등록자 */
+					, SYSDATE                         /* 수정일자 */
+					, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+    <!--
+        쿼리명 : 답변스크립트 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallAnswerList" parameterClass="callScriptMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+							  C.MAKR_CD                        /* 메이커코드 */
+							, C.SCRIPT_KND                     /* 스크립트구분 */
+							, C.SCRIPT_CD                      /* 스크립트코드 */
+							, C.QUEST_CD                       /* 질문코드 */
+							, C.ANSR_CD                        /* 답변코드 */
+							, C.ANSR_SORT_SEQ                  /* 답변정렬순번 */
+							, C.ANSR_DSCR                      /* 답변내용 */
+							, C.SCORE_NM                       /* 점수명 */
+							, C.SCORE_VAL                      /* 점수값 */
+							, C.USE_YN                         /* 사용여부 */
+							, C.REGIST_DE                      /* 등록일자 */
+							, C.REGISTER                       /* 등록자 */
+							, C.UPDT_DE                        /* 수정일자 */
+							, C.UPDUSR                         /* 수정자 */
+						FROM CALL_SCRIPT_ANSWER_MNG C
+						WHERE 1=1
+						AND C.SCRIPT_KND = #searchScriptKnd#
+						AND C.SCRIPT_CD  = #searchScriptCd#
+						AND C.QUEST_CD  = #searchQuestCd#
+    ]]>
+            <isNotEmpty property="searchScriptCd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_CD  = #searchScriptCd#
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEmpty property="sortColNm">
+            <![CDATA[
+                              ANSR_SORT_SEQ
+            ]]>
+            </isEmpty>
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 답변스크립트 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallAnswerListCnt" parameterClass="callScriptMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+						FROM CALL_SCRIPT_ANSWER_MNG C
+						WHERE 1=1
+						AND C.SCRIPT_KND = #searchScriptKnd#
+						AND C.SCRIPT_CD  = #searchScriptCd#
+						AND C.QUEST_CD  = #searchQuestCd#
+    ]]>
+            <isNotEmpty property="searchScriptCd" prepend="AND">
+            <![CDATA[
+                              C.SCRIPT_CD  = #searchScriptCd#
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 답변스크립트 수정조회
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <select id="callScriptMngDAO.selectCallAnswerMod" parameterClass="callScriptMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT 
+				  C.MAKR_CD                        /* 메이커코드 */
+				, C.SCRIPT_KND                     /* 스크립트구분 */
+				, C.SCRIPT_CD                      /* 스크립트코드 */
+				, C.QUEST_CD                       /* 질문코드 */
+				, C.ANSR_CD                        /* 답변코드 */
+				, C.ANSR_SORT_SEQ                  /* 답변정렬순번 */
+				, C.ANSR_DSCR                      /* 답변내용 */
+				, C.SCORE_NM                       /* 점수명 */
+				, C.SCORE_VAL                      /* 점수값 */
+				, C.USE_YN                         /* 사용여부 */
+				, C.REGIST_DE                      /* 등록일자 */
+				, C.REGISTER                       /* 등록자 */
+				, C.UPDT_DE                        /* 수정일자 */
+				, C.UPDUSR                         /* 수정자 */
+				, Q.QUEST_DSCR
+				, CM.CODE_NM AS QUEST_TYPE_NM
+				, S.SCRIPT_TITLE
+				, S.SCRIPT_BEGIN_DT
+				, S.SCRIPT_END_DT
+				, CM2.CODE_NM AS SCRIPT_KND_NM
+			FROM CALL_SCRIPT_ANSWER_MNG C, CALL_SCRIPT_QUEST_MNG Q, COMTCCMMNDETAILCODE CM, CALL_SCRIPT_MNG S, COMTCCMMNDETAILCODE CM2
+			WHERE 1=1
+			AND C.MAKR_CD = #makrCd#
+			AND C.SCRIPT_KND = #scriptKnd#
+			AND C.SCRIPT_CD = #scriptCd#
+			AND C.QUEST_CD  = #questCd#
+			AND C.ANSR_CD = #ansrCd#
+			AND C.MAKR_CD = Q.MAKR_CD
+			AND C.SCRIPT_KND = Q.SCRIPT_KND
+			AND C.SCRIPT_CD = Q.SCRIPT_CD
+			AND C.QUEST_CD  = Q.QUEST_CD
+            AND CM.CODE_ID(+) = 'COM018'
+            AND Q.QUEST_TYPE = CM.CODE(+)
+            AND CM2.CODE_ID(+) = 'CALLSCRIPT'
+            AND C.SCRIPT_KND = CM2.CODE(+)
+            AND Q.MAKR_CD = S.MAKR_CD
+            AND Q.SCRIPT_KND = S.SCRIPT_KND
+            AND Q.SCRIPT_CD = S.SCRIPT_CD
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 답변스크립트 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <update id="callScriptMngDAO.updateCallAnswer">
+    <![CDATA[
+        UPDATE
+                CALL_SCRIPT_ANSWER_MNG
+           SET
+				  ANSR_SORT_SEQ                      = #ansrSortSeq#                      /* 답변정렬순번 */
+				, ANSR_DSCR                          = #ansrDscr#                         /* 답변내용 */
+				, SCORE_NM                           = #scoreNm#                          /* 점수명 */
+				, SCORE_VAL                          = #scoreVal#                         /* 점수값 */
+				, USE_YN                             = #useYn#                            /* 사용여부 */
+				, UPDT_DE                            = SYSDATE                           /* 수정일자 */
+				, UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+         		MAKR_CD = #makrCd#
+			AND SCRIPT_KND = #scriptKnd#
+			AND SCRIPT_CD = #scriptCd#
+			AND QUEST_CD  = #questCd#
+			AND ANSR_CD = #ansrCd#
+
+    ]]>
+    </update>
+
+
+    <!--
+        쿼리명 : 답변스크립트 삭제
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.10.02    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.10.02
+    -->
+    <delete id="callScriptMngDAO.deleteCallAnswer">
+        <![CDATA[
+            DELETE
+              FROM
+                    CALL_SCRIPT_ANSWER_MNG
+	         WHERE
+					MAKR_CD = #makrCd#
+			AND SCRIPT_KND = #scriptKnd#
+			AND SCRIPT_CD = #scriptCd#
+			AND QUEST_CD  = #questCd#
+			AND ANSR_CD = #ansrCd#
+        ]]>
+    </delete>
+
+
+
+
+
+	<resultMap id="CmmCodeDetail" class="egovframework.com.cmm.service.CmmnDetailCode">
+		<result property="codeId"    	column="CODE_ID"   	columnIndex="1"/>
+		<result property="code"  		column="CODE" 		columnIndex="2"/>
+		<result property="codeNm"   	column="CODE_NM"  	columnIndex="3"/>
+		<result property="codeDc"   	column="CODE_DC"  	columnIndex="4"/>
+		<result property="id"   	    column="ID"  	    columnIndex="5"/>
+		<result property="text"   	    column="TEXT"  	    columnIndex="6"/>
+		<result property="selected"   	column="SELECTED"  	columnIndex="7"/>
+		<result property="disabled"   	column="DISABLED"  	columnIndex="8"/>
+	</resultMap>
+
+
+    <select id="callScriptMngDAO.selectScriptTitleComboList" parameterClass="callScriptMngVO" resultMap="CmmCodeDetail">
+    <![CDATA[
+        SELECT 
+                  SCRIPT_CD       AS CODE_ID
+                , SCRIPT_CD         AS CODE
+                , SCRIPT_TITLE          AS CODE_NM
+                , SCRIPT_CD          AS CODE_DC
+                , SCRIPT_CD         AS ID
+                , SCRIPT_TITLE          AS TEXT
+                , DECODE(#searchScriptCd#, SCRIPT_CD, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+            FROM   CALL_SCRIPT_MNG
+           WHERE   SCRIPT_CD != '0'   
+    ]]>      
+
+    <![CDATA[
+         ORDER BY SCRIPT_TITLE, SCRIPT_CD
+    ]]>
+    </select>    
+
+
+
+
+
+
+</sqlMap>

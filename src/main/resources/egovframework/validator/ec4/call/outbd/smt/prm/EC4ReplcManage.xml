@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+	<formset>
+		<form name="replcManageVO">
+			<field property="replcCode" depends="required">
+				<arg0 key="replcManage.replcCode" />
+			</field>
+			<field property="replcTy" depends="required">
+				<arg0 key="replcManage.replcTy" />
+			</field>
+			<field property="replcNm" depends="required">
+				<arg0 key="replcManage.replcNm" />
+			</field>
+			<field property="smsDsptchNo" depends="required">
+				<arg0 key="replcManage.smsDsptchNo" />
+			</field>
+		</form>
+	</formset>
+</form-validation>

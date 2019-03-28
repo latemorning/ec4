@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CstmrCar">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cstmrCarDefaultVO" type="egovframework.ec4.cmm.cinfo.ccm.service.CstmrCarDefaultVO"/>
+    <typeAlias  alias="cstmrCarVO" type="egovframework.ec4.cmm.cinfo.ccm.service.CstmrCarVO"/>
+
+        <!--
+        쿼리명 : 고객 차량 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.27    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.07.27
+    -->
+    <select id="cstmrCarDAO.selectCstmrCarList" parameterClass="CstmrCarDefaultVO" resultClass="egovMap">
+    <![CDATA[
+		SELECT
+		        ROWNUM rn
+		      , ccv.vhcle_esntl_id
+		      , ccv.vin_front
+		      , ccv.vin_rear
+		      , ccv.vin_front||ccv.vin_rear AS vin
+		      , ccv.carnbr
+		      , ccv.vhcle_detail_model_id
+		      , ccv.vhcty_code
+		      , ccv.color_code
+		      , ccv.etc_vhcle_info
+		  FROM
+		        ca_cstmr_view ctv
+		      , ca_car_acqs ca
+		      , ca_cstmr_car_view ccv
+		 WHERE
+		        ctv.cstmr_esntl_id = ca.cstmr_esntl_id
+		   AND  ca.vhcle_esntl_id = ccv.vhcle_esntl_id
+		   AND  ctv.cstmr_esntl_id = 'ESNTL_ID_00000000001'
+		   AND  NOT EXISTS (SELECT 1
+		                      FROM ca_car_frftr
+		                     WHERE cstmr_esntl_id = 'ESNTL_ID_00000000001'
+		                       AND vhcle_esntl_id = 'VHCLEST_000000000001')
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+                ccv.$sortColNm$
+            ]]>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 고객 차량 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.27    harry     최초 생성
+
+        작성자 : harry
+        최초작성일 : 2018.07.27
+    -->
+    <select id="cstmrCarDAO.selectCstmrCarListCnt" parameterClass="CstmrCarDefaultVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) AS cnt
+          FROM
+                ca_cstmr_view ctv
+              , ca_car_acqs ca
+              , ca_cstmr_car_view ccv
+         WHERE
+                ctv.cstmr_esntl_id = ca.cstmr_esntl_id
+           AND  ca.vhcle_esntl_id = ccv.vhcle_esntl_id
+           AND  ctv.cstmr_esntl_id = 'ESNTL_ID_00000000001'
+           AND  NOT EXISTS (SELECT 1
+                              FROM ca_car_frftr
+                             WHERE cstmr_esntl_id = 'ESNTL_ID_00000000001'
+                               AND vhcle_esntl_id = 'VHCLEST_000000000001')
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 고객차량 상세
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.09    harry     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.08.09
+    -->
+    <select id="cstmrCarDAO.selectCstmrCar" parameterClass="cstmrCarVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT
+                vhcle_esntl_id
+              , vin_front
+              , vin_rear
+              , carnbr
+              , vhcle_detail_model_id
+              , vhcty_code
+              , vhcty_code_nm
+              , color_code
+              , color_code_nm
+              , TO_CHAR(drvdstnc) AS drvdstnc
+          FROM
+                ca_cstmr_car_view ccv
+              , (SELECT code_id, code, code_nm AS vhcty_code_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'VHCT' AND use_at='Y') vhct
+              , (SELECT code_id, code, code_nm AS color_code_nm
+                   FROM comtccmmndetailcode
+                  WHERE code_id = 'CLCD' AND use_at='Y') clcd
+         WHERE
+                ccv.vhcty_code = vhct.code(+)
+           AND  ccv.color_code = clcd.code(+)
+           AND  ccv.vhcle_esntl_id = #vhcleEsntlId#
+    ]]>
+    </select>
+
+
+
+</sqlMap>

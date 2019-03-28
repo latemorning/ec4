@@ -1,0 +1,3256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltIn">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="cnsltInBoundMngVO" type="egovframework.ec4.call.inbd.service.CnsltInBoundMngVO"/>
+    
+
+
+
+    <!--
+        쿼리명 : 상담화면(In) - 상담내용저장
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.03    CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.08.03
+    -->
+    <insert id="cnsltInBoundMngDAO.insertCnsltInBoundReg">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CNSLT_INBOUND_MNG
+		      (
+			        CNSLT_INCALL_NO                /* 인바운드콜번호 */
+			      , CNSLT_USER_ID                  /* 상담원아이디 */
+			      , CSTMR_CD                       /* 콜고객코드 */
+			      , CNSLT_DT                       /* 상담일자 */
+			      , CNSLT_TIME                     /* 상담시간 */
+			      , CALL_TYPE                      /* 통화유형 */
+			      , CSTMR_REL                      /* 고객관계 */
+			      , CALLER_NM                      /* 통화자명 */
+			      , CALLER_HPNO                    /* 통화자핸드폰 */
+			      , CNSLT_TY_CN                    /* 상담유형내용 */
+			      , CNSLT_TY_CN_CODE                    /* 상담유형내용 */
+			      , CNSLT_KND                      /* 상담구분 */
+			      , CUST_VMCD                      /* 고객차량 제작사 브랜드 */
+			      , CUST_VHCT_CD                   /* 고객차량 차종 */
+			      , CUST_VHCL_MDL                  /* 고객차량 모델 */
+			      , CUST_VHCL_DETL_MDL             /* 고객차량 세부모델 */
+			      , VMCD                           /* 제작사 브랜드 */
+			      , VHCT_CD                        /* 차종 */
+			      , VHCL_MDL                       /* 모델 */
+			      , VHCL_DETL_MDL                  /* 세부모델 */
+			      , CNSLT_RSLT                     /* 상담결과 */
+			      , CNSLT_DSCR                     /* 상담내용 */
+			      , CNSLT_STT_DSCR                 /* 상담STT내용 */
+			      , CNSLT_MEMO                     /* 상담메모 */
+			      , CNSLT_CUST_KND                 /* 상담고객구분 */
+			      , PART_NO_REASON                 /* 원인품번 */
+			      , CNSLT_BUSSPLC_KND              /* 상담사업소구분 */
+			      , CNSLT_BUSSPLC_CD1              /* 상담사업소코드1 */
+			      , CNSLT_BUSSPLC_CD2              /* 상담사업소코드2 */
+			      , CNSLT_BUSSPLC_CD3              /* 상담사업소코드3 */
+			      , CNSLT_BUSSPLC_CD4              /* 상담사업소코드4 */
+				  /* , ACT_DSCR                       조치내용 - 매니저처리화면에서 조치내용입력하고 cmpl테이블에 저장한다 */
+			      , RECORD_CD                      /* 녹취코드 */
+			      , BNDRY_TRGT_CSTMR_YN            /* 경계대상고객여부  */
+			      , CALL_BACK_YN                   /* 콜백여부 */
+			      , REL_CNSLT_INCALL_NO            /* 참조콜번호 */
+			      , MGR_CNFM_REQ_FLAG			   /* 매니저확인요청FLAG */
+			      , SALES_LEAD_FLAG			   	   /* SALES LEAD FLAG */
+			      , SMS_FILE_ATTACH_FLAG		   /* 고객SMS파일첨부FLAG */
+			      , CSTMR_MKT_AGREE_FLAG    		 /* 고객마케팅활용동의FLAG */
+			      , VOC_CNSLT_TITLE                /* 접수제목 */
+			      , VOC_RECPT_DSCR                 /* 접수내용 */
+			      , VOC_RECPTER_OPINION            /* 접수자의견 */
+			      , CUST_VIN                       /* 고객차대번호 */
+			      , CUST_VHCLE_NO                  /* 고객차량번호 */
+			      , CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+			      , CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+			      , REGIST_DE                      /* 등록일자 */
+			      , REGISTER                       /* 등록자 */
+			      , UPDT_DE                        /* 수정일자 */
+			      , UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+			        #cnsltIncallNo#                  /* 인바운드콜번호 */
+			      , #cnsltUserId#                    /* 상담원아이디 */
+			      , #cstmrCd#                        /* 콜고객코드 */
+			      , #cnsltDt#                        /* 상담일자 */
+			      , #cnsltTime#                      /* 상담시간 */
+			      , #callType#                       /* 통화유형 */
+			      , #cstmrRel#                       /* 고객관계 */
+			      , #callerNm#                       /* 통화자명 */
+			      , #callerHpno#                     /* 통화자핸드폰 */
+			      , #cnsltTyCn#                      /* 상담유형내용 */
+			      , #cnsltTyCnCode#                      /* 상담유형내용 */
+			      , #cnsltKnd#                       /* 상담구분 */
+			      , #custVmcd#                       /* 고객차량 제작사 브랜드 */
+			      , #custVhctCd#                     /* 고객차량 차종 */
+			      , #custVhclMdl#                    /* 고객차량 모델 */
+			      , #custVhclDetlMdl#                /* 고객차량 세부모델 */
+			      , #vmcd#                           /* 제작사 브랜드 */
+			      , #vhctCd#                         /* 차종 */
+			      , #vhclMdl#                        /* 모델 */
+			      , #vhclDetlMdl#                    /* 세부모델 */
+			      , #cnsltRslt#                      /* 상담결과 */
+			      , #cnsltDscr#                      /* 상담내용 */
+			      , #cnsltSttDscr#                   /* 상담STT내용 */
+			      , #cnsltMemo#                   	 /* 상담메모 */
+			      , #cnsltCustKnd#                   /* 상담고객구분 */
+			      , #partNoReason#                   /* 원인품번 */
+			      , #cnsltBussplcKnd#                /* 상담사업소구분 */
+			      , #cnsltBussplcCd1#                /* 상담사업소코드1 */
+			      , #cnsltBussplcCd2#                /* 상담사업소코드2 */
+			      , #cnsltBussplcCd3#                /* 상담사업소코드3 */
+			      , #cnsltBussplcCd4#                /* 상담사업소코드4 */
+			      /* , actDscr                   	 조치내용 - 매니저처리화면에서 조치내용입력하고 cmpl테이블에 저장한다 */
+			      , #recordCd#                       /* 녹취코드 */
+			      , #bndryTrgtCstmrYn#				 /* 경계대상고객여부 */
+			      , #callBackYn#                     /* 콜백여부 */
+			      , #relCnsltIncallNo#               /* 참조콜번호 */
+			      , #mgrCnfmReqFlag#				 /* 매니저확인요청FLAG */
+			      , #salesLeadFlag#			   	   	 /* SALES LEAD FLAG */
+			      , #smsFileAttachFlag#		   		 /* 고객SMS파일첨부FLAG */
+			      , #cstmrMktAgreeFlag#		   		 /* 고객마케팅활용동의FLAG */
+			      , #vocCnsltTitle#                  /* 접수제목 */
+			      , #vocRecptDscr#                   /* 접수내용 */
+			      , #vocRecpterOpinion#              /* 접수자의견 */
+			      , #custVin#                        /* 고객차대번호 */
+			      , #custVhcleNo#                    /* 고객차량번호 */
+			      , #cstmrEsntlId#                   /* CA_CAR_ACQS 고객고유ID */
+			      , #cstmrVhcleSeq#                  /* CA_CAR_ACQS 고객차량순번 */
+			      , SYSDATE                       /* 등록일자 */
+			      , #register#                       /* 등록자 */
+			      , SYSDATE                         /* 수정일자 */
+			      , #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+    <!--
+        쿼리명 : 상담화면(In) - 상담분류저장
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.03    CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.08.03
+    -->
+    <insert id="cnsltInBoundMngDAO.insertCnsltTypeReg">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CNSLT_INBOUND_TYPE_DETL
+		      (
+			        CNSLT_INCALL_NO                /* 인바운드콜번호 */
+			      , CNSLT_USER_ID                  /* 상담원아이디 */
+			      , CSTMR_CD                       /* 콜고객코드 */
+			      , CNSLT_TY_KEY_SN                /* 상담유형KEY순번 */
+			      , CNSLT_TY_CD1                   /* 상담유형코드1 */
+			      , CNSLT_TY_CD2                   /* 상담유형코드2 */
+			      , CNSLT_TY_CD3                   /* 상담유형코드3 */
+			      , CNSLT_TY_CD4                   /* 상담유형코드4 */
+			      , REGIST_DE                      /* 등록일자 */
+			      , REGISTER                       /* 등록자 */
+			      , UPDT_DE                        /* 수정일자 */
+			      , UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+			        #cnsltIncallNo#                  /* 인바운드콜번호 */
+			      , #cnsltUserId#                    /* 상담원아이디 */
+			      , #cstmrCd#                        /* 콜고객코드 */
+			      , #cnsltTyKeySn#                   /* 상담유형KEY순번 */
+			      , #cnsltTyCd1#                     /* 상담유형코드1 */
+			      , #cnsltTyCd2#                     /* 상담유형코드2 */
+			      , #cnsltTyCd3#                     /* 상담유형코드3 */
+			      , #cnsltTyCd4#                     /* 상담유형코드4 */
+			      , SYSDATE                       /* 등록일자 */
+			      , #register#                       /* 등록자 */
+			      , SYSDATE                         /* 수정일자 */
+			      , #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>
+
+
+
+
+
+
+    <!--
+        쿼리명 : 상담유형 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.12    cjj     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.12
+    -->
+    <select id="cnsltInBoundMngDAO.selectInCallCnsltTypeList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT
+				CY.CNSLT_INCALL_NO                  AS "cnsltIncallNo"
+				, CY.CNSLT_USER_ID                  AS "cnsltUserId"
+				, CY.CSTMR_CD                       AS "cstmrCd"
+				, CY.CNSLT_TY_KEY_SN                AS "cnsltTyKeySn"
+				, LV1.CODE_ID                       AS "codeId"                                   /* 코드 ID */
+				, LV1.CODE_NM                       AS "codeNm"                                   /* 코드 명 */
+				, LV1.PARNTS_CODE_ID                AS "parntsCodeId"                             /* 부모 코드 ID */
+				, LV1.CNSLT_SE_CODE                 AS "cnsltSeCode"                              /* 상담 구분 코드 */
+				, LV1.SORT_ORDR                     AS "sortOrdr"                                 /* 정렬 순서 */
+				, LV1.USE_AT                        AS "useAt"                                    /* 사용 여부 */
+				, LV1.FRST_REGIST_PNTTM             AS "frstRegistPnttm"                          /* 최초 등록 시점 */
+				, LV1.FRST_REGISTER_ID              AS "frstRegisterId"                           /* 최초 등록자 ID */
+				, LV1.LAST_UPDT_PNTTM               AS "lastUpdtPnttm"                            /* 최종 수정 시점 */
+				, LV1.LAST_UPDUSR_ID                AS "lastUpdusrId"                             /* 최종 수정자 ID */
+				, LV2.CODE_ID                       AS "codeIdLv2"
+				, LV2.CODE_NM                       AS "codeNmLv2"
+				, LV2.PARNTS_CODE_ID                AS "parntsCodeIdLv2"
+				, LV3.CODE_ID                       AS "codeIdLv3"
+				, LV3.CODE_NM                       AS "codeNmLv3"
+				, LV3.PARNTS_CODE_ID                AS "parntsCodeIdLv3"
+				, LV4.CODE_ID                       AS "codeIdLv4"
+				, LV4.CODE_NM                       AS "codeNmLv4"
+				, LV4.PARNTS_CODE_ID                AS "parntsCodeIdLv4" 
+			FROM CNSLT_INBOUND_TYPE_DETL CY
+			    , CA_CNSLT_CODE LV1
+			    , CA_CNSLT_CODE LV2
+			    , CA_CNSLT_CODE LV3
+			    , CA_CNSLT_CODE LV4
+			WHERE 1=1
+			AND CNSLT_TY_CD1 = LV1.CODE_ID(+) AND LV1.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND CNSLT_TY_CD2 = LV2.CODE_ID(+) AND LV2.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND CNSLT_TY_CD3 = LV3.CODE_ID(+) AND LV3.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND CNSLT_TY_CD4 = LV4.CODE_ID(+) AND LV4.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+    ]]>
+			<isNotEmpty property="searchCnsltTyCnCode">
+            AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+            	OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                )
+			</isNotEmpty >
+			<isNotEmpty property="searchCnsltIncallNo">
+			AND CY.CNSLT_INCALL_NO = #searchCnsltIncallNo#
+			</isNotEmpty >
+			<isNotEmpty property="searchCnsltUserId">
+			AND CY.CNSLT_USER_ID = #searchCnsltUserId#
+			</isNotEmpty >
+			<isNotEmpty property="searchCstmrCd">
+			AND CY.CSTMR_CD = #searchCstmrCd#
+			</isNotEmpty >
+    <![CDATA[
+         ORDER BY LV1.PARNTS_CODE_ID, LV1.SORT_ORDR, LV1.CODE_ID
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담유형 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.12    cjj     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.12
+    -->
+    <select id="cnsltInBoundMngDAO.selectInCallCnsltTypeListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+			FROM CNSLT_INBOUND_TYPE_DETL CY
+			    , CA_CNSLT_CODE LV1
+			    , CA_CNSLT_CODE LV2
+			    , CA_CNSLT_CODE LV3
+			    , CA_CNSLT_CODE LV4
+			WHERE 1=1
+			AND CNSLT_TY_CD1 = LV1.CODE_ID(+) AND LV1.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND CNSLT_TY_CD2 = LV2.CODE_ID(+) AND LV2.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND CNSLT_TY_CD3 = LV3.CODE_ID(+) AND LV3.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND CNSLT_TY_CD4 = LV4.CODE_ID(+) AND LV4.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+    ]]>
+			<isNotEmpty property="searchCnsltIncallNo">
+			AND CY.CNSLT_INCALL_NO = #searchCnsltIncallNo#
+			</isNotEmpty >
+			<isNotEmpty property="searchCnsltUserId">
+			AND CY.CNSLT_USER_ID = #searchCnsltUserId#
+			</isNotEmpty >
+			<isNotEmpty property="searchCstmrCd">
+			AND CY.CSTMR_CD = #searchCstmrCd#
+			</isNotEmpty >
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 콜상담이력 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.16    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.16
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltHistList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+							C.CSTMR_NM
+							, C.HPNO
+							, C.TELNO
+							, C.BRTHDY
+							, C.EMAIL_ADRES||''||C.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+							, C.VIN
+							, S.CNSLT_DT
+							, S.CNSLT_TIME
+							, REL.CODE_NM AS "CSTMR_REL_NM"
+							, CT.CODE_NM AS "CALL_TYPE_NM"
+							, S.CALLER_NM AS "CALLER_NM"
+							, S.CALLER_HPNO AS "CALLER_HPNO"
+							, CK.CODE_NM AS "CNSLT_KND_NM"
+							, CR.CODE_NM AS "CNSLT_RSLT_NM"
+							, CCK.CODE_NM AS "CNSLT_CUST_KND_NM"
+							, S.CNSLT_TY_CN
+							, S.CNSLT_TY_CN_CODE
+							, S.CNSLT_DSCR
+							, (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = S.CNSLT_USER_ID) AS "CNSLT_NM"
+							, S.CNSLT_MEMO
+							, S.CNSLT_CUST_KND                 /* 상담고객구분 */
+							, S.PART_NO_REASON                 /* 원인품번 */
+							, S.CNSLT_BUSSPLC_KND              /* 상담사업소구분 */
+							, S.CNSLT_BUSSPLC_CD1              /* 상담사업소코드1 */
+							, S.CNSLT_BUSSPLC_CD2              /* 상담사업소코드2 */
+							, S.CNSLT_BUSSPLC_CD3              /* 상담사업소코드3 */
+							, S.CNSLT_BUSSPLC_CD4              /* 상담사업소코드4 */
+							, V.ACT_DSCR 						/* 조치내용 - 매니저처리화면에서 조치내용입력하고 cmpl테이블에 저장한다 */
+							, S.BNDRY_TRGT_CSTMR_YN
+							, S.CALL_BACK_YN
+							, S.MGR_CNFM_REQ_FLAG
+							, S.SALES_LEAD_FLAG
+							, S.SMS_FILE_ATTACH_FLAG
+							, S.CSTMR_MKT_AGREE_FLAG    		 /* 고객마케팅활용동의FLAG */
+							, S.VOC_CNSLT_TITLE                /* 접수제목 */
+							, S.VOC_RECPT_DSCR                 /* 접수내용 */
+							, S.VOC_RECPTER_OPINION            /* 접수자의견 */
+							, S.CUST_VIN                       /* 고객차대번호 */
+							, S.CUST_VHCLE_NO                  /* 고객차량번호 */
+							, S.CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+							, S.CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+							, S.REGIST_DE
+							, S.REGISTER
+							, S.UPDT_DE
+							, S.UPDUSR
+							, '' AS VHCTY_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD1_NO) AS CMPL_CD1_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD2_NO) AS CMPL_CD2_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD3_NO) AS CMPL_CD3_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD4_NO) AS CMPL_CD4_NM
+							, '' AS PROCESS_STTUS_NM
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, COMTCCMMNDETAILCODE CCK
+							, CSTMR_CMPL_MNG V
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND CCK.CODE_ID(+) = 'CNSLTCUSTKND' AND S.CNSLT_CUST_KND = CCK.CODE(+)
+							AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+            
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 콜상담이력 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.16    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.16
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltHistListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, CSTMR_CMPL_MNG V
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--
+        쿼리명 : 계약/판매이력  목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.03.05    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.03.05
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallContSalesList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+							  DEALER_CD                      /* 딜러코드 */
+							, CONTRACT_NO                    /* 계약번호 */
+							, BUSINESS_ID                    /* 사업구분 */
+							, BRCH_CD                        /* 영업소코드 */
+							, CENTER_CD                      /* 본부코드 */
+							, BRCH_NM                        /* 영업소명 */
+							, SALE_MAN_CD                    /* 사원코드 */
+							, SALE_MAN_NM                    /* 영업사원명 */
+							, CUSTOMER_CD                    /* 고객코드 */
+							, OUT_PLACE_CD                   /* 출하장 */
+							, BUSINESS_TYPE                  /* 업태 */
+							, INDUSTRY_TYPE                  /* 업종 */
+							, ASSIGN_REQ_DT                  /* 배정요청일 */
+							, ASSIGN_DT                      /* 배정일자 */
+							, CANCEL_DT                      /* 해약일자 */
+							, STATUS_CD                      /* STATUS */
+							, MODEL_CD                       /* 모델코드 */
+							, SPEC_CD                        /* 스펙코드 */
+							, CAR_CD                         /* 차종코드 */
+							, OUT_BASIC_CNT                  /* 출고대수 */
+							, SALE_AMT                       /* 공급가액 */
+							, COLOR_CD                       /* 컬러코드 */
+							, PAYMENT_DT                     /* 납기일자 */
+							, TOTAL_SALE_AMT                 /* 총판매가 */
+							, SALE_CD                        /* 판매조건 */
+							, INST_PERD                      /* 할부기간 */
+							, OUT_DT                         /* 출고일자 */
+							, CONT_AMT                       /* 계약금 */
+							, INDO_AMT                       /* 인도금 */
+							, INIT_RATE                      /* 선수율 */
+							, ALLOTMENT_AMT                  /* 할부원금 */
+							, IJA_RATE                       /* 자체이자율 */
+							, LOSS_COLLECTION_AMT            /* 기타비용 */
+							, NONMOVE_ESTATE_AMT             /* CMS견적 SEQ */
+							, CONT_DT                        /* 계약일자 */
+							, BUSINESS_NO                    /* 사업자번호 */
+							, RESIDENT_NO                    /* 주민등록번호 */
+							, RESIDENT_NM                    /* 고객명 */
+							, BUSINESS_NM                    /* 상호명 */
+							, RESIDENT_ADDR                  /* 실거주지고객주소 */
+							, BUSINESS_ADDR                  /* 회사주소 */
+							, RESIDENT_TEL_NO                /* 고객전화번호 */
+							, BUSINESS_TEL_NO                /* 상호전화번호 */
+							, RESIDENT_POST_CD               /* 실거주지우편번호 */
+							, BUSINESS_POST_CD               /* 회사 우편번호 */
+							, DLVY_PRMS_DT_1                 /* 인도금약정일1 */
+							, DLVY_PRMS_AMT_1                /* 인도금약정액1 */
+							, DLVY_PRMS_DT_2                 /* 인도금약정일2 */
+							, DLVY_PRMS_AMT_2                /* 인도금약정액2 */
+							, DLVY_PRMS_DT_3                 /* 인도금약정일3 */
+							, DLVY_PRMS_AMT_3                /* 인도금약정액3 */
+							, DLVY_PRMS_DT_4                 /* 인도금약정일4 */
+							, DLVY_PRMS_AMT_4                /* 인도금약정액4 */
+							, DLVY_PRMS_DT_5                 /* 인도금약정일5 */
+							, DLVY_PRMS_AMT_5                /* 인도금약정액5 */
+							, STAMP_AMT                      /* 인지대 */
+							, FIXED_DC_AMT                   /* 정액DC금액 */
+							, FIXED_DC_RATE                  /* 정율 DC율 */
+							, UNFIXED_DC_AMT                 /* DC 금액 */
+							, DLVY_PRMS_YN_1                 /* 인도금약정구분1 */
+							, DLVY_PRMS_YN_2                 /* 인도금약정구분2 */
+							, DLVY_PRMS_YN_3                 /* 인도금약정구분3 */
+							, DLVY_PRMS_YN_4                 /* 인도금약정구분4 */
+							, DLVY_PRMS_YN_5                 /* 인도금약정구분5 */
+							, SP_SALE_AMT                    /* 판매단가 */
+							, ESTABLE_PAY_GU                 /* 설정구분 */
+							, CONSIGN_AMT                    /* 배송료 */
+							, FINA_AMT                       /* 금융수수료 */
+							, CONSIGN_CD                     /* 대표지역코드 */
+							, ESTABLE_PAY_RATE               /* 설정가입비율 */
+							, GUARANTEE_AMT                  /* 보증보험가입액 */
+							, ESTABLE_AMT                    /* 차량설정가액 */
+							, SALE_TYPE_CD                   /* 판매형태 */
+							, OPTION_CD                      /* OPTION코드 */
+							, OPTION_AMT                     /* 옵션대 */
+							, ALLOTMENT_END                  /* 할부종료 FLAG */
+							, GUARANTEE_RATE                 /* 보증보험 할인율 */
+							, NEW_IJA_RATE                   /* 유예이자율 */
+							, SALES_PROMOTION_CD             /* 판매형태2 */
+							, GRACE_AMT_1                    /* 할부 유예금액 */
+							, GRACE_IJA_RATE_1               /* 할부 유예이자율 */
+							, GRACE_COMP_RATE_1              /* 할부 유예구성비율 */
+							, CAR_NO                         /* 배정요청 차대번호 */
+							, CONT_CNT                       /* 계약대수 */
+							, CANCEL_CNT                     /* 해약대수 */
+							, SELF_IJA_AMT                   /* 자체할부이자 */
+							, BANK_IJA_AMT                   /* 은행할부이자 */
+							, CAR_SALE_AMT                   /* 차량판매단가 */
+							, COLOR_AMT                      /* 컬러단가 */
+							, BUY_TYPE_CD                    /* 구입용도코드 */
+							, USE_TYPE_CD                    /* 용도분류코드 */
+							, HAND_PERSON_CD                 /* 장애등급코드 */
+							, REMARK                         /* 비고 */
+							, TUK_TP                         /* 개소세적용여부 */
+							, VAT_TP                         /* 부가세적용여부 */
+							, TUK_AMT                        /* 개소세 */
+							, EDK_AMT                        /* 교육세 */
+							, VAT_AMT                        /* 부가세 */
+							, ASSIGN_BASIS_DATE              /* 배정선정기준일시 */
+							, REG_DATE                       /* 등록일 */
+							, UPDT_DATE                      /* 수정일 */
+							, UPDT_USER_CD                   /* 수정자 */
+							, JUMIN_POST_CD                  /* 주민등록상우편번호 */
+							, JUMIN_POST_ADDR                /* 주민등록상주소 */
+							, CHASSIS_NO                     /* 배정확정 차대번호 */
+							, EXPECT_DT                      /* 출고희망일 */
+							, FLEET_CUST_MK                  /* Fleet업체여부 */
+							, OUT_PLACE_TYPE                 /* 배송유형 */
+							, OUT_TO_AREA                    /* 도착구간코드 */
+							, TRANS_AMT                      /* 운송료 */
+							, OUT_PLACE_AMT                  /* 탁송료 */
+							, TRUST_CD                       /* 신용등급 */
+							, SPECIAL_DC_AMT                 /* 특별할인금액 */
+							, ONCE_DC_AMT                    /* 일시불할인금액 */
+							, EMP_DC_AMT                     /* 임직원할인금액 */
+							, FLAW_DC_AMT                    /* 등급차할인금액 */
+							, LONG_DC_AMT                    /* 장기재고할인금액 */
+							, DISPLAY_DC_AMT                 /* 전시차할인금액 */
+							, FLEET_DC_AMT                   /* FLEET업체할인금액 */
+							, CAMPAIGN_DC_AMT                /* 캠페인할인금액 */
+							, PRO_DC_AMT                     /* 조달할인금액 */
+							, ADD_DC_AMT                     /* 추가할인금액 */
+							, CARD_DC_AMT                    /* 선할인카드금액 */
+							, AUTO_DC_AMT                    /* 오토카드포인트 */
+							, ETC_DC_AMT                     /* 기타할인 */
+							, PAY_CD                         /* 할부코드 */
+							, CAPITAL_CD                     /* 캐피탈사코드 */
+							, BEGIN_ACCEPT_DT                /* 초회납입일자 */
+							, PAY_KEEP_TERM                  /* 거치기간 */
+							, PAY_KEEP_RATE                  /* 거치이율 */
+							, DELAY_TERM                     /* 유예기간 */
+							, DELAY_RATE                     /* 유예이율 */
+							, DELAY_USE_RATE                 /* 유예가능율 */
+							, PAY_TYPE                       /* 상황방식 */
+							, PAY_USE_GRADE                  /* 가능신용등급 */
+							, OFFTAX_STAT                    /* 면과세승인상태 */
+							, OFFTAX_APPR_DTTM               /* 면과세승인일시 */
+							, OFFTAX_USER_CD                 /* 면과세승인자 */
+							, REDUCT_CD                      /* 감면코드 */
+							, REDUCT_TUK_AMT                 /* 감면세액 */
+							, REDUCT_TUK_RATE                /* 감면적용세율 */
+							, APPR_DT                        /* 결재요청일자 */
+							, APPR_SEQ                       /* 결재요청번호 */
+							, CONTRACT_STATUS                /* 계약상태 */
+							, REG_USER_CD                    /* 등록자 */
+							, RECEIPT_NO                     /* ASP/STP접수번호 */
+							, RECEIPT_STAT                   /* ASP/STP상태 */
+							, RECEIPT_APPR_DTTM              /* ASP/STP승인일시 */
+							, RECEIPT_APPR_NO                /* ASP/STP승인번호 */
+							, HAND_PHONE_NO                  /* 고객휴대폰번호 */
+							, PAY_STATUS                     /* 할부승인상태 */
+							, PAY_APPR_DTTM                  /* 할부승인일시 */
+							, PAY_APPR_NO                    /* 할부승인번호 */
+							, BEF_SIGNOFF_DT                 /* 이전차량 등록일자 */
+							, BEF_CHASSIS_NO                 /* 이전차량 차대번호 */
+							, REMARK2                        /* 비고2 */
+							, PAY_CRDT_RATE                  /* 금융수수료율 */
+							, STOCK_AMT                      /* 책임보험료 */
+							, CONTRACT_NO_O                  /* 원계약번호 */
+							, EMAIL                          /* 이메일 */
+							, OLD_CAR_PLAN                   /* 이전차량 */
+							, OLD_CAR_MAKER                  /* 이전차량 매이커 */
+							, OLD_CAR_MODEL                  /* 이전차량 모델 */
+							, OLD_CAR_MY                     /* 이전차량 년식 */
+							, RESIDENT_POST_REG_NO           /* RESIDENT_POST_REG_NO */
+							, BUSINESS_POST_REG_NO           /* BUSINESS_POST_REG_NO */
+							, JUMIN_POST_REG_NO              /* JUMIN_POST_REG_NO */
+							, SALES_MODL_CD                  /* SALES_MODL_CD */
+							, INDO_DT                        /* INDO_DT */
+							, EW_ITEM_CD                     /* 보증연장상품코드 */
+							, EW_ITEM_AMT                    /* 보증연장상품금액 */
+                        FROM IF_DELIVY
+                        WHERE 1=1
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              (RESIDENT_NM,RESIDENT_TEL_NO,RESIDENT_NO)
+								IN (
+								        SELECT CUST_NM,HAND_PHONE_NO,BIRTH_SEX 
+								        FROM CSTMR_INFO_LINK_MNG
+								        WHERE CSTMR_CD = #searchCstmrCd#
+								)
+            ]]>
+            </isNotEmpty>
+            
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 계약/판매이력 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.03.05    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.03.05
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallContSalesListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM IF_DELIVY
+                        WHERE 1=1
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              (RESIDENT_NM,RESIDENT_TEL_NO,RESIDENT_NO)
+								IN (
+								        SELECT CUST_NM,HAND_PHONE_NO,BIRTH_SEX 
+								        FROM CSTMR_INFO_LINK_MNG
+								        WHERE CSTMR_CD = #searchCstmrCd#
+								)
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+
+
+
+
+
+
+    <!--
+        쿼리명 : 상담유형 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.07.12    cjj     최초 생성
+        작성자 : harry
+        최초작성일 : 2018.07.12
+    -->
+    <select id="cnsltInBoundMngDAO.selectCnsltTypeLoad" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+			SELECT DISTINCT
+				'LOAD' AS "listRsltNm"
+				, LV1.CODE_ID                       AS "codeId"                                   /* 코드 ID */
+				, LV1.CODE_NM                       AS "codeNm"                                   /* 코드 명 */
+				, LV1.PARNTS_CODE_ID                AS "parntsCodeId"                             /* 부모 코드 ID */
+				, LV1.CNSLT_SE_CODE                 AS "cnsltSeCode"                              /* 상담 구분 코드 */
+				, LV1.SORT_ORDR                     AS "sortOrdr"                                 /* 정렬 순서 */
+				, LV1.USE_AT                        AS "useAt"                                    /* 사용 여부 */
+				, LV1.FRST_REGIST_PNTTM             AS "frstRegistPnttm"                          /* 최초 등록 시점 */
+				, LV1.FRST_REGISTER_ID              AS "frstRegisterId"                           /* 최초 등록자 ID */
+				, LV1.LAST_UPDT_PNTTM               AS "lastUpdtPnttm"                            /* 최종 수정 시점 */
+				, LV1.LAST_UPDUSR_ID                AS "lastUpdusrId"                             /* 최종 수정자 ID */
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 2 THEN LV2.CODE_ID ELSE '' END)                       AS "codeIdLv2"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 2 THEN LV2.CODE_NM ELSE '' END)                       AS "codeNmLv2"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 2 THEN LV2.PARNTS_CODE_ID ELSE '' END)                AS "parntsCodeIdLv2"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 3 THEN LV3.CODE_ID ELSE '' END)                       AS "codeIdLv3"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 3 THEN LV3.CODE_NM ELSE '' END)                       AS "codeNmLv3"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 3 THEN LV3.PARNTS_CODE_ID ELSE '' END)                AS "parntsCodeIdLv3"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 4 THEN LV4.CODE_ID ELSE '' END)                       AS "codeIdLv4"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 4 THEN LV4.CODE_NM ELSE '' END)                       AS "codeNmLv4"
+                , (CASE WHEN LENGTH(#searchCnsltTyCnCode#) >= 4 THEN LV4.PARNTS_CODE_ID ELSE '' END)                AS "parntsCodeIdLv4" 
+			FROM  CA_CNSLT_CODE LV1
+			    , CA_CNSLT_CODE LV2
+			    , CA_CNSLT_CODE LV3
+			    , CA_CNSLT_CODE LV4
+			WHERE 1=1
+			AND LV1.CNSLT_SE_CODE = #searchCnsltSeCode#
+			AND LV1.CODE_ID = LV2.PARNTS_CODE_ID(+) AND LV2.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND LV2.CODE_ID = LV3.PARNTS_CODE_ID(+) AND LV3.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+			AND LV3.CODE_ID = LV4.PARNTS_CODE_ID(+) AND LV4.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+    ]]>
+            AND (CASE 
+                    WHEN LENGTH(#searchCnsltTyCnCode#) = 1 THEN LV1.CODE_ID
+                    WHEN LENGTH(#searchCnsltTyCnCode#) = 2 THEN LV2.CODE_ID
+                    WHEN LENGTH(#searchCnsltTyCnCode#) = 3 THEN LV3.CODE_ID
+                    WHEN LENGTH(#searchCnsltTyCnCode#) = 4 THEN LV4.CODE_ID
+                    ELSE ''
+               END) = #searchCnsltTyCnCode#
+    <![CDATA[
+         ORDER BY LV1.PARNTS_CODE_ID, LV1.SORT_ORDR, LV1.CODE_ID
+    ]]>
+    </select>
+
+
+
+    <!--
+        쿼리명 : 고객상담내역조회 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.29    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.08.29
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltInBoundList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+							C.CSTMR_NM
+							, C.HPNO
+							, C.TELNO
+							, C.BRTHDY
+							, C.EMAIL_ADRES||''||C.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+							, C.VIN
+							, S.CNSLT_DT
+							, S.CNSLT_TIME
+							, REL.CODE_NM AS "CSTMR_REL_NM"
+							, CT.CODE_NM AS "CALL_TYPE_NM"
+							, S.CALLER_NM AS "CALLER_NM"
+							, S.CALLER_HPNO AS "CALLER_HPNO"
+							, CK.CODE_NM AS "CNSLT_KND_NM"
+							, CR.CODE_NM AS "CNSLT_RSLT_NM"
+							, CCK.CODE_NM AS "CNSLT_CUST_KND_NM"
+							, S.CNSLT_TY_CN
+							, S.CNSLT_TY_CN_CODE
+							, S.CNSLT_DSCR
+							, (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = S.CNSLT_USER_ID) AS "CNSLT_NM"
+							, S.CNSLT_MEMO
+							, S.CNSLT_CUST_KND                 /* 상담고객구분 */
+							, S.PART_NO_REASON                 /* 원인품번 */
+							, S.CNSLT_BUSSPLC_KND              /* 상담사업소구분 */
+							, S.CNSLT_BUSSPLC_CD1              /* 상담사업소코드1 */
+							, S.CNSLT_BUSSPLC_CD2              /* 상담사업소코드2 */
+							, S.CNSLT_BUSSPLC_CD3              /* 상담사업소코드3 */
+							, S.CNSLT_BUSSPLC_CD4              /* 상담사업소코드4 */
+							, (FN_GET_CALLINBOUND_ACTDSCR_ALL(S.CNSLT_INCALL_NO)) AS ACT_DSCR
+							, S.BNDRY_TRGT_CSTMR_YN
+							, S.CALL_BACK_YN
+							, S.MGR_CNFM_REQ_FLAG
+							, S.SALES_LEAD_FLAG
+							, S.SMS_FILE_ATTACH_FLAG
+							, S.CSTMR_MKT_AGREE_FLAG    		 /* 고객마케팅활용동의FLAG */
+							, S.VOC_CNSLT_TITLE                /* 접수제목 */
+							, S.VOC_RECPT_DSCR                 /* 접수내용 */
+							, S.VOC_RECPTER_OPINION            /* 접수자의견 */
+							, S.CUST_VIN                       /* 고객차대번호 */
+							, S.CUST_VHCLE_NO                  /* 고객차량번호 */
+							, S.CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+							, S.CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+							, S.REGIST_DE
+							, S.REGISTER
+							, S.UPDT_DE
+							, S.UPDUSR
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, COMTCCMMNDETAILCODE CCK
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND CCK.CODE_ID(+) = 'CNSLTCUSTKND' AND S.CNSLT_CUST_KND = CCK.CODE(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+
+            <isNotEmpty property="roleInfo" prepend="AND">
+            <isEqual property="roleInfo" compareValue="ROLE_COUNSELLER">
+            <![CDATA[
+                             S.CNSLT_USER_ID = #uniqId#
+            ]]>
+            </isEqual>
+            </isNotEmpty>
+	        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+	                         $sortColNm$
+            ]]>
+	            <isNotEmpty property="sSortDir_0">
+	            <![CDATA[
+	                         $sSortDir_0$
+	            ]]>
+	            </isNotEmpty>
+	        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 고객상담내역조회 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.29    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.08.29
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltInBoundListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+            
+            <isNotEmpty property="roleInfo" prepend="AND">
+            <isEqual property="roleInfo" compareValue="ROLE_COUNSELLER">
+            <![CDATA[
+                             S.CNSLT_USER_ID = #uniqId#
+            ]]>
+            </isEqual>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 고객상담현황 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.29    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.08.29
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltInBoundStatList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+							'STATE' AS "listRsltNm"
+						    , S.CNSLT_DT
+						    , '' AS CNSLT_TEAM_NM
+						    , CT.CODE_NM AS "CALL_TYPE_NM"
+						    , CK.CODE_NM AS "CNSLT_KND_NM"
+						    , COUNT(*) AS CNSLT_CNT
+						    , 0 AS CNSLT_END_CNT
+						    , 0 AS CNSLT_ING_CNT
+						    , 0 AS CNSLT_REQ_CNT
+						    , COUNT(V.CMPL_MNG_NO) AS CNSLT_VOC_CNT
+						    , 0 AS REPAIR_RESV_CNT
+						    , 0 AS SALES_LEAD_CNT
+						    , 0 AS MKT_NO_AGREE_CNT
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, CSTMR_CMPL_MNG V
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+
+            <isNotEmpty property="roleInfo" prepend="AND">
+            <isEqual property="roleInfo" compareValue="ROLE_COUNSELLER">
+            <![CDATA[
+                             S.CNSLT_USER_ID = #uniqId#
+            ]]>
+            </isEqual>
+            </isNotEmpty>
+            
+            <![CDATA[
+	                         GROUP BY C.CSTMR_NM, S.CNSLT_DT, CT.CODE_NM, CK.CODE_NM
+            ]]>
+            
+	        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <![CDATA[
+	                         $sortColNm$
+            ]]>
+	            <isNotEmpty property="sSortDir_0">
+	            <![CDATA[
+	                         $sSortDir_0$
+	            ]]>
+	            </isNotEmpty>
+	        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 고객상담현황 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.29    cjj     최초 생성
+
+        작성자 : cjj
+        최초작성일 : 2018.08.29
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltInBoundStatListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, CSTMR_CMPL_MNG V
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+)
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+            
+            <isNotEmpty property="roleInfo" prepend="AND">
+            <isEqual property="roleInfo" compareValue="ROLE_COUNSELLER">
+            <![CDATA[
+                             S.CNSLT_USER_ID = #uniqId#
+            ]]>
+            </isEqual>
+            </isNotEmpty>
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 의뢰현황 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltReqList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+							C.CSTMR_NM
+							, C.HPNO
+							, C.TELNO
+							, C.BRTHDY
+							, C.EMAIL_ADRES||''||C.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+							, C.VIN
+							, S.CNSLT_DT
+							, S.CNSLT_TIME
+							, REL.CODE_NM AS "CSTMR_REL_NM"
+							, CT.CODE_NM AS "CALL_TYPE_NM"
+							, S.CALLER_NM AS "CALLER_NM"
+							, S.CALLER_HPNO AS "CALLER_HPNO"
+							, CK.CODE_NM AS "CNSLT_KND_NM"
+							, CR.CODE_NM AS "CNSLT_RSLT_NM"
+							, CCK.CODE_NM AS "CNSLT_CUST_KND_NM"
+							, S.CNSLT_TY_CN
+							, S.CNSLT_TY_CN_CODE
+							, S.CNSLT_DSCR
+							, (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = S.CNSLT_USER_ID) AS "CNSLT_NM"
+							, S.CNSLT_MEMO
+							, S.CNSLT_CUST_KND                 /* 상담고객구분 */
+							, S.PART_NO_REASON                 /* 원인품번 */
+							, S.CNSLT_BUSSPLC_KND              /* 상담사업소구분 */
+							, S.CNSLT_BUSSPLC_CD1              /* 상담사업소코드1 */
+							, S.CNSLT_BUSSPLC_CD2              /* 상담사업소코드2 */
+							, S.CNSLT_BUSSPLC_CD3              /* 상담사업소코드3 */
+							, S.CNSLT_BUSSPLC_CD4              /* 상담사업소코드4 */
+							, V.ACT_DSCR
+							, S.BNDRY_TRGT_CSTMR_YN
+							, S.CALL_BACK_YN
+							, S.MGR_CNFM_REQ_FLAG
+							, S.SALES_LEAD_FLAG
+							, S.SMS_FILE_ATTACH_FLAG
+							, S.CSTMR_MKT_AGREE_FLAG    		 /* 고객마케팅활용동의FLAG */
+							, S.VOC_CNSLT_TITLE                /* 접수제목 */
+							, S.VOC_RECPT_DSCR                 /* 접수내용 */
+							, S.VOC_RECPTER_OPINION            /* 접수자의견 */
+							, S.CUST_VIN                       /* 고객차대번호 */
+							, S.CUST_VHCLE_NO                  /* 고객차량번호 */
+							, S.CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+							, S.CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+							, S.REGIST_DE
+							, S.REGISTER
+							, S.UPDT_DE
+							, S.UPDUSR
+							, '' AS VHCTY_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD1_NO) AS CMPL_CD1_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD2_NO) AS CMPL_CD2_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD3_NO) AS CMPL_CD3_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD4_NO) AS CMPL_CD4_NM
+							, '' AS PROCESS_STTUS_NM
+							, VOC_KND
+							, (
+								CASE WHEN VOC_KND = 'SCMS' THEN (SELECT BRCH_NM FROM DZR_BRCH WHERE BRCH_CD = V.BUSSPLC_CD4)
+									 WHEN VOC_KND = 'CCMS' THEN (SELECT FIRM_NAME FROM TB_ASM610 WHERE CUST_CODE = V.BUSSPLC_CD4)
+									 ELSE ''
+								END
+							) AS BUSSPLC_NM
+							, '' AS RCV_DT
+							, '' AS PROC_DT
+							, '' AS PROC_STAT
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, COMTCCMMNDETAILCODE CCK
+							, CSTMR_CMPL_MNG V
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND CCK.CODE_ID(+) = 'CNSLTCUSTKND' AND S.CNSLT_CUST_KND = CCK.CODE(+)
+							AND V.MAKR_CD = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO AND S.CSTMR_CD = V.CSTMR_CD
+							AND V.BUSSPLC_CD4 IS NOT NULL
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="codeId1" prepend="AND">
+            <![CDATA[
+                              V.CMPL_CD1_NO = #codeId1#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="codeId2" prepend="AND">
+            <![CDATA[
+                              V.CMPL_CD2_NO = #codeId2#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="codeId3" prepend="AND">
+            <![CDATA[
+                              V.CMPL_CD3_NO = #codeId3#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="codeId4" prepend="AND">
+            <![CDATA[
+                              V.CMPL_CD4_NO = #codeId4#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 의뢰현황 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.08.31    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.08.31
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCnsltReqListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, CSTMR_CMPL_MNG V
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+)
+							AND V.BUSSPLC_CD4 IS NOT NULL
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+
+
+    <!--
+        쿼리명 : 매니저처리 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.03    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.12.03
+    -->
+    <select id="cnsltInBoundMngDAO.selectCnsltInBoundMgrProcList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+                      SELECT
+                      		S.CNSLT_INCALL_NO
+                      		, S.CSTMR_CD
+							, C.CSTMR_NM
+							, C.HPNO
+							, C.TELNO
+							, C.BRTHDY
+							, C.EMAIL_ADRES||''||C.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+							, C.VIN
+							, S.CNSLT_DT
+							, S.CNSLT_TIME
+							, REL.CODE_NM AS "CSTMR_REL_NM"
+							, CT.CODE_NM AS "CALL_TYPE_NM"
+							, S.CALLER_NM AS "CALLER_NM"
+							, S.CALLER_HPNO AS "CALLER_HPNO"
+							, CK.CODE_NM AS "CNSLT_KND_NM"
+							, CR.CODE_NM AS "CNSLT_RSLT_NM"
+							, CCK.CODE_NM AS "CNSLT_CUST_KND_NM"
+							, S.CNSLT_TY_CN
+							, S.CNSLT_TY_CN_CODE
+							, S.CNSLT_DSCR
+							, (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = S.CNSLT_USER_ID) AS "CNSLT_NM"
+							, S.CNSLT_MEMO
+							, S.CNSLT_CUST_KND                 /* 상담고객구분 */
+							, S.PART_NO_REASON                 /* 원인품번 */
+							, S.CNSLT_BUSSPLC_KND              /* 상담사업소구분 */
+							, S.CNSLT_BUSSPLC_CD1              /* 상담사업소코드1 */
+							, S.CNSLT_BUSSPLC_CD2              /* 상담사업소코드2 */
+							, S.CNSLT_BUSSPLC_CD3              /* 상담사업소코드3 */
+							, S.CNSLT_BUSSPLC_CD4              /* 상담사업소코드4 */
+							, (FN_GET_CALLINBOUND_ACTDSCR_ALL(S.CNSLT_INCALL_NO)) AS ACT_DSCR
+							, S.BNDRY_TRGT_CSTMR_YN
+							, S.CALL_BACK_YN
+							, S.MGR_CNFM_REQ_FLAG
+							, S.SALES_LEAD_FLAG
+							, S.SMS_FILE_ATTACH_FLAG
+							, S.CSTMR_MKT_AGREE_FLAG    		 /* 고객마케팅활용동의FLAG */
+							, S.VOC_CNSLT_TITLE                /* 접수제목 */
+							, S.VOC_RECPT_DSCR                 /* 접수내용 */
+							, S.VOC_RECPTER_OPINION            /* 접수자의견 */
+							, S.CUST_VIN                       /* 고객차대번호 */
+							, S.CUST_VHCLE_NO                  /* 고객차량번호 */
+							, S.CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+							, S.CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+							, TO_CHAR(S.REGIST_DE,'YYYY-MM-DD HH24:MI:SS.DDD') AS REGIST_DE
+							, S.REGISTER
+							, TO_CHAR(S.UPDT_DE,'YYYY-MM-DD HH24:MI:SS.DDD') AS UPDT_DE
+							, S.UPDUSR
+							, (SELECT VHCLE_MODEL_NM FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = S.VHCL_MDL) AS VHCL_MDL_NM
+							/*  VOC테이블을 JOIN하지 않기에 주석처리한다  VOC테이블은 다건으로써 필요함이 생길때 JOIN부분을 살필예정
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD1_NO) AS CMPL_CD1_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD2_NO) AS CMPL_CD2_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD3_NO) AS CMPL_CD3_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD4_NO) AS CMPL_CD4_NM
+							*/
+							, '' AS PROCESS_STTUS_NM
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, COMTCCMMNDETAILCODE CCK
+							/*, CSTMR_CMPL_MNG V*/
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND CCK.CODE_ID(+) = 'CNSLTCUSTKND' AND S.CNSLT_CUST_KND = CCK.CODE(+)
+							/*AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+) 매니저처리대상리스트는 인바운드데이터만 보여준다  (인바운드 1건당  매니저처리 다건)   */
+							AND NVL(S.MGR_CNFM_REQ_FLAG,'X') = 'Y'
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+            
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 매니저처리 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.03    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2018.12.03
+    -->
+    <select id="cnsltInBoundMngDAO.selectCnsltInBoundMgrProcListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							/*, CSTMR_CMPL_MNG V*/
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							/*AND MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+) 매니저처리대상리스트는 인바운드데이터만 보여준다  (인바운드 1건당  매니저처리 다건)   */
+							AND NVL(S.MGR_CNFM_REQ_FLAG,'X') = 'Y'
+    ]]>
+            <isNotEmpty property="searchCstmrCd" prepend="AND">
+            <![CDATA[
+                              S.CSTMR_CD = #searchCstmrCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCstmrNm" prepend="AND">
+            <![CDATA[
+                              C.CSTMR_NM LIKE '%'||#searchCstmrNm#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchHpno" prepend="AND">
+            <![CDATA[
+                              C.HPNO LIKE '%'||#searchHpno#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEmailAdres" prepend="AND">
+            <![CDATA[
+                              C.EMAIL_ADRES||'@'||C.EMAIL_DOMAIN LIKE '%'||#searchEmailAdres#||'%'
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltKnd" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_KND = #searchCnsltKnd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchBeginDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT >= #searchBeginDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchEndDe" prepend="AND">
+            <![CDATA[
+                              S.CNSLT_DT <= #searchEndDe#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCarNo" prepend="AND">
+            <![CDATA[
+                              C.VHCLE_NO = #searchCarNo#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vmcd" prepend="AND">
+            <![CDATA[
+                              S.VMCD = #vmcd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhctCd" prepend="AND">
+            <![CDATA[
+                              S.VHCT_CD = #vhctCd#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_MDL = #vhclMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="vhclDetlMdl" prepend="AND">
+            <![CDATA[
+                              S.VHCL_DETL_MDL = #vhclDetlMdl#
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="searchCnsltTyCn" prepend="AND">
+            <![CDATA[
+                              EXISTS (SELECT 'X' 
+                              			FROM CNSLT_INBOUND_TYPE_DETL 
+                              				,CA_CNSLT_CODE LV1
+                              				,CA_CNSLT_CODE LV2
+                              				,CA_CNSLT_CODE LV3
+                              				,CA_CNSLT_CODE LV4
+                              			WHERE CNSLT_INCALL_NO = S.CNSLT_INCALL_NO
+                              			AND CNSLT_USER_ID = S.CNSLT_USER_ID
+                              			AND CSTMR_CD = S.CSTMR_CD
+                              			AND LV1.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD1 = LV1.CODE_ID(+)
+                              			AND LV2.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD2 = LV2.CODE_ID(+)
+                              			AND LV3.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD3 = LV3.CODE_ID(+)
+                              			AND LV4.CNSLT_SE_CODE(+) = 'CNSE020'
+                              			AND CNSLT_TY_CD4 = LV4.CODE_ID(+)
+                              			AND (UPPER(LV1.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV2.CODE_NM) IN ($searchCnsltTyCn$) 
+                              				OR UPPER(LV3.CODE_NM) IN ($searchCnsltTyCn$)
+                              				OR UPPER(LV4.CODE_NM) IN ($searchCnsltTyCn$)
+                              				)
+                              			AND (UPPER(LV1.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV2.CODE_ID) IN ($searchCnsltTyCnCode$) 
+                              				OR UPPER(LV3.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				OR UPPER(LV4.CODE_ID) IN ($searchCnsltTyCnCode$)
+                              				)
+                              		 )
+            ]]>
+            </isNotEmpty>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담내용 매니저처리
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.06    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.12.06
+    -->
+    <select id="cnsltInBoundMngDAO.selectCnsltInBoundMgrProcLoad" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+    		SELECT X.*
+				, '네트워크' AS BUSSPLC_CD1_NM
+				, BPC2.CODE_NM AS BUSSPLC_CD2_NM
+				, BPC3.CODE_NM AS BUSSPLC_CD3_NM
+				, BPC4.CODE_NM AS BUSSPLC_CD4_NM
+				, VOCRCPTKND.CODE_NM AS RECPT_KND_NM
+				, VOCCTGY.CODE_NM AS CNSLT_CATEGORY_NM
+				, VOCROOT.CODE_NM AS RECPT_ROOT_NM
+				, VOCCPTT.CODE_NM AS CSTMR_PROTECT_KND_NM
+				, VOCDMND.CODE_NM AS CSTMR_DEMAND_NM
+				, VOCADNT.CODE_NM AS ACCIDENT_YN_CD_NM
+				, VOCSITT.CODE_NM AS CMPL_SITTN_CD_NM
+				, VOCSTUS.CODE_NM AS PROCESS_STTUS_NM
+    		FROM (
+                      SELECT
+							C.CSTMR_NM
+							, C.HPNO
+							, C.TELNO
+							, C.BRTHDY
+							, C.EMAIL_ADRES||''||C.EMAIL_DOMAIN AS "EMAIL_ADDRESS"
+							, C.EMAIL_DOMAIN AS "SELECT_EMAIL_DOMAIN"
+							, C.VIN
+                            , C.EMAIL_ADRES
+                            , C.EMAIL_DOMAIN
+                            , C.HOUSE_ZIP
+                            , C.HOUSE_ADRES
+                            , C.HOUSE_ADRES_DETAIL
+							, S.CNSLT_INCALL_NO
+							, S.CNSLT_USER_ID
+							, S.CSTMR_CD
+							, S.CALL_TYPE
+							, S.CSTMR_REL
+							, S.CNSLT_KND
+							, S.CUST_VMCD                      /* 고객차량 제작사 브랜드 */
+							, S.CUST_VHCT_CD                   /* 고객차량 차종 */
+							, S.CUST_VHCL_MDL                  /* 고객차량 모델 */
+							, S.CUST_VHCL_DETL_MDL             /* 고객차량 세부모델 */
+							, S.VMCD
+							, S.VHCT_CD
+							, S.VHCL_MDL
+							, S.VHCL_DETL_MDL
+							, S.CNSLT_RSLT
+							/*, S.CNSLT_STT_DSCR */
+							, S.RECORD_CD
+							, S.REL_CNSLT_INCALL_NO
+							, S.CNSLT_DT
+							, S.CNSLT_TIME
+							, REL.CODE_NM AS "CSTMR_REL_NM"
+							, CT.CODE_NM AS "CALL_TYPE_NM"
+							, S.CALLER_NM AS "CALLER_NM"
+							, S.CALLER_HPNO AS "CALLER_HPNO"
+							, CK.CODE_NM AS "CNSLT_KND_NM"
+							, CR.CODE_NM AS "CNSLT_RSLT_NM"
+							, CCK.CODE_NM AS "CNSLT_CUST_KND_NM"
+							, S.CNSLT_TY_CN
+							, S.CNSLT_TY_CN_CODE
+							, S.CNSLT_DSCR
+							, (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = S.CNSLT_USER_ID) AS "CNSLT_NM"
+							, S.CNSLT_MEMO
+							, S.CNSLT_CUST_KND                 /* 상담고객구분 */
+							, S.PART_NO_REASON                 /* 원인품번 */
+							, S.CNSLT_BUSSPLC_KND              /* 상담사업소구분 */
+							, S.CNSLT_BUSSPLC_CD1              /* 상담사업소코드1 */
+							, S.CNSLT_BUSSPLC_CD2              /* 상담사업소코드2 */
+							, S.CNSLT_BUSSPLC_CD3              /* 상담사업소코드3 */
+							, S.CNSLT_BUSSPLC_CD4              /* 상담사업소코드4 */
+							, (FN_GET_CALLINBOUND_ACTDSCR_ALL(S.CNSLT_INCALL_NO)) AS ACT_DSCR_BEFORE
+							, V.ACT_DSCR
+							, S.BNDRY_TRGT_CSTMR_YN
+							, S.CALL_BACK_YN
+							, S.MGR_CNFM_REQ_FLAG
+							, S.SALES_LEAD_FLAG
+							, S.SMS_FILE_ATTACH_FLAG
+							, S.CSTMR_MKT_AGREE_FLAG    		 /* 고객마케팅활용동의FLAG */
+							, S.VOC_CNSLT_TITLE                /* 접수제목 */
+							, S.VOC_RECPT_DSCR                 /* 접수내용 */
+							, S.VOC_RECPTER_OPINION            /* 접수자의견 */
+							, S.CUST_VIN                       /* 고객차대번호 */
+							, S.CUST_VHCLE_NO                  /* 고객차량번호 */
+							, S.CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+							, S.CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+							, TO_CHAR(S.REGIST_DE,'YYYY-MM-DD HH24:MI:SS.DDD') AS REGIST_DE
+							, S.REGISTER
+							, TO_CHAR(S.UPDT_DE,'YYYY-MM-DD HH24:MI:SS.DDD') AS UPDT_DE
+							, S.UPDUSR
+							, '' AS VHCTY_NM
+							/* 고객차량 */
+							, (SELECT VHCLE_MODEL_NM FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = S.CUST_VHCL_MDL) AS CUST_VHCL_MDL_NM
+							, (
+									SELECT VDM.DETAIL_MODEL_NM AS CODE_NM
+									FROM   SI_VHCLE_MODEL VM, SI_VHCLE_DETAIL_MODEL VDM
+									WHERE   VM.VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID
+									AND VDM.VHCLE_MODEL_ID = S.CUST_VHCL_MDL
+									AND VDM.DETAIL_MODEL_ID = S.CUST_VHCL_DETL_MDL
+								) AS CUST_VHCL_DETL_MDL_NM
+							/* 상담차량 */
+							, VMCD.CODE_NM AS VMCD_NM
+							, VHCT.CODE_NM AS VHCT_CD_NM
+							, (SELECT VHCLE_MODEL_NM FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = S.VHCL_MDL) AS VHCL_MDL_NM
+							, (
+									SELECT VDM.DETAIL_MODEL_NM AS CODE_NM
+									FROM   SI_VHCLE_MODEL VM, SI_VHCLE_DETAIL_MODEL VDM
+									WHERE   VM.VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID
+									AND VDM.VHCLE_MODEL_ID = S.VHCL_MDL
+									AND VDM.DETAIL_MODEL_ID = S.VHCL_DETL_MDL
+								) AS VHCL_DETL_MDL_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD1_NO) AS CMPL_CD1_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD2_NO) AS CMPL_CD2_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD3_NO) AS CMPL_CD3_NM
+							, (SELECT CODE_NM FROM CA_CNSLT_CODE WHERE CNSLT_SE_CODE = 'CNSE040' AND CODE_ID = V.CMPL_CD4_NO) AS CMPL_CD4_NM
+							, NVL(V.CMPL_MNG_NO, MCMPL.CMPL_MNG_NO) AS CMPL_MNG_NO
+							, NVL(V.CMPL_RECPT_DT, MCMPL.CMPL_RECPT_DT) AS CMPL_RECPT_DT
+							, V.CMPL_RECPT_SEQ
+							, NVL(V.VOC_KND,S.CNSLT_BUSSPLC_KND) AS VOC_KND
+							/*11111111111111111111111111111111111*/
+							, NVL(V.RECPT_KND, MCMPL.RECPT_KND) AS RECPT_KND
+							, NVL(V.CNSLT_CATEGORY, MCMPL.CNSLT_CATEGORY) AS CNSLT_CATEGORY
+							, NVL(V.RECPT_ROOT, MCMPL.RECPT_ROOT) AS RECPT_ROOT
+							, NVL(V.CSTMR_PROTECT_KND, MCMPL.CSTMR_PROTECT_KND) AS CSTMR_PROTECT_KND
+							, NVL(V.CSTMR_DEMAND, MCMPL.CSTMR_DEMAND) AS CSTMR_DEMAND
+							, NVL(V.CMPL_SITTN_CD, MCMPL.CMPL_SITTN_CD) AS CMPL_SITTN_CD
+							, NVL(V.ONESELF_APPNT_KND, MCMPL.ONESELF_APPNT_KND) AS ONESELF_APPNT_KND
+							, NVL(V.ACCIDENT_YN_CD, MCMPL.ACCIDENT_YN_CD) AS ACCIDENT_YN_CD
+							, NVL(V.PROCESS_STTUS, MCMPL.PROCESS_STTUS) AS PROCESS_STTUS
+							/*11111111111111111111111111111111111 */
+							, NVL(V.CNSLT_TITLE, S.VOC_CNSLT_TITLE) AS CNSLT_TITLE
+							, NVL(V.RECPT_DSCR, S.VOC_RECPT_DSCR) AS RECPT_DSCR
+							, NVL(V.RECPTER_OPINION, S.VOC_RECPTER_OPINION) AS RECPTER_OPINION
+		                    , NVL (V.CMPL_CD1_NO, MCMPL.CMPL_CD1_NO)
+			                   || DECODE(NVL (V.CMPL_CD2_NO, MCMPL.CMPL_CD2_NO),NULL,'','/'||NVL (V.CMPL_CD2_NO, MCMPL.CMPL_CD2_NO))
+			                   || DECODE(NVL (V.CMPL_CD3_NO, MCMPL.CMPL_CD3_NO),NULL,'','/'||NVL (V.CMPL_CD3_NO, MCMPL.CMPL_CD3_NO))
+			                   || DECODE(NVL (V.CMPL_CD4_NO, MCMPL.CMPL_CD4_NO),NULL,'','/'||NVL (V.CMPL_CD4_NO, MCMPL.CMPL_CD4_NO))
+		                      AS CMPL_CD
+							, NVL(V.CMPL_CD_NM, MCMPL.CMPL_CD_NM) AS CMPL_CD_NM
+							, NVL(V.CMPL_CD_LVL, MCMPL.CMPL_CD_LVL) AS CMPL_CD_LVL
+							, NVL(V.CMPL_CD1_NO, MCMPL.CMPL_CD1_NO) AS CMPL_CD1_NO
+							, NVL(V.CMPL_CD2_NO, MCMPL.CMPL_CD2_NO) AS CMPL_CD2_NO
+							, NVL(V.CMPL_CD3_NO, MCMPL.CMPL_CD3_NO) AS CMPL_CD3_NO
+							, NVL(V.CMPL_CD4_NO, MCMPL.CMPL_CD4_NO) AS CMPL_CD4_NO
+							, NVL(V.BUSSPLC_CD1,S.CNSLT_BUSSPLC_CD1) AS BUSSPLC_CD1
+							, NVL(V.BUSSPLC_CD2,S.CNSLT_BUSSPLC_CD2) AS BUSSPLC_CD2
+							, NVL(V.BUSSPLC_CD3,S.CNSLT_BUSSPLC_CD3) AS BUSSPLC_CD3
+							, NVL(V.BUSSPLC_CD4,S.CNSLT_BUSSPLC_CD4) AS BUSSPLC_CD4
+                        FROM
+							CNSLT_INBOUND_MNG S
+							, CA_ITGRT_CSTMR C
+							, COMTCCMMNDETAILCODE REL
+							, COMTCCMMNDETAILCODE CT
+							, COMTCCMMNDETAILCODE CK
+							, COMTCCMMNDETAILCODE CR
+							, COMTCCMMNDETAILCODE CCK
+							, COMTCCMMNDETAILCODE VMCD
+							, COMTCCMMNDETAILCODE VHCT
+							, CSTMR_CMPL_MNG V
+							,(SELECT *
+							  FROM (
+							  		SELECT RANK() OVER (PARTITION BY CNSLT_INCALL_NO ORDER BY CMPL_RECPT_SEQ DESC )RK
+							  				,A.*
+							  		FROM CSTMR_CMPL_MNG A
+							  		WHERE CNSLT_INCALL_NO = #cnsltIncallNo#
+							  )
+							  WHERE RK = 1) MCMPL
+                      WHERE
+							    S.CSTMR_CD = C.CSTMR_ESNTL_ID
+							AND REL.CODE_ID(+) = 'COM073' AND S.CSTMR_REL = REL.CODE(+)
+							AND CT.CODE_ID(+) = 'CALLTYPE' AND S.CALL_TYPE = CT.CODE(+)
+							AND CK.CODE_ID(+) = 'CNSLTKND' AND S.CNSLT_KND = CK.CODE(+)
+							AND CR.CODE_ID(+) = 'CNSLTRSLT' AND S.CNSLT_RSLT = CR.CODE(+)
+							AND CCK.CODE_ID(+) = 'CNSLTCUSTKND' AND S.CNSLT_CUST_KND = CCK.CODE(+)
+							AND VMCD.CODE_ID(+) = 'VMCD' AND S.VMCD = VMCD.CODE(+)
+							AND VHCT.CODE_ID(+) = 'VHCT' AND S.VHCT_CD = VHCT.CODE(+)
+							AND V.MAKR_CD(+) = 'GM' AND S.CNSLT_INCALL_NO = V.CNSLT_INCALL_NO(+) AND S.CSTMR_CD = V.CSTMR_CD(+)
+							AND S.CNSLT_INCALL_NO = MCMPL.CNSLT_INCALL_NO(+)
+							AND S.CNSLT_INCALL_NO = #cnsltIncallNo#
+							AND V.PROC_MGR_USER_ID(+) = #uniqId#  /* 로그인 유저아이디 자신의 불만처리내용만 확인하고 그 외에는(없으면) 신규로 등록되도록 한다 */ 
+    		)X
+			, COMTCCMMNDETAILCODE VOCRCPTKND
+			, COMTCCMMNDETAILCODE VOCCTGY
+			, COMTCCMMNDETAILCODE VOCROOT
+			, COMTCCMMNDETAILCODE VOCCPTT
+			, COMTCCMMNDETAILCODE VOCDMND
+			, COMTCCMMNDETAILCODE VOCADNT
+			, COMTCCMMNDETAILCODE VOCSITT
+			, COMTCCMMNDETAILCODE VOCSTUS
+			, (
+                           SELECT 'GM' AS CODE_ID
+                                   ,'*' AS CODE                    
+                                   ,'한국지엠' AS CODE_NM
+                               FROM DZR_BRCH BR
+                           WHERE ROWNUM = 1
+                           UNION            
+                           SELECT DISTINCT
+                                   'GM'      AS CODE_ID            
+                                   , AREA_GROUP_CD   AS CODE            
+                                   , CM.CODE_NM   AS CODE_NM
+                               FROM TB_ASM610 RP, COMTCCMMNDETAILCODE CM
+                               WHERE RP.AREA_GROUP_CD = CM.CODE
+                               AND CM.CODE_ID = 'RPAREA'
+				)BPC2
+			, (
+					SELECT 
+					    BR.BRCH_CD AS CODE
+					    ,BR.BRCH_NM AS CODE_NM
+					FROM DZR_BRCH BR
+					WHERE BR.BRCH_CD IN (
+					SELECT DISTINCT BRCH_CENTER
+					FROM DZR_BRCH)
+					AND DEALER_CD = 'KR09'
+					AND BRCH_CENTER = '*'     
+					UNION
+					SELECT
+					    DISTINCT
+					    VNDR_GUBN      AS CODE
+					    , VN.CODE_NM   AS CODE_NM
+					FROM TB_ASM610 RP, COMTCCMMNDETAILCODE VN
+					WHERE RP.VNDR_GUBN = VN.CODE
+					AND VN.CODE_ID = 'RPVNDR'
+					AND VNDR_GUBN IS NOT NULL
+				)BPC3
+			, (
+					SELECT BRCH_CD AS CODE
+					        ,BRCH_NM AS CODE_NM
+					FROM DZR_BRCH BR
+					WHERE BR.BRCH_CD IN (
+					                      SELECT DISTINCT BRCH_CD
+					                      FROM DZR_BRCH)
+					AND BRCH_CENTER IN (
+					                      SELECT BRCH_CD
+					                      FROM DZR_BRCH BR
+					                      WHERE BR.BRCH_CD IN (
+					                      SELECT DISTINCT BRCH_CENTER
+					                      FROM DZR_BRCH)
+					                      AND DEALER_CD = 'KR09'
+					                      AND BRCH_CENTER = '*')     
+					UNION
+					SELECT DISTINCT              
+					        CUST_CODE      AS CODE            
+					        , RP.FIRM_NAME AS CODE_NM            
+					FROM TB_ASM610 RP, COMTCCMMNDETAILCODE VN
+					WHERE RP.VNDR_GUBN = VN.CODE
+					AND VN.CODE_ID = 'RPVNDR'
+					AND VNDR_GUBN IS NOT NULL
+				)BPC4
+				WHERE 1=1
+                /* VOC */
+                AND VOCRCPTKND.CODE_ID(+) = 'VOCRCPTKND' AND X.RECPT_KND = VOCRCPTKND.CODE(+) AND X.VOC_KND = VOCRCPTKND.UP_CODE(+)
+                AND VOCCTGY.CODE_ID(+) = 'VOCCTGY' AND X.CNSLT_CATEGORY = VOCCTGY.CODE(+) AND X.VOC_KND = VOCCTGY.UP_CODE(+)
+                AND VOCROOT.CODE_ID(+) = 'VOCROOT' AND X.RECPT_ROOT = VOCROOT.CODE(+) AND X.VOC_KND = VOCROOT.UP_CODE(+)
+                AND VOCCPTT.CODE_ID(+) = 'VOCCPTT' AND X.CSTMR_PROTECT_KND = VOCCPTT.CODE(+) AND X.VOC_KND = VOCCPTT.UP_CODE(+)
+                AND VOCDMND.CODE_ID(+) = 'VOCDMND' AND X.CSTMR_DEMAND = VOCDMND.CODE(+) AND X.VOC_KND = VOCDMND.UP_CODE(+)
+                AND VOCADNT.CODE_ID(+) = 'VOCADNT' AND X.ACCIDENT_YN_CD = VOCADNT.CODE(+) AND X.VOC_KND = VOCADNT.UP_CODE(+)
+                AND VOCSITT.CODE_ID(+) = 'VOCSITT' AND X.CMPL_SITTN_CD = VOCSITT.CODE(+) AND X.VOC_KND = VOCSITT.UP_CODE(+)
+                AND VOCSTUS.CODE_ID(+) = 'VOCSTUS' AND X.PROCESS_STTUS = VOCSTUS.CODE(+) AND X.VOC_KND = VOCSTUS.UP_CODE(+)
+				/* 사업소 */
+				AND X.BUSSPLC_CD2 = BPC2.CODE(+)
+				AND X.BUSSPLC_CD3 = BPC3.CODE(+)
+				AND X.BUSSPLC_CD4 = BPC4.CODE(+)
+    ]]>
+    </select>  
+
+
+    <!--
+        쿼리명 : 인바운드상담내용 수정
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.20    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.12.20
+    -->
+    <update id="cnsltInBoundMngDAO.updateCnsltInBoundReg">
+    <![CDATA[
+        UPDATE
+                CNSLT_INBOUND_MNG
+           SET
+			        CALL_TYPE                          = #callType#                         /* 통화유형 */
+			      , CSTMR_REL                          = #cstmrRel#                         /* 고객관계 */
+			      , CALLER_NM                          = #callerNm#                         /* 통화자명 */
+			      , CALLER_HPNO                        = #callerHpno#                         /* 통화자핸드폰 */
+			      /* , CNSLT_TY_CN                        = cnsltTyCn                        상담유형내용 */
+			      /* , CNSLT_TY_CN_CODE                   = cnsltTyCnCode                    상담유형내용 */
+			      , CNSLT_KND                          = #cnsltKnd#                         /* 상담구분 */
+			      , CUST_VMCD                          = #custVmcd#                         /* 고객차량 제작사 브랜드 */
+			      , CUST_VHCT_CD                       = #custVhctCd#                       /* 고객차량 차종 */
+			      , CUST_VHCL_MDL                      = #custVhclMdl#                      /* 고객차량 모델 */
+			      , CUST_VHCL_DETL_MDL                 = #custVhclDetlMdl#                  /* 고객차량 세부모델 */
+			      , VMCD                               = #vmcd#                             /* 제작사 브랜드 */
+			      , VHCT_CD                            = #vhctCd#                           /* 차종 */
+			      , VHCL_MDL                           = #vhclMdl#                          /* 모델 */
+			      , VHCL_DETL_MDL                      = #vhclDetlMdl#                      /* 세부모델 */
+			      , CNSLT_RSLT                         = #cnsltRslt#                        /* 상담결과 */
+			      , CNSLT_DSCR                         = #cnsltDscr#                        /* 상담내용 */
+			      , CNSLT_STT_DSCR                     = #cnsltSttDscr#                     /* 상담STT내용 */
+			      , CNSLT_MEMO                         = #cnsltMemo#                        /* 상담메모 */
+			      , CNSLT_CUST_KND                     = #cnsltCustKnd#                     /* 상담고객구분 */
+			      , PART_NO_REASON                     = #partNoReason#                     /* 원인품번 */
+			      , CNSLT_BUSSPLC_KND                  = #cnsltBussplcKnd#                  /* 상담사업소구분 */
+			      , CNSLT_BUSSPLC_CD1                  = #cnsltBussplcCd1#                  /* 상담사업소코드1 */
+			      , CNSLT_BUSSPLC_CD2                  = #cnsltBussplcCd2#                  /* 상담사업소코드2 */
+			      , CNSLT_BUSSPLC_CD3                  = #cnsltBussplcCd3#                  /* 상담사업소코드3 */
+			      , CNSLT_BUSSPLC_CD4                  = #cnsltBussplcCd4#                  /* 상담사업소코드4 */
+			      /* , ACT_DSCR                           = actDscr                          조치내용 - 매니저처리화면에서 조치내용입력하고 cmpl테이블에 저장한다 */
+			      /* , RECORD_CD                          = recordCd                         녹취코드 */
+			      /*, BNDRY_TRGT_CSTMR_YN                = #bndryTrgtCstmrYn#                  경계대상고객여부 */
+			      /*, MGR_CNFM_REQ_FLAG				   = #mgrCnfmReqFlag#					 매니저확인요청FLAG */
+			      /*, SALES_LEAD_FLAG				   = #salesLeadFlag#					 SALES리드판매FLAG */
+			      /*, SMS_FILE_ATTACH_FLAG				   = #smsFileAttachFlag#					 고객SMS파일첨부FLAG */
+			      /*, CSTMR_MKT_AGREE_FLAG				   = #cstmrMktAgreeFlag#					 고객마케팅활용동의FLAG */
+			      , CALL_BACK_YN                       = #callBackYn#                       /* 콜백여부 */
+			      , REL_CNSLT_INCALL_NO                = #relCnsltIncallNo#                 /* 참조콜번호 */
+			      , UPDT_DE                            = SYSDATE                           /* 수정일자 */
+			      , UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+	        	CNSLT_INCALL_NO                    = #cnsltIncallNo#                    /* 인바운드콜번호 */
+	     AND 	CSTMR_CD                           = #cstmrCd#                          /* 콜고객코드 */
+    ]]>
+	        	
+		<isNotEqual property="mgrProcModeYn" compareValue="Y"> <!-- 매니저처리모드가 아닐경우에는 상담원 자신이 등록한 콜정보만 수정할 수 있다 -->
+    <![CDATA[
+	     AND 	CNSLT_USER_ID                      = #cnsltUserId#                      /* 상담원아이디 - 같은 콜번호로 다른 상담원이 추가등록하는일이 일단은 없다.  해당 업데이트는 매니저모드에서 매니저가 수정 업데이트한다*/
+    ]]>
+		</isNotEqual>
+    </update> 
+
+
+
+
+
+
+
+
+
+    <!--
+        쿼리명 : 고객정보 load
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.21    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.12.21
+    -->
+    <select id="cnsltInBoundMngDAO.loadCstmrLastInfo_BACK" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <isNotEmpty property="cstmrCd">
+    <![CDATA[
+				SELECT 
+				    A.CSTMR_ESNTL_ID AS CSTMR_CD
+				    ,A.CSTMR_NM
+				    ,A.HPNO
+				    ,A.TELNO
+				    ,A.BRTHDY
+				    ,A.EMAIL_ADRES
+				    ,A.EMAIL_DOMAIN
+				    ,DECODE(A.EMAIL_ADRES,NULL,'',A.EMAIL_ADRES||'@'||A.EMAIL_DOMAIN) AS EMAIL_ADDRESS
+				    ,A.HOUSE_ZIP
+				    ,A.HOUSE_ADRES
+				    ,A.HOUSE_ADRES_DETAIL
+				    ,A.CSTMR_MEMO
+				    ,B.BIRTH_SEX
+				    ,REPLACE(TO_SINGLE_BYTE(B.VEHI_NO01),' ','') AS VEHI_NO01
+				    ,REPLACE(TO_SINGLE_BYTE(B.VEHI_NO02),' ','') AS VEHI_NO02
+				    ,B.CHASSIS_NO
+				FROM CA_ITGRT_CSTMR A
+				,(
+				        SELECT RANK() OVER (PARTITION BY CSTMR_CD ORDER BY UPD_DT DESC )RK
+				        ,X.*
+				        FROM (
+				                SELECT CI.*
+				                , CHASSIS_NO
+				                , TO_DATE(DCM.UPDT_DATE,'YYYY-MM-DD HH24:MI:SS') AS UPD_DT
+				                FROM CSTMR_INFO_LINK_MNG CI, DCM_OUT_BEF DCM
+				                WHERE CI.REL_KND = 'S'
+				                AND CI.DEALER_CD = DCM.DEALER_CD(+) AND CI.BIRTH_SEX = DCM.BUSINESS_NO(+)
+				                AND CSTMR_CD = #cstmrCd#
+				                UNION 
+				                SELECT CI.*
+				                , TB.VIN_COMP||TB.VIN_TYPE||TB.VIN_CHECK||TB.VIN_MDL_YEAR||TB.VIN_PLAN||TB.VIN_BODY_NO AS VIN
+				                , TO_DATE(TB.REG_DTTM,'YYYY-MM-DD HH24:MI:SS') AS UPD_DT
+				                FROM CSTMR_INFO_LINK_MNG CI, TB_ASM413 TB
+				                WHERE CI.REL_KND = 'A'
+				                AND CI.BIRTH_SEX = TB.CUST_ID(+)
+				                AND CSTMR_CD = #cstmrCd#
+				        )X
+				)B
+				WHERE RK = 1
+				AND A.CSTMR_ESNTL_ID = B.CSTMR_CD
+				AND A.CSTMR_ESNTL_ID = #cstmrCd#
+    ]]>
+    <![CDATA[
+         ORDER BY A.CSTMR_NM, A.CSTMR_ESNTL_ID
+    ]]>
+    </isNotEmpty>
+    
+    <isEmpty property="cstmrCd">
+    <![CDATA[
+				SELECT 
+				    A.CSTMR_ESNTL_ID AS CSTMR_CD
+				    ,A.CSTMR_NM
+				    ,A.HPNO
+				    ,A.TELNO
+				    ,A.BRTHDY
+				    ,A.EMAIL_ADRES
+				    ,A.EMAIL_DOMAIN
+				    ,DECODE(A.EMAIL_ADRES,NULL,'',A.EMAIL_ADRES||'@'||A.EMAIL_DOMAIN) AS EMAIL_ADDRESS
+				    ,A.HOUSE_ZIP
+				    ,A.HOUSE_ADRES
+				    ,A.HOUSE_ADRES_DETAIL
+				    ,A.CSTMR_MEMO
+				    ,B.BIRTH_SEX
+				    ,REPLACE(TO_SINGLE_BYTE(B.VEHI_NO01),' ','') AS VEHI_NO01
+				    ,REPLACE(TO_SINGLE_BYTE(B.VEHI_NO02),' ','') AS VEHI_NO02
+				    ,B.CHASSIS_NO
+				FROM CA_ITGRT_CSTMR A
+				,(
+				        SELECT RANK() OVER (PARTITION BY CSTMR_CD ORDER BY UPD_DT DESC )RK
+				        ,X.*
+				        FROM (
+				                SELECT CI.*
+				                , CHASSIS_NO
+				                , TO_DATE(DCM.UPDT_DATE,'YYYY-MM-DD HH24:MI:SS') AS UPD_DT
+				                FROM CSTMR_INFO_LINK_MNG CI, DCM_OUT_BEF DCM, DBM_CUST DC
+				                WHERE CI.REL_KND = 'S'
+				                AND CI.BIRTH_SEX = DCM.BUSINESS_NO(+)
+				                AND DCM.DEALER_CD = DC.DEALER_CD(+) AND DCM.BUSINESS_NO = DC.BUS_RES_NO(+)
+				                AND DC.RESIDENT_NM
+				                    ||FN_GET_BIRTH_YEAR(REGEXP_REPLACE(DC.BUS_RES_NO, '[^0-9]+'))||SUBSTR(REGEXP_REPLACE(DC.BUS_RES_NO, '[^0-9]+'),7,1)
+				                    ||REGEXP_REPLACE(DC.HAND_PHONE_NO, '[^0-9]+')
+				                    ||REPLACE(E_MAIL,'@','')
+				                    =
+				                    #cstmrNm#||#brthdy#||REGEXP_REPLACE(#hpno#, '[^0-9]+')||REPLACE(#emailAdres#,'@','')
+				                UNION 
+				                SELECT CI.*
+				                , TB.VIN_COMP||TB.VIN_TYPE||TB.VIN_CHECK||TB.VIN_MDL_YEAR||TB.VIN_PLAN||TB.VIN_BODY_NO AS VIN
+				                , TO_DATE(TB.REG_DTTM,'YYYY-MM-DD HH24:MI:SS') AS UPD_DT
+				                FROM CSTMR_INFO_LINK_MNG CI, TB_ASM413 TB, DBM_CUST DC
+				                WHERE CI.REL_KND = 'A'
+				                AND CI.BIRTH_SEX = TB.CUST_ID(+)
+				                AND TB.CUST_ID = DC.BUS_RES_NO(+)
+				                AND DC.RESIDENT_NM
+				                    ||FN_GET_BIRTH_YEAR(REGEXP_REPLACE(DC.BUS_RES_NO, '[^0-9]+'))||SUBSTR(REGEXP_REPLACE(DC.BUS_RES_NO, '[^0-9]+'),7,1)
+				                    ||REGEXP_REPLACE(DC.HAND_PHONE_NO, '[^0-9]+')
+				                    ||REPLACE(E_MAIL,'@','')
+				                    =
+				                    #cstmrNm#||#brthdy#||REGEXP_REPLACE(#hpno#, '[^0-9]+')||REPLACE(#emailAdres#,'@','')
+				        )X
+				)B
+				WHERE RK = 1
+				AND A.CSTMR_ESNTL_ID = B.CSTMR_CD
+				AND A.CSTMR_NM||A.BRTHDY||A.HPNO||A.EMAIL_ADRES||A.EMAIL_DOMAIN = #cstmrNm#||#brthdy#||#hpno#||REPLACE(#emailAdres#,'@','')
+    ]]>
+    <![CDATA[
+         ORDER BY A.CSTMR_NM, A.CSTMR_ESNTL_ID
+    ]]>
+    </isEmpty>
+    </select>
+
+
+
+
+
+
+
+
+
+    <!--
+        쿼리명 : 고객정보 load
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2018.12.21    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.12.21
+    -->
+    <select id="cnsltInBoundMngDAO.loadCstmrLastInfo" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+		    SELECT DISTINCT L.* FROM (
+		    SELECT RANK() OVER (PARTITION BY CSTMR_CD ORDER BY NVL(NVL(LAST_RCPT_DATE,REGIST_DE),TO_DATE('1111-11-11')) DESC, VIN DESC )RK
+		    	   ,X.*
+			FROM (
+			            SELECT
+			                    CCM.CSTMR_ESNTL_ID AS CSTMR_CD
+							      , NVL(CLM.CUST_NM,CCM.CSTMR_NM) AS CSTMR_NM                                             /* 콜고객명 */
+							      , NVL(CLM.HAND_PHONE_NO,CCM.HPNO) AS HPNO                                                 /* 핸드폰번호 */
+							      , CCM.TELNO AS TELNO                                                /* 전화번호 */
+							      , NVL(SUBSTR(CLM.BIRTH_SEX,1,6),CCM.BRTHDY) AS BRTHDY                                               /* 생년월일 */
+							      , NVL(SUBSTR(CLM.E_MAIL,1,INSTR(CLM.E_MAIL,'@')-1),CCM.EMAIL_ADRES) AS EMAIL_ADRES                                          /* 이메일주소 */
+							      , NVL(SUBSTR(CLM.E_MAIL,INSTR(CLM.E_MAIL,'@')+1),CCM.EMAIL_DOMAIN) AS EMAIL_DOMAIN                                         /* 이메일도메인 */
+							      , NVL(SUBSTR(CLM.E_MAIL,INSTR(CLM.E_MAIL,'@')+1),CCM.EMAIL_DOMAIN) AS SELECT_EMAIL_DOMAIN                                         /* 이메일도메인 */
+			                      , NVL(CLM.E_MAIL,DECODE(CCM.EMAIL_ADRES,NULL,'',CCM.EMAIL_ADRES||'@'||CCM.EMAIL_DOMAIN)) AS EMAIL_ADDRESS
+			                    ,CCM.HOUSE_ZIP AS HOUSE_ZIP
+			                    ,CCM.HOUSE_ADRES AS HOUSE_ADRES
+			                    ,CCM.HOUSE_ADRES_DETAIL AS HOUSE_ADRES_DETAIL
+			                    ,CLM.BIRTH_SEX
+			                    ,NVL(CLM.REGIST_DE,CCM.REGIST_DE) AS REGIST_DE
+			                    ,REPLACE(IMC.VEHI_NO01,' ','') AS VEHI_NO01
+			                    ,REPLACE(IMC.VEHI_NO02,' ','') AS VEHI_NO02
+			                    ,VW.VIN
+						        ,(CASE WHEN IMC.VIN IS NOT NULL THEN 'A'
+						               WHEN ISC.VIN IS NOT NULL THEN 'S' 
+						               ELSE 'X' END) AS IF_KND
+			                    ,TO_CHAR(IMC.LAST_RCPT_DATE,'YYYY-MM-DD') AS LAST_RCPT_DATE
+			                    ,IMC.LAST_READ_KM
+			                    ,(SELECT VHCTY_CODE FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID) AS LAST_VHCL_MDL
+			                    ,(SELECT VHCLE_MODEL_NM FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID) AS LAST_VHCL_MDL_NM
+			                    ,VDM.VHCLE_MODEL_ID
+			                    ,IMC.SALE_MDL
+			                    ,IMC.TYPE_YEAR
+			                    ,IMC.LAST_CUST_CODE
+                                ,(CASE WHEN IMC.VIN IS NOT NULL THEN (SELECT FIRM_NAME FROM IF_REPLC WHERE CUST_TYPE = IMC.LAST_CUST_TYPE AND CUST_CODE = IMC.LAST_CUST_CODE AND MAKER = IMC.MAKER) 
+                                       WHEN ISC.VIN IS NOT NULL THEN (SELECT BRCH_NM FROM IF_DELIVY WHERE CHASSIS_NO = IMC.VIN)
+                                       ELSE '' END) AS LAST_CUST_NM
+			                    /* 최근인바운드상담 */
+			                    ,INB.CSTMR_MEMO
+			                    ,INB.CNSLT_MEMO
+				                , INB.CALL_TYPE
+				                , INB.CSTMR_REL
+				                , INB.CNSLT_KND
+				                , INB.CUST_VMCD                      /* 최근상담 고객차량 제작사 브랜드 */
+				                , INB.CUST_VHCT_CD                   /* 최근상담 고객차량 차종 */
+				                , INB.CUST_VHCL_MDL                  /* 최근상담 고객차량 모델 */
+				                , INB.CUST_VHCL_DETL_MDL             /* 최근상담 고객차량 세부모델 */
+				                , INB.CUST_VHCLE_NO					 /* 최근상담 고객차량번호 */
+								, INB.CUST_VIN                       /* 고객차대번호 */
+								, INB.CSTMR_ESNTL_ID                 /* CA_CAR_ACQS 고객고유ID */
+								, INB.CSTMR_VHCLE_SEQ                /* CA_CAR_ACQS 고객차량순번 */
+				                , INB.VMCD
+				                , INB.VHCT_CD
+				                , INB.VHCL_MDL
+				                , INB.VHCL_DETL_MDL
+				                , INB.CNSLT_RSLT
+				                , REL.CODE_NM AS "CSTMR_REL_NM"
+				                , CT.CODE_NM AS "CALL_TYPE_NM"
+				                , INB.CALLER_NM AS "CALLER_NM"
+				                , INB.CALLER_HPNO AS "CALLER_HPNO"
+				                , CK.CODE_NM AS "CNSLT_KND_NM"
+				                , CR.CODE_NM AS "CNSLT_RSLT_NM"
+				                , CCK.CODE_NM AS "CNSLT_CUST_KND_NM"
+				                , INB.CNSLT_TY_CN
+				                , INB.CNSLT_DSCR
+				                , (SELECT USER_NM FROM COMTNEMPLYRINFO WHERE ESNTL_ID = INB.CNSLT_USER_ID) AS "CNSLT_NM"
+				                , INB.CNSLT_CUST_KND                 /* 상담고객구분 */
+				                , INB.PART_NO_REASON                 /* 원인품번 */
+				                /* 고객차량 */
+				                , (SELECT VHCLE_MODEL_NM FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = INB.CUST_VHCL_MDL) AS CUST_VHCL_MDL_NM
+				                , (
+				                        SELECT VDM.DETAIL_MODEL_NM AS CODE_NM
+				                        FROM   SI_VHCLE_MODEL VM, SI_VHCLE_DETAIL_MODEL VDM
+				                        WHERE   VM.VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID
+				                        AND VDM.VHCLE_MODEL_ID = INB.CUST_VHCL_MDL
+				                        AND VDM.DETAIL_MODEL_ID = INB.CUST_VHCL_DETL_MDL
+				                    ) AS CUST_VHCL_DETL_MDL_NM
+				                /* 상담차량 */
+				                , VMCD.CODE_NM AS VMCD_NM
+				                , VHCT.CODE_NM AS VHCT_CD_NM
+				                , (SELECT VHCLE_MODEL_NM FROM SI_VHCLE_MODEL WHERE VHCLE_MODEL_ID = INB.VHCL_MDL) AS VHCL_MDL_NM
+				                , (
+				                        SELECT VDM.DETAIL_MODEL_NM AS CODE_NM
+				                        FROM   SI_VHCLE_MODEL VM, SI_VHCLE_DETAIL_MODEL VDM
+				                        WHERE   VM.VHCLE_MODEL_ID = VDM.VHCLE_MODEL_ID
+				                        AND VDM.VHCLE_MODEL_ID = INB.VHCL_MDL
+				                        AND VDM.DETAIL_MODEL_ID = INB.VHCL_DETL_MDL
+				                    ) AS VHCL_DETL_MDL_NM
+						/*00000000000000000000000000000000000000*/
+			            FROM CA_ITGRT_CSTMR CCM
+			                ,CSTMR_INFO_LINK_MNG CLM
+			                ,CA_CAR_ACQS CCA
+			                ,VW_ITGRT_CAR VW
+			                ,IF_MNTNC_CAR IMC
+			                ,IF_SALE_CAR ISC
+			                ,SI_VHCLE_DETAIL_MODEL VDM
+			                ,(  /* 최근 상담정보 */
+			                    SELECT *
+			                    FROM (
+			                        SELECT 
+			                        RANK() OVER (PARTITION BY A.CSTMR_CD ORDER BY A.CNSLT_INCALL_NO DESC )RK
+                                    ,B.CSTMR_MEMO
+			                        ,A.* 
+			                        FROM CNSLT_INBOUND_MNG A, CA_ITGRT_CSTMR B
+			                        WHERE A.CSTMR_CD = B.CSTMR_ESNTL_ID
+			                        AND A.CSTMR_CD = #cstmrCd#
+			                    )WHERE RK = 1
+			                )INB
+			                , COMTCCMMNDETAILCODE REL
+			                , COMTCCMMNDETAILCODE CT
+			                , COMTCCMMNDETAILCODE CK
+			                , COMTCCMMNDETAILCODE CR
+			                , COMTCCMMNDETAILCODE CCK
+			                , COMTCCMMNDETAILCODE VMCD
+			                , COMTCCMMNDETAILCODE VHCT
+			            WHERE 1=1
+			            AND CCM.CSTMR_ESNTL_ID = INB.CSTMR_CD(+)
+			            AND CCM.CSTMR_ESNTL_ID = CLM.CSTMR_CD(+)
+			            /*AND CLM.REL_KND(+) = 'A'*/ 
+			            AND CLM.CSTMR_CD = CCA.CSTMR_ESNTL_ID(+)
+			            AND VIN_COMP||VIN_TYPE||VIN_CHECK||VIN_MDL_YEAR||VIN_PLAN||VIN_BODY_NO = CCA.VHCLE_ESNTL_ID(+)
+			            AND CCA.VHCLE_ESNTL_ID = VW.VIN(+)
+			            AND VW.VIN = IMC.VIN(+)
+			            AND VW.VIN = ISC.VIN(+)
+			            AND IMC.SALE_MDL = VDM.IF_MDL_CODE(+)
+		                AND REL.CODE_ID(+) = 'COM073' AND INB.CSTMR_REL = REL.CODE(+)
+		                AND CT.CODE_ID(+) = 'CALLTYPE' AND INB.CALL_TYPE = CT.CODE(+)
+		                AND CK.CODE_ID(+) = 'CNSLTKND' AND INB.CNSLT_KND = CK.CODE(+)
+		                AND CR.CODE_ID(+) = 'CNSLTRSLT' AND INB.CNSLT_RSLT = CR.CODE(+)
+		                AND CCK.CODE_ID(+) = 'CNSLTCUSTKND' AND INB.CNSLT_CUST_KND = CCK.CODE(+)
+		                AND VMCD.CODE_ID(+) = 'VMCD' AND INB.VMCD = VMCD.CODE(+)
+		                AND VHCT.CODE_ID(+) = 'VHCT' AND INB.VHCT_CD = VHCT.CODE(+)
+			            /*AND VW.VIN IS NOT NULL 신규고객이 차대번호 없을수도 있다 */
+						AND CCM.CSTMR_ESNTL_ID = #cstmrCd#
+			)X)L WHERE RK = 1
+    ]]>
+    </select>
+
+
+
+
+
+    <!--
+        쿼리명 : 리콜내역 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.19    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.02.19
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCarRecallList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT *
+						FROM (
+						        SELECT VIN_COMP||VIN_TYPE||VIN_CHECK||VIN_MDL_YEAR||VIN_PLAN||VIN_BODY_NO AS VIN
+						                /* 차량별캠페인 */
+						                , A720.VIN_COMP                       /* 차대번호1 */
+						                , A720.VIN_TYPE                       /* 차대번호2 */
+						                , A720.VIN_CHECK                      /* 차대번호3 */
+						                , A720.VIN_MDL_YEAR                   /* 차대번호4 */
+						                , A720.VIN_PLAN                       /* 차대번호5 */
+						                , A720.VIN_BODY_NO                    /* 차대번호6 */
+						                , A720.VIN_DUP                        /* 차대번호7 */
+						                , A720.MAKER                          /* 메이커 */
+						                , A720.CAMP_NO                        /* 캠패인번호 */
+						                , A720.CUST_TYPE                      /* 공장타입 */
+						                , A720.CUST_CODE                      /* 공장코드 */
+						                , A720.STAT_1                         /* 캠패인상태1 */
+						                , A720.STAT_2                         /* 캠패인상태2  1작업전, 3작업완료 */
+						                , A720.STAT_DTTM                      /* 상태변경일시 */
+						                , A720.RCPT_MARK                      /* 캠패인완료상태 */
+						                , A720.REGI_DATE                      /* 등록일 */
+						                , A720.WCR_NO                         /*   */
+						                , A720.MEMO                           /*   */
+						                , A720.CONTACT_SHOP_CODE              /*  */
+						                , A720.CONTACT_DATE                   /*  */
+						                , A720.GM_CONTACT_DATE                /*  */
+						                , A720.INTER_STATUS                   /*  */
+						                , A720.EXPR_DATE                      /*  */
+						                , A720.CLAIM_ID                       /*  */
+						                , A720.RELEASE_DATE                   /*  */
+						                , A720.RELEASE_BU                     /*  */
+						                , A720.SEND_MAIL_YN                   /*  */
+						                /* 캠페인 */
+						                , A700.DOCU_NO                        /* 문서번호 */
+						                , A700.JOB_MAKER                      /* 작업메이커 */
+						                , A700.JOB_CODE                       /* 작업코드 */
+						                , A700.CAMP_FROM_DATE                 /* 캠패인시작일 */
+						                , A700.CAMP_END_DATE                  /* 캠패인종료일 */
+						                , A700.STAT                           /* 상태 */
+						                , A700.STAT_DATE                      /* 상태변경일 */
+						                , A700.EXPT_CNT                       /*   */
+						                , A700.TRGT_CNT                       /*   */
+						                , A700.RCPT_CNT                       /* 접수횟수 */
+						                , A700.REPR_CNT                       /*   */
+						                , A700.MDL_FLAG                       /* 차종구분 */
+						                , A700.SALE_MDL                       /* 차종코드 */
+						                , A700.DATE_FLAG                      /* 날짜구분 */
+						                , A700.FROM_DATE                      /* 캠패인시작일 */
+						                , A700.TO_DATE                        /* 캠패인종료일 */
+						                , A700.OPTN_FLAG                      /* 옵션구분 */
+						                , A700.OPTN_01                        /* 옵션1 */
+						                , A700.OPTN_02                        /* 옵션2 */
+						                , A700.OPTN_03                        /* 옵션3 */
+						                , A700.RMRK                           /* 캠패인명 */
+						                , A700.DOCU_DATE                      /* 문서등록일 */
+						                , A700.CB_GUBN                        /*   */
+						                , A700.CAUS_MAKER                     /* 보증작업메이커 */
+						                , A700.CAUS_PART_NO                   /* 보증부품번호 */
+						                , A700.CAUS_VNDR_TYPE                 /* 주원인거래처구분 */
+						                , A700.CAUS_VNDR                      /* 주원인거래처코드 */
+						                , A700.CHNG_PART_NO                   /* 변경부품번호 */
+						                , A700.CAR_DFCT                       /* 차량상황 */
+						                , A700.PART_DFCT                      /* 부품결함 */
+						                , A700.CAMP_GUBNT                     /* 보증구분 */
+						                , A700.CAMP_CHECK                     /* 캠패인확인 */
+						                , A700.DFCT_RESN                      /* 결함원인 */
+						                , A700.CHRG_RETN_CASE                 /*   */
+						                , A700.AUTO_RECALL_FLAG               /*   */
+						                , A700.TECH_RPT_NO                    /*   */
+						                , A700.EXTRA_RMRK                     /*   */
+						                , A700.MILEAGE                        /*   */
+						                , A700.REG_VIN_FROM_DATE              /*   */
+						                , A700.REG_VIN_TO_DATE                /*   */
+						                , A700.FA_TYPE                        /* Global Field Action Type PSR for Product Safety Recall  NCR for Noncompliance Recall  CSP for Customer Satisfaction Program PER for Product Emission Recall  SPP for Special Policy  SUB for Yellow Top Bulletin */
+						                , A700.ENG_DESC                       /*   */
+						                , A700.FA_NO                          /*   */
+						                , A700.COMP_CAT_CD                    /* COMPLAINT CATEGORY CODE - Interface 데이터<사용안함> */
+						                , A700.COMP_CD                        /* COMPLAINT CODE - Interface 데이터 */
+						                , A700.CAUS_CD                        /* CAUSE CODE - Interface 데이터 */
+						                , A700.READ_KM_FR                     /* 시작 주행거리 */
+						                , A700.READ_KM_TO                     /* 종료 주행거리 */
+						                , A700.SAFE_RISK_DESC                 /*  */
+						                , A700.REMEDY_DESC                    /*  */
+						                , A700.CUSTOMER_ACTION                /*  */
+						                , A700.PART_AVAILABILITY              /*  */
+						                , A700.NOTES                          /*  */
+						                /*, A700.SEND_MAIL_YN                     */
+						                , A700.GFA_STATUS                     /*  */
+						                , A700.VERSION                        /*  */
+						        FROM TB_ASM720 A720, TB_ASM700 A700
+						        WHERE A720.MAKER = A700.MAKER AND A720.CAMP_NO = A700.CAMP_NO
+						)WHERE VIN = #searchVin#
+    ]]>
+
+            
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 리콜내역 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.02.19    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.02.19
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCarRecallListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+					  FROM (
+						        SELECT VIN_COMP||VIN_TYPE||VIN_CHECK||VIN_MDL_YEAR||VIN_PLAN||VIN_BODY_NO AS VIN
+						                /* 차량별캠페인 */
+						                , A720.VIN_COMP                       /* 차대번호1 */
+						                , A720.VIN_TYPE                       /* 차대번호2 */
+						                , A720.VIN_CHECK                      /* 차대번호3 */
+						                , A720.VIN_MDL_YEAR                   /* 차대번호4 */
+						                , A720.VIN_PLAN                       /* 차대번호5 */
+						                , A720.VIN_BODY_NO                    /* 차대번호6 */
+						                , A720.VIN_DUP                        /* 차대번호7 */
+						                , A720.MAKER                          /* 메이커 */
+						                , A720.CAMP_NO                        /* 캠패인번호 */
+						                , A720.CUST_TYPE                      /* 공장타입 */
+						                , A720.CUST_CODE                      /* 공장코드 */
+						                , A720.STAT_1                         /* 캠패인상태1 */
+						                , A720.STAT_2                         /* 캠패인상태2  1작업전, 3작업완료 */
+						                , A720.STAT_DTTM                      /* 상태변경일시 */
+						                , A720.RCPT_MARK                      /* 캠패인완료상태 */
+						                , A720.REGI_DATE                      /* 등록일 */
+						                , A720.WCR_NO                         /*   */
+						                , A720.MEMO                           /*   */
+						                , A720.CONTACT_SHOP_CODE              /*  */
+						                , A720.CONTACT_DATE                   /*  */
+						                , A720.GM_CONTACT_DATE                /*  */
+						                , A720.INTER_STATUS                   /*  */
+						                , A720.EXPR_DATE                      /*  */
+						                , A720.CLAIM_ID                       /*  */
+						                , A720.RELEASE_DATE                   /*  */
+						                , A720.RELEASE_BU                     /*  */
+						                , A720.SEND_MAIL_YN                   /*  */
+						        FROM TB_ASM720 A720, TB_ASM700 A700
+						        WHERE A720.MAKER = A700.MAKER AND A720.CAMP_NO = A700.CAMP_NO
+					  )WHERE VIN = #searchVin#
+    ]]>
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--
+        쿼리명 : 개인소모품교환 목록
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.03.05    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.03.05
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCarPeriodList" parameterClass="cnsltInBoundMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT *
+						FROM (
+						        SELECT VIN_COMP||VIN_TYPE||VIN_CHECK||VIN_MDL_YEAR||VIN_PLAN||VIN_BODY_NO AS VIN
+						                /* 개인소모품교환 */
+										, VIN_COMP                       /* 차대번호1 */
+										, VIN_TYPE                       /* 차대번호2 */
+										, VIN_CHECK                      /* 차대번호3 */
+										, VIN_MDL_YEAR                   /* 차대번호4 */
+										, VIN_PLAN                       /* 차대번호5 */
+										, VIN_BODY_NO                    /* 차대번호6 */
+										, JOB_CODE                       /* 작업코드 */
+										, MAKER                          /* 메이커 */
+										, MDL_CODE                       /* 모델코드 */
+										, DELI_DATE                      /* 출고일자 */
+										, EXP_RCPT_DATE                  /* 예상입고일자 */
+										, EXP_READ_KM                    /* 예상주행거리 */
+										, EXP_CUST_TYPE                  /*   */
+										, EXP_CUST_CODE                  /* 사업소코드 */
+										, LST_READ_KM                    /* 마지막주행거리 */
+										, LST_RCPT_DATE                  /*   */
+										, LST_RCPT_SEQ                   /*   */
+										, LST_CUST_TYPE                  /*   */
+										, LST_CUST_CODE                  /*   */
+										, LST_CUST_ID                    /*   */
+										, LST_READ_KM_AVG                /*   */
+										, SMSYN                          /* SMS수신여부 */
+										, EMLYN                          /* E-MAIL수신여부 */
+										, HIST_DATE                      /* 최근교환일자 */
+										, HIST_DISTANCE                  /* 최근교환주행거리 */
+										, SMS_SEND_YN                    /* SMS발송여부 */
+										, REG_CD                         /*   */
+										, REG_DT                         /*   */
+										, MOD_CD                         /*   */
+										, MOD_DT                         /*   */
+										, JOB_PERIOD                     /*   */
+										, LST_READ_KM_AVG_FG             /*   */
+										, LST_CUST_ID_OLD                /* 마지막 본인인증값 */
+						        FROM IF_CAR_PERIOD
+						)WHERE VIN = #searchVin#
+    ]]>
+
+            
+    <![CDATA[
+                     ) TB
+    ]]>
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isNotEmpty property="sortColNm">
+            <![CDATA[
+                              $sortColNm$
+            ]]>
+            </isNotEmpty>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 개인소모품교환 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        ##########    ######    ####################
+        2019.03.05    CJJ     최초 생성
+
+        작성자 : CJJ
+        최초작성일 : 2019.03.05
+    -->
+    <select id="cnsltInBoundMngDAO.selectCallCarPeriodListCnt" parameterClass="cnsltInBoundMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+                      SELECT
+                              COUNT(1) as cnt
+					  FROM (
+						        SELECT VIN_COMP||VIN_TYPE||VIN_CHECK||VIN_MDL_YEAR||VIN_PLAN||VIN_BODY_NO AS VIN
+						                /* 개인소모품교환 */
+										, VIN_COMP                       /* 차대번호1 */
+										, VIN_TYPE                       /* 차대번호2 */
+										, VIN_CHECK                      /* 차대번호3 */
+										, VIN_MDL_YEAR                   /* 차대번호4 */
+										, VIN_PLAN                       /* 차대번호5 */
+										, VIN_BODY_NO                    /* 차대번호6 */
+										, JOB_CODE                       /* 작업코드 */
+										, MAKER                          /* 메이커 */
+										, MDL_CODE                       /* 모델코드 */
+										, DELI_DATE                      /* 출고일자 */
+										, EXP_RCPT_DATE                  /* 예상입고일자 */
+										, EXP_READ_KM                    /* 예상주행거리 */
+										, EXP_CUST_TYPE                  /*   */
+										, EXP_CUST_CODE                  /* 사업소코드 */
+										, LST_READ_KM                    /* 마지막주행거리 */
+										, LST_RCPT_DATE                  /*   */
+										, LST_RCPT_SEQ                   /*   */
+										, LST_CUST_TYPE                  /*   */
+										, LST_CUST_CODE                  /*   */
+										, LST_CUST_ID                    /*   */
+										, LST_READ_KM_AVG                /*   */
+										, SMSYN                          /* SMS수신여부 */
+										, EMLYN                          /* E-MAIL수신여부 */
+										, HIST_DATE                      /* 최근교환일자 */
+										, HIST_DISTANCE                  /* 최근교환주행거리 */
+										, SMS_SEND_YN                    /* SMS발송여부 */
+										, REG_CD                         /*   */
+										, REG_DT                         /*   */
+										, MOD_CD                         /*   */
+										, MOD_DT                         /*   */
+										, JOB_PERIOD                     /*   */
+										, LST_READ_KM_AVG_FG             /*   */
+										, LST_CUST_ID_OLD                /* 마지막 본인인증값 */
+						        FROM IF_CAR_PERIOD
+					  )WHERE VIN = #searchVin#
+    ]]>
+    </select>
+
+
+
+
+</sqlMap>

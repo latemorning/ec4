@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CnsltType">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <!-- <typeAlias  alias="cnsltTypeDefaultVO" type="egovframework.ec4.call.cmpl.service.CnsltTypeDefaultVO"/> -->
+    <typeAlias  alias="cstmrCmplMngVO" type="egovframework.ec4.call.cmpl.service.CstmrCmplMngVO"/>
+    <typeAlias  alias="cmnDetailCode" type="egovframework.com.cmm.service.CmmnDetailCode"/>
+
+
+
+
+
+
+    <!--
+        쿼리명 : 상담유형 목록
+        설  명 :
+        수정일        수정자    수정내용
+        2018.07.27    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.07.27
+    -->
+    <select id="cstmrCmplMngDAO.selectScmsCmplCdList" parameterClass="cstmrCmplMngVO" resultClass="egovMap">
+    <![CDATA[
+        SELECT  *
+          FROM
+              (
+               SELECT  ROWNUM rn
+                     , TB.*
+                 FROM
+                     (
+						SELECT 
+								LV1.CODE_ID                         AS "codeId"                                   /* 코드 ID */
+								, LV1.CODE_NM                       AS "codeNm"                                   /* 코드 명 */
+								, LV1.PARNTS_CODE_ID                AS "parntsCodeId"                             /* 부모 코드 ID */
+								, LV1.CNSLT_SE_CODE                 AS "cnsltSeCode"                              /* 상담 구분 코드 */
+								, LV1.SORT_ORDR                     AS "sortOrdr"                                 /* 정렬 순서 */
+								, LV1.USE_AT                        AS "useAt"                                    /* 사용 여부 */
+								, LV1.FRST_REGIST_PNTTM             AS "frstRegistPnttm"                          /* 최초 등록 시점 */
+								, LV1.FRST_REGISTER_ID              AS "frstRegisterId"                           /* 최초 등록자 ID */
+								, LV1.LAST_UPDT_PNTTM               AS "lastUpdtPnttm"                            /* 최종 수정 시점 */
+								, LV1.LAST_UPDUSR_ID                AS "lastUpdusrId"                             /* 최종 수정자 ID */
+						        , LV2.CODE_ID 						AS "codeIdLv2"
+						        , LV2.CODE_NM 						AS "codeNmLv2"
+						        , LV2.PARNTS_CODE_ID 				AS "parntsCodeIdLv2"
+						        , LV3.CODE_ID 						AS "codeIdLv3"
+						        , LV3.CODE_NM 						AS "codeNmLv3"
+						        , LV3.PARNTS_CODE_ID 				AS "parntsCodeIdLv3"
+						        , LV4.CODE_ID 						AS "codeIdLv4"
+						        , LV4.CODE_NM 						AS "codeNmLv4"
+						        , LV4.PARNTS_CODE_ID 				AS "parntsCodeIdLv4"
+						    FROM   CA_CNSLT_CODE LV1
+						    		, CA_CNSLT_CODE LV2
+						    		, CA_CNSLT_CODE LV3
+						    		, CA_CNSLT_CODE LV4
+						   WHERE   LV1.CODE_ID != '0'
+						   AND     LV1.PARNTS_CODE_ID = '0'			AND LV1.CNSLT_SE_CODE = #searchCnsltSeCode#         
+						   AND     LV1.CODE_ID = LV2.PARNTS_CODE_ID(+) AND LV2.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+						   AND     LV2.CODE_ID = LV3.PARNTS_CODE_ID(+) AND LV3.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+						   AND     LV3.CODE_ID = LV4.PARNTS_CODE_ID(+) AND LV4.CNSLT_SE_CODE(+) = #searchCnsltSeCode#
+    ]]>
+						   <isEqual property="codeLv" compareValue="1"> <!-- 대분류 검색 -->
+					   	   AND LV1.CODE_ID = #searchCodeId#
+						   </isEqual>
+						   <isEqual property="codeLv" compareValue="2"> <!-- 중분류검색 -->
+				   		   AND LV2.CODE_ID = #searchCodeId#
+						   </isEqual>
+						   <isEqual property="codeLv" compareValue="3"> <!-- 소분류검색 -->
+						   AND LV3.CODE_ID = #searchCodeId#
+						   </isEqual>
+						   <isEqual property="codeLv" compareValue="4"> <!-- 최하위레벨검색 -->
+						   AND LV4.CODE_ID = #searchCodeId#
+						   </isEqual>
+						   <isNotEmpty property="codeNm">
+						   AND (LV1.CODE_NM LIKE #codeNm# OR LV2.CODE_NM LIKE #codeNm# OR LV3.CODE_NM LIKE #codeNm# OR LV4.CODE_NM LIKE #codeNm#)
+						   </isNotEmpty >
+        <isNotEmpty property="sortColNm" prepend="ORDER BY">
+            <isEqual property="sortColNm" compareValue="CL_CODE_NM">
+            <![CDATA[
+                              LV1.$sortColNm$
+            ]]>
+            </isEqual>
+            <isNotEqual property="sortColNm" compareValue="CL_CODE_NM">
+            <![CDATA[
+                              LV1.$sortColNm$
+            ]]>
+            </isNotEqual>
+            <isNotEmpty property="sSortDir_0">
+            <![CDATA[
+                              $sSortDir_0$
+            ]]>
+            </isNotEmpty>
+        </isNotEmpty>
+    <![CDATA[
+                     ) TB
+              )
+         WHERE rn BETWEEN #iDisplayStart# + 1 AND #iDisplayStart# + #iDisplayLength#
+    ]]>
+    </select>
+
+
+    <!--
+        쿼리명 : 상담유형 목록 카운트
+        설  명 :
+        수정일        수정자    수정내용
+        2018.07.27    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.07.27
+    -->
+    <select id="cstmrCmplMngDAO.selectScmsCmplCdListCnt" parameterClass="cstmrCmplMngVO" resultClass="java.lang.Integer">
+    <![CDATA[
+        SELECT
+                COUNT(1) cnt
+		    FROM   CA_CNSLT_CODE LV1, CA_CNSLT_CODE LV2, CA_CNSLT_CODE LV3, CA_CNSLT_CODE LV4
+		   WHERE   LV1.CODE_ID != '0'
+		   AND     LV1.PARNTS_CODE_ID = '0'			AND LV1.CNSLT_SE_CODE = #searchCnsltSeCode#         
+		   AND     LV1.CODE_ID = LV2.PARNTS_CODE_ID AND LV2.CNSLT_SE_CODE = #searchCnsltSeCode#
+		   AND     LV2.CODE_ID = LV3.PARNTS_CODE_ID AND LV3.CNSLT_SE_CODE = #searchCnsltSeCode#
+		   AND     LV3.CODE_ID = LV4.PARNTS_CODE_ID AND LV4.CNSLT_SE_CODE = #searchCnsltSeCode#
+    ]]>
+		   <isEqual property="codeLv" compareValue="1"> <!-- 대분류 검색 -->
+	   	   AND LV1.CODE_ID = #searchCodeId#         
+		   </isEqual>
+		   <isEqual property="codeLv" compareValue="2"> <!-- 중분류검색 -->
+   		   AND LV2.CODE_ID = #searchCodeId#         
+		   </isEqual>
+		   <isEqual property="codeLv" compareValue="3"> <!-- 소분류검색 -->
+		   AND LV3.CODE_ID = #searchCodeId#         
+		   </isEqual>
+		   <isEqual property="codeLv" compareValue="4"> <!-- 최하위레벨검색 -->
+		   AND LV4.CODE_ID = #searchCodeId#         
+		   </isEqual>
+		   <isNotEmpty property="codeNm">
+		   AND LV4.CODE_NM LIKE #codeNm#
+		   </isNotEmpty >
+    </select>
+
+
+
+
+
+
+    <!--
+        쿼리명 : 불만코드 콤보박스에 의한 결과리스트
+        설  명 :
+        수정일        수정자    수정내용
+        2018.07.27    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.07.27
+    -->
+    <select id="cstmrCmplMngDAO.selectScmsCmplCdComboList" parameterClass="cmnDetailCode" resultClass="egovMap">
+    <![CDATA[
+		SELECT 
+                  code_id   	AS CODE_ID
+                , code_id     	AS CODE
+                , code_nm  		AS CODE_NM
+                , code_id  		AS CODE_DC
+                , code_id     	AS ID
+                , code_nm  		AS TEXT
+                , DECODE(#codeId#, code_id, 'true', '') AS SELECTED
+                , ''                                    AS DISABLED
+		    FROM   CA_CNSLT_CODE
+		   WHERE   CODE_ID != '0'
+		   AND CNSLT_SE_CODE = #cnsltSeCode#
+		   AND PARNTS_CODE_ID = #upCodeId#   
+    ]]>      
+
+    <![CDATA[
+         ORDER BY PARNTS_CODE_ID, SORT_ORDR, CODE_ID
+    ]]>
+    </select>
+    
+
+
+
+    <!--
+        쿼리명 : VOC 불만내용저장
+        설  명 :
+        수정일        수정자    수정내용
+        2018.08.07    CJJ     최초 생성
+        작성자 : CJJ
+        최초작성일 : 2018.08.07
+    -->
+    <insert id="cstmrCmplMngDAO.insertCstmrCmplReg">
+    <![CDATA[
+		INSERT
+		  INTO
+		        CSTMR_CMPL_MNG
+		      (
+				  MAKR_CD                        /* 메이커코드 */
+				, CMPL_MNG_NO                    /* 불만접수관리번호 */
+				, CSTMR_CD                       /* 콜고객코드 */
+				, CMPL_RECPT_DT                  /* 불만접수일자 */
+				, CMPL_RECPT_SEQ                 /* 불만접수순번 */
+				, NETWORK_ID                     /* 네트워크아이디 */
+				, CNSLT_INCALL_NO                /* 인바운드콜번호 */
+				, CNSLT_USER_ID                  /* 상담원아이디 */
+				, CALL_BOUND_KND                 /* 콜바운드구분 */
+				, PROC_MGR_USER_ID				 /* 처리자매니저아이디 */
+				, VOC_KND                        /* VOC구분 */
+				, RECPT_KND                      /* 접수구분 */
+				, CNSLT_CATEGORY                 /* 상담카테고리 */
+				, RECPT_ROOT                     /* 접수경로 */
+				, CSTMR_PROTECT_KND              /* 소보원구분 */
+				, BUSSPLC_CD1                    /* 사업소코드1 */
+				, BUSSPLC_CD2                    /* 사업소코드2 */
+				, BUSSPLC_CD3                    /* 사업소코드3 */
+				, BUSSPLC_CD4                    /* 사업소코드4 */
+				, CSTMR_DEMAND                   /* 고객요구사항 */
+				, CMPL_CD_NM                     /* 불만코드명 */
+				, CMPL_CD_LVL                    /* 불만코드레벨 */
+				, CMPL_CD1_NO                    /* 불만코드1번호 */
+				, CMPL_CD2_NO                    /* 불만코드2번호 */
+				, CMPL_CD3_NO                    /* 불만코드3번호 */
+				, CMPL_CD4_NO                    /* 불만코드4번호 */
+				, CMPL_SITTN_CD                  /* 불만상황코드 */
+				, CMPL_DSCR                      /* 불만상황내용 */
+				, ONESELF_APPNT_KND              /* 담당본인지정구분 */
+				, ACCIDENT_YN_CD                 /* 상해여부코드 */
+				/* , PROCESS_STTUS                  처리상태  - insert에서는 제외한다. 별도로 상태 update해라.  */
+				/* , CNSLT_TITLE                    상담제목 */
+				/* , RECPT_DSCR                     접수내용 */
+				/* , RECPTER_OPINION                접수자의견 */
+				, ACT_DSCR                       /* 조치내용 */
+				, REGIST_DE                      /* 등록일자 */
+				, REGISTER                       /* 등록자 */
+				, UPDT_DE                        /* 수정일자 */
+				, UPDUSR                         /* 수정자 */
+		      )
+		VALUES
+		      (
+				  'GM'                       /* 메이커코드 */
+				, #cmplMngNo#                      /* 불만접수관리번호 */
+				, #cstmrCd#                        /* 콜고객코드 */
+				, #cmplRecptDt#                    /* 불만접수일자 */
+				, NVL((SELECT MAX(CMPL_RECPT_SEQ)+1 
+						FROM CSTMR_CMPL_MNG
+						WHERE MAKR_CD = 'GM'
+						AND CMPL_MNG_NO = #cmplMngNo#
+						AND CSTMR_CD = #cstmrCd#
+						AND CMPL_RECPT_DT = #cmplRecptDt#
+					),1)                  /* 불만접수순번 */
+				, #networkId#                      /* 네트워크아이디 */
+				, #cnsltIncallNo#                  /* 인바운드콜번호 */
+				, #cnsltUserId#                    /* 상담원아이디 */
+				, #callBoundKnd#                   /* 콜바운드구분 */
+				, #procMgrUserId#				   /* 처리자매니저아이디 */
+				, #vocKnd#                         /* VOC구분 */
+				, #recptKnd#                       /* 접수구분 */
+				, #cnsltCategory#                  /* 상담카테고리 */
+				, #recptRoot#                      /* 접수경로 */
+				, #cstmrProtectKnd#                /* 소보원구분 */
+				, #bussplcCd1#                     /* 사업소코드1 */
+				, #bussplcCd2#                     /* 사업소코드2 */
+				, #bussplcCd3#                     /* 사업소코드3 */
+				, #bussplcCd4#                     /* 사업소코드4 */
+				, #cstmrDemand#                    /* 고객요구사항 */
+				, #cmplCdNm#                       /* 불만코드명 */
+				, #cmplCdLvl#                      /* 불만코드레벨 */
+				, #cmplCd1No#                      /* 불만코드1번호 */
+				, #cmplCd2No#                      /* 불만코드2번호 */
+				, #cmplCd3No#                      /* 불만코드3번호 */
+				, #cmplCd4No#                      /* 불만코드4번호 */
+				, #cmplSittnCd#                    /* 불만상황코드 */
+				, #cmplDscr#                       /* 불만상황내용 */
+				, #oneselfAppntKnd#                /* 담당본인지정구분 */
+				, #accidentYnCd#                   /* 상해여부코드 */
+				/* , processSttus                   처리상태  - insert에서는 제외한다. 별도로 상태 update해라. */
+				/* , cnsltTitle                     상담제목 */
+				/* , recptDscr                      접수내용 */
+				/* , recpterOpinion                 접수자의견 */
+				, #actDscr#                       /* 조치내용 */
+				, SYSDATE                       /* 등록일자 */
+				, #register#                       /* 등록자 */
+				, SYSDATE                         /* 수정일자 */
+				, #updusr#                         /* 수정자 */
+		      )
+    ]]>
+    </insert>  
+
+
+    <!--
+        쿼리명 : 인바운드상담내용 수정
+        설  명 :
+        수정일        수정자    수정내용
+        2018.12.20    cjj     최초 생성
+        작성자 : cjj
+        최초작성일 : 2018.12.20
+    -->
+    <update id="cstmrCmplMngDAO.updateCstmrCmplReg">
+    <![CDATA[
+        UPDATE
+                CSTMR_CMPL_MNG
+           SET
+			        NETWORK_ID                         = #networkId#                        /* 네트워크아이디 */
+			      /* , CNSLT_INCALL_NO                    = cnsltIncallNo                    인바운드콜번호 */
+			      /* , CNSLT_USER_ID                      = cnsltUserId                      상담원아이디 */
+			      /* , CALL_BOUND_KND                     = callBoundKnd                     콜바운드구분 */
+			      , VOC_KND                            = #vocKnd#                           /* VOC구분 */
+			      , RECPT_KND                          = #recptKnd#                         /* 접수구분 */
+			      , CNSLT_CATEGORY                     = #cnsltCategory#                    /* 상담카테고리 */
+			      , RECPT_ROOT                         = #recptRoot#                        /* 접수경로 */
+			      , CSTMR_PROTECT_KND                  = #cstmrProtectKnd#                  /* 소보원구분 */
+			      , BUSSPLC_CD1                        = #bussplcCd1#                       /* 사업소코드1 */
+			      , BUSSPLC_CD2                        = #bussplcCd2#                       /* 사업소코드2 */
+			      , BUSSPLC_CD3                        = #bussplcCd3#                       /* 사업소코드3 */
+			      , BUSSPLC_CD4                        = #bussplcCd4#                       /* 사업소코드4 */
+			      , CSTMR_DEMAND                       = #cstmrDemand#                      /* 고객요구사항 */
+			      , CMPL_CD_NM                         = #cmplCdNm#                         /* 불만코드명 */
+			      , CMPL_CD_LVL                        = #cmplCdLvl#                        /* 불만코드레벨 */
+			      , CMPL_CD1_NO                        = #cmplCd1No#                        /* 불만코드1번호 */
+			      , CMPL_CD2_NO                        = #cmplCd2No#                        /* 불만코드2번호 */
+			      , CMPL_CD3_NO                        = #cmplCd3No#                        /* 불만코드3번호 */
+			      , CMPL_CD4_NO                        = #cmplCd4No#                        /* 불만코드4번호 */
+			      , CMPL_SITTN_CD                      = #cmplSittnCd#                      /* 불만상황코드 */
+			      , CMPL_DSCR                          = #cmplDscr#                         /* 불만상황내용 */
+			      , ONESELF_APPNT_KND                  = #oneselfAppntKnd#                  /* 담당본인지정구분 */
+			      , ACCIDENT_YN_CD                     = #accidentYnCd#                     /* 상해여부코드 */
+			      /* , PROCESS_STTUS                      = processSttus                     처리상태 */
+			      /* , CNSLT_TITLE                        = cnsltTitle                       상담제목 */
+			      /* , RECPT_DSCR                         = recptDscr                        접수내용 */
+			      /* , RECPTER_OPINION                    = recpterOpinion                   접수자의견 */
+			      , ACT_DSCR						   = #actDscr#							/* 조치내용 */
+			      , UPDT_DE                            = SYSDATE                           /* 수정일자 */
+			      , UPDUSR                             = #updusr#                           /* 수정자 */
+         WHERE
+	        	MAKR_CD                            = 'GM'                         /* 메이커코드 */
+	     AND 	CMPL_MNG_NO                        = #cmplMngNo#                        /* 불만접수관리번호 */
+	     AND 	CSTMR_CD                           = #cstmrCd#                          /* 콜고객코드 */
+	     AND 	CMPL_RECPT_DT                      = #cmplRecptDt#                      /* 불만접수일자 */
+	     AND 	CMPL_RECPT_SEQ                     = #cmplRecptSeq#                     /* 불만접수순번 */
+    ]]>
+    </update> 
+
+
+
+
+</sqlMap>

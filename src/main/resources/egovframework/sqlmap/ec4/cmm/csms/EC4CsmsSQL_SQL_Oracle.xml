@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CSms">
+
+    <typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="csmsMngVo" type="egovframework.ec4.cmm.csms.service.CSmsMngVO"/>
+
+
+
+
+
+	<statement id="getSmsJobNoSeq" resultClass="java.lang.Integer" parameterClass="csmsMngVo">
+		SELECT SMS_JOB_NO_SEQ.NEXTVAL	  as smsJobNo
+		FROM DUAL
+	</statement>
+
+	<select id = "listSmsTemp" resultClass="egovMap" parameterClass="csmsMngVo">
+		SELECT	A.CSTMR_ESNTL_ID AS "smsCustSeq",
+				A.CSTMR_NM AS "custNm",
+				A.HPNO AS "hpNo"
+		FROM	CA_ITGRT_CSTMR A,
+				SMS_TEMP B
+		WHERE	A.CSTMR_ESNTL_ID = B.SMS_CUST_SEQ
+		AND		A.SMS_RECV_YN = 'Y'
+		AND		B.USER_ID = #userId#
+	</select>
+
+	<select id = "listSmsTempCount" resultClass="java.lang.Integer" parameterClass="csmsMngVo">
+		SELECT	COUNT(*)
+		FROM	CA_ITGRT_CSTMR A,
+				SMS_TEMP B
+		WHERE	A.CSTMR_ESNTL_ID = B.SMS_CUST_SEQ
+		AND		A.SMS_RECV_YN = 'Y'
+		AND		B.USER_ID = #userId#
+	</select>
+
+	<statement id="EC4CSmsMngSQL.regiSmsSendLog"  parameterClass="csmsMngVo">
+		INSERT INTO SMS_SEND_LOG(
+			MSG_KEY,
+			RECEIVER,
+			SENDER,
+			REG_TIME,
+			FIXED_COM,
+			TRAN_ID,
+			APP_GB,
+			DEALER_CD,
+			SALE_MAN_CD,
+			CUST_SEQ,
+			JOB_STATUS,
+			CUST_NAME,
+			MESSAGE,
+			ANNYVERSARY,
+			ANNYVERSARY_GB,
+			RESERVE_TIME,
+			SMS_JOB_NO,
+			DEL_YN,
+			SEND_TYPE,
+			VIN_NO,
+			VEHI_NO01,
+			VEHI_NO02,
+			FILE_PATH
+			)
+			VALUES
+			(
+			SMS_SEND_SEQ.NEXTVAL,
+			#receiver#,
+			#sender#,
+			TO_CHAR(sysdate,'YYYYMMDDHH24MISS'),
+			'',
+			'wizvil',
+			NVL(#appGubn#,'X'),
+			NVL(#dealerCd#,'X'),
+			#userId#,
+			#cstmrCd#,
+			'T',
+			#cstmrNm#,
+			' ',
+			'',
+			'',
+			<isNotEmpty property="reserveTime">
+			#reserveTime#,
+			</isNotEmpty>
+			<isEmpty property="reserveTime">
+			'00000000000000',
+			</isEmpty>
+			#smsJobNo#,
+			'N',
+			'FC',
+			'',
+			'',
+			'',
+			''
+			)
+			<!-- SELECT	SMS_SEND_SEQ.NEXTVAL,
+					HPNO,
+					#sender#,
+					TO_CHAR(sysdate,'YYYYMMDDHH24MISS'),
+					'',
+					'wizvil',
+					#appGubn#,
+					#dealerCd#,
+					#userId#,
+					CSTMR_ESNTL_ID,
+					'T',
+					CSTMR_NM,
+					' ',
+					'',
+					'',
+					<isNotEmpty property="reserveTime">
+					#reserveTime#,
+					</isNotEmpty>
+					<isEmpty property="reserveTime">
+					'00000000000000',
+					</isEmpty>
+					#smsJobNo#,
+					'N',
+					'FC',
+					'',
+					'',
+					'',
+					''
+			FROM	CA_ITGRT_CSTMR
+			WHERE	CSTMR_ESNTL_ID = #smsCustSeq# -->
+	</statement>
+
+	<select id="getSmsJob" resultClass="egovMap" parameterClass="csmsMngVo">
+		SELECT
+				NVL(SUM(DECODE(smsCnt,1,1,0)),0)                   AS "smsCnt1"
+				, NVL(SUM(DECODE(smsCnt,2,1,0)),0)                   AS "smsCnt2"
+				, NVL(SUM(CASE WHEN smsCnt > 2 THEN 1 ELSE 0 END),0) AS "smsCntM"
+				, DECODE(NVL(SUM(DECODE(smsCnt,1,1,0)),0)
+				, 0, NVL(SUM(DECODE(smsCnt,2,1,0)), 0)
+				, NVL(SUM(DECODE(smsCnt, 1, 1, 0)), 0))  AS "orgSmsCnt"
+				, NVL(SUM(smsCnt),0)                                 	AS "totalSmsCnt"
+				, NVL(SUM(smsCnt),0) * 36                	AS "minusPoint"
+				, MAX(RESERVE_TIME)                                	AS "reserveTime"
+		FROM (
+				SELECT
+					LENGTH(FN_CHK_MSG_SIZE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+					WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),90))/10 smsCnt,
+					#reserveTime#       AS RESERVE_TIME
+				FROM 	SMS_SEND_LOG
+				WHERE 	1=1
+				AND		NVL(APP_GB,'X') 	= NVL(#appGubn#,'X')
+				AND 	NVL(DEALER_CD,'X') 	= NVL(#dealerCd#,'X')
+				AND 	SALE_MAN_CD = #userId#
+				AND 	SMS_JOB_NO 	= #smsJobNo#
+				AND 	JOB_STATUS 	= 'T'
+				AND 	DEL_YN 		= 'N'
+			)
+	</select>
+
+	<statement id="EC4CSmsMngSQL.regiSmsJob"  parameterClass="csmsMngVo">
+		INSERT INTO SMS_JOB (
+			SMS_JOB_NO,
+			DEALER_CD,
+			SALE_MAN_CD,
+			RET_TEL_NO,
+			SMS_MESSAGE,
+			REQ_CNT,
+			REG_CNT,
+			COMP_CNT,
+			RESV_DT,
+			REGI_DT,
+			STAT,
+			MSG_TYPE
+			) VALUES (
+			#smsJobNo#,
+			NVL(#dealerCd#,'X'),
+			#userId#,
+			' ',
+			' ',
+			0,
+			0,
+			0,
+			'00000000000000',
+			to_char(sysdate,'YYYYMMDDHH24MISS'),
+			'00',
+			#msgType#
+		)
+	</statement>
+
+	<statement id="EC4CSmsMngSQL.updtSmsSendLog"  parameterClass="csmsMngVo">
+		UPDATE	SMS_SEND_LOG
+		SET		SENDER 		= #sender#
+				, MESSAGE 		= SUBSTRB(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))
+								,TO_NUMBER(SUBSTR(FN_CHK_SMS_MSG_SIZE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))),1,3))
+								,TO_NUMBER(SUBSTR(FN_CHK_SMS_MSG_SIZE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))),4,3)))
+				, REG_TIME 		= to_char(sysdate,'YYYYMMDDHH24MISS')
+				<isNotEmpty property="reserveTime">
+				, RESERVE_TIME	= #reserveTime#
+				</isNotEmpty>
+				<isEmpty property="reserveTime">
+				, RESERVE_TIME	= '00000000000000'
+				</isEmpty>
+				, JOB_STATUS 	= ''
+		WHERE  SMS_JOB_NO 		= #smsJobNo#
+	</statement>
+	
+	<statement id="EC4CSmsMngSQL.updtMmsSendLog"  parameterClass="csmsMngVo">
+		UPDATE	SMS_SEND_LOG
+		SET		SENDER 		= #sender#
+				, MESSAGE 		= REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))
+				, REG_TIME 		= to_char(sysdate,'YYYYMMDDHH24MISS')
+				<isNotEmpty property="reserveTime">
+				, RESERVE_TIME	= #reserveTime#
+				</isNotEmpty>
+				<isEmpty property="reserveTime">
+				, RESERVE_TIME	= '00000000000000'
+				</isEmpty>
+				, JOB_STATUS 	= ''
+		WHERE  SMS_JOB_NO 		= #smsJobNo#
+	</statement>
+
+	<statement id="EC4CSmsMngSQL.regiAddSmsSendLog"  parameterClass="csmsMngVo">
+		INSERT INTO SMS_SEND_LOG(
+			MSG_KEY,
+			RECEIVER,
+			SENDER,
+			MESSAGE,
+			REG_TIME,
+			RESERVE_TIME,
+			TRAN_ID,
+			APP_GB,
+			DEALER_CD,
+			SALE_MAN_CD,
+			CUST_SEQ,
+			JOB_STATUS,
+			CUST_NAME,
+			SMS_JOB_NO,
+			DEL_YN
+			)
+			SELECT
+   			   SMS_SEND_SEQ.NEXTVAL
+				, RECEIVER
+				, SENDER
+				, MESSAGE
+				, REG_TIME
+				, RESERVE_TIME
+				, TRAN_ID
+				, APP_GB
+				, DEALER_CD
+				, SALE_MAN_CD
+				, CUST_SEQ
+				, JOB_STATUS
+				, CUST_NAME
+				, SMS_JOB_NO
+				, 'N'
+			FROM (
+					SELECT
+						  MSG_KEY
+						, RECEIVER
+						, #sender# SENDER
+						, SUBSTRB(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))
+							,TO_NUMBER(SUBSTR(FN_CHK_SMS_MSG_SIZE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))),7,3))
+							,TO_NUMBER(SUBSTR(FN_CHK_SMS_MSG_SIZE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE( #msgComment# , '[NAME]', TRIM(CUST_NAME) ), '[VEHI]', TO_SINGLE_BYTE(TRIM(VEHI_NO02))),'[JOB]', TRIM(FILE_PATH)),'[RESVDATE]',CASE WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =12 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':' || SUBSTR(REPLACE(MMS_MSG_KEY,'-'),11,2)
+								WHEN LENGTH(REPLACE(MMS_MSG_KEY,'-')) =10 THEN SUBSTR(REPLACE(MMS_MSG_KEY,'-'),1,4) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),5,2) ||'-'|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),7,2)||' '|| SUBSTR(REPLACE(MMS_MSG_KEY,'-'),9,2) ||':00'  END ),'[EXPT]', TRIM(DEPART))),10,3))+1) AS MESSAGE
+						, REG_TIME
+						, RESERVE_TIME
+						, TRAN_ID
+						, APP_GB
+						, DEALER_CD
+						, SALE_MAN_CD
+						, CUST_SEQ
+						, JOB_STATUS
+						, ANNYVERSARY
+						, CUST_NAME
+						, SMS_JOB_NO
+					FROM  SMS_SEND_LOG
+					WHERE SMS_JOB_NO = #smsJobNo#
+					AND	  LENGTH(FN_CHK_SMS_MSG_SIZE(REPLACE(REPLACE( REPLACE(#msgComment#,CHR(0),''),CHR(13)||CHR(10),CHR(10)),'[NAME]',CUST_NAME))) = 12
+					AND   DEL_YN 	 = 'N'
+				)
+	</statement>
+
+	<statement id="EC4CSmsMngSQL.regiSmsSend"  parameterClass="csmsMngVo">
+		INSERT INTO SMS_SEND (
+			MSG_KEY
+			, RECEIVER
+			, SENDER
+			, MESSAGE
+			, REG_TIME
+			, RESERVE_TIME
+			, TRAN_ID
+			, APP_GB
+			, DEALER_CD
+			, SALE_MAN_CD
+			, CUST_SEQ
+			, JOB_STATUS
+			, ANNYVERSARY
+			, CUST_NAME
+			)
+			SELECT
+				MSG_KEY
+				, RECEIVER
+				, SENDER
+				, MESSAGE
+				, REG_TIME
+				, RESERVE_TIME
+				, TRAN_ID
+				, APP_GB
+				, DEALER_CD
+				, SALE_MAN_CD
+				, CUST_SEQ
+				, JOB_STATUS
+				, ANNYVERSARY
+				, CUST_NAME
+			FROM SMS_SEND_LOG
+			WHERE 1=1
+            AND NVL(APP_GB,'X')        = NVL(#appGubn#,'X')
+            AND NVL(DEALER_CD,'X')     = NVL(#dealerCd#,'X')
+			AND SMS_JOB_NO   = #smsJobNo#
+			AND SALE_MAN_CD  = #userId#
+			AND DEL_YN       = 'N'
+	</statement>
+
+	<statement id="EC4CSmsMngSQL.regiMmsSend"  parameterClass="csmsMngVo">
+		INSERT INTO MMS_SEND (
+			MSG_KEY
+			, RECEIVER
+			, SENDER
+			, MESSAGE
+			, REG_TIME
+			, RESERVE_TIME
+			, TRAN_ID
+			, APP_GB
+			, DEALER_CD
+			, SALE_MAN_CD
+			, CUST_SEQ
+			, JOB_STATUS
+			, ANNYVERSARY
+			, CUST_NAME
+			, FILE_CNT
+			, FILE_PATH1
+			, FILE_PATH2
+			, FILE_PATH3			
+			)
+			SELECT
+				MSG_KEY
+				, RECEIVER
+				, SENDER
+				, MESSAGE
+				, REG_TIME
+				, RESERVE_TIME
+				, TRAN_ID
+				, APP_GB
+				, DEALER_CD
+				, SALE_MAN_CD
+				, CUST_SEQ
+				, JOB_STATUS
+				, ANNYVERSARY
+				, CUST_NAME
+				, #fileCnt#
+				, #filePath1#
+				, #filePath2#
+				, #filePath3#
+			FROM SMS_SEND_LOG
+			WHERE 1=1
+            AND NVL(APP_GB,'X')        = NVL(#appGubn#,'X')
+            AND NVL(DEALER_CD,'X')     = NVL(#dealerCd#,'X')
+			AND SMS_JOB_NO   = #smsJobNo#
+			AND SALE_MAN_CD  = #userId#
+			AND DEL_YN       = 'N'
+	</statement>
+
+	<statement id="EC4CSmsMngSQL.updtSmsJobSum"  parameterClass="csmsMngVo">
+		UPDATE SMS_JOB
+		SET	  SMS_MESSAGE 	= REPLACE(#msgComment#,CHR(13)||CHR(10),CHR(10))
+			, RET_TEL_NO    = #sender#
+			, REQ_CNT     	= NVL(#orgSmsCnt#,REQ_CNT)
+			, REG_CNT     	= NVL(#totalSmsCnt#,REG_CNT)
+			, COMP_CNT   	= 0
+			<isNotEmpty property="reserveTime">
+			, RESV_DT	= #reserveTime#
+			</isNotEmpty>
+			<isEmpty property="reserveTime">
+			, RESV_DT	= '00000000000000'
+			</isEmpty>
+			, REGI_DT     	= to_char(sysdate,'YYYYMMDDHH24MISS')
+			, STAT 		  	= '10'
+			, TRNS_TYPE   	= 'R'
+			, MSG_TYPE      = #msgType#
+		WHERE SMS_JOB_NO    = #smsJobNo#
+	</statement>
+
+
+	<select id="listSmsEmoticon" resultClass="egovMap" parameterClass="csmsMngVo">
+		SELECT SSI_SEQ                      AS "ssiSeq",
+			   EMOTICON                     AS "emoticon",
+			   SELF_YN                      AS "selfYn"
+		FROM (
+				SELECT SSI_SEQ,
+					   EMOTICON,
+					   'N'           AS SELF_YN
+				  FROM SMS_EMOTICON
+				 WHERE CUST_CODE IS NULL
+				   AND DEL_YN = 'N'
+				   <isNotEmpty property="eType">
+						<isNotEqual property="eType" compareValue="00"> <!-- 공용 -->
+							AND E_TYPE = #eType#
+						</isNotEqual>
+				   </isNotEmpty>
+
+				UNION ALL
+
+				SELECT SSI_SEQ ,
+					   EMOTICON,
+					   'Y'
+				  FROM SMS_EMOTICON
+				 WHERE CUST_TYPE   = 'C'
+				   AND CUST_CODE   = #userId#
+				   AND DEL_YN      = 'N'
+				   <isNotEmpty property="eType">
+						<isNotEqual property="eType" compareValue="09"> <!-- 사용자 -->
+							AND E_TYPE = #eType#
+						</isNotEqual>
+				   </isNotEmpty>
+		)
+		ORDER BY SELF_YN DESC, SSI_SEQ DESC
+	</select>
+
+	<select id = "listSmsEmoticonCount" resultClass="java.lang.Integer" parameterClass="csmsMngVo">
+		select count(*)
+		FROM (
+				SELECT SSI_SEQ,
+					   EMOTICON,
+					   'N'           AS SELF_YN
+				  FROM SMS_EMOTICON
+				 WHERE CUST_CODE IS NULL
+				   AND DEL_YN = 'N'
+				   <isNotEmpty property="eType">
+						<isNotEqual property="eType" compareValue="00"> <!-- 공용 -->
+							AND E_TYPE = #eType#
+						</isNotEqual>
+				   </isNotEmpty>
+
+				UNION ALL
+
+				SELECT SSI_SEQ ,
+					   EMOTICON,
+					   'Y'
+				  FROM SMS_EMOTICON
+				 WHERE CUST_TYPE   = 'C'
+				   AND CUST_CODE   = #userId#
+				   AND DEL_YN      = 'N'
+				   <isNotEmpty property="eType">
+						<isNotEqual property="eType" compareValue="09"> <!-- 사용자 -->
+							AND E_TYPE = #eType#
+						</isNotEqual>
+				   </isNotEmpty>
+		)
+	</select>
+
+	<statement id="updtSmsEmoticon"  parameterClass="csmsMngVo">
+		UPDATE SMS_EMOTICON
+			   SET DEL_YN = 'Y'
+		WHERE  SSI_SEQ = #ssiSeq#
+	</statement>
+
+	<statement id="EC4CSmsMngSQL.getNextSsiSeq" resultClass="java.lang.String" parameterClass="csmsMngVo">
+		SELECT NVL(MAX(SSI_SEQ), 0) + 1 as "ssiSeq"
+		  FROM SMS_EMOTICON
+	</statement>
+
+	<insert id="EC4CSmsMngSQL.regiSmsEmoticon" parameterClass="csmsMngVo">
+		INSERT INTO SMS_EMOTICON (
+			SSI_SEQ ,
+			CUST_TYPE ,
+			CUST_CODE ,
+			EMOTICON ,
+			REG_CD ,
+			REG_DT ,
+			MOD_CD ,
+			MOD_DT ,
+			DEL_YN ,
+			E_TYPE
+		) VALUES (
+			#maxSsiSeq# ,
+			'C' ,
+			#userId# ,
+			 REPLACE(#msgComment#,CHR(0),'') ,
+			#userId# ,
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') ,
+			'' ,
+			'' ,
+			'N' ,
+			#eType#
+		)
+	</insert>
+
+
+
+
+</sqlMap>
